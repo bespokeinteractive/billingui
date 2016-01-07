@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+
+	<!-- Module Properties -->
+	<id>billingui</id>
+	<name>Billingui Module</name>
+	<version>3.4.0</version>
+	<package>org.openmrs.module.billingui</package>
+	<author>Brian, Stans</author>
+	<description>
+		Billing UI module
+	</description>
+	<updateURL>https://modules.openmrs.org/modules/download/billingui/update.rdf</updateURL>
+	<require_version>1.9.8</require_version>
+	<!-- / Module Properties -->
+
+	
+	<!-- Required Modules -->
+	<require_modules>
+																											
+		<require_module version="1.5.1-SNAPSHOT">
+			org.openmrs.module.hospitalcore
+		</require_module>
+																											
+		<require_module version="2.0">
+			org.openmrs.module.uiframework
+		</require_module>
+																											
+		<require_module version="2.0">
+			org.openmrs.module.uilibrary
+		</require_module>
+			
+	</require_modules>
+	<!-- / Required Modules -->
+	
+	<!-- Module Activator -->
+	<activator>org.openmrs.module.billingui.BillinguiActivator</activator>
+	
+	
+	<!-- Adds link to admin page -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.billingui.extension.html.AdminList</class>
+	</extension>
+<extension>
+<point>org.openmrs.gutter.tools</point>
+<class>org.openmrs.module.billingui.extension.html.BillinguiHeader</class>
+</extension>
+	<!-- Maps hibernate file's, if present -->
+	<mappingFiles>
+				
+	</mappingFiles>
+
+	<!-- Internationalization -->
+	<!-- All message codes should start with billingui. -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+</module>
+
