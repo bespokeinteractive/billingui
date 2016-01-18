@@ -15,7 +15,7 @@
         <li><a href="#tabs-1">Outdoor Patient Queue</a></li>
         <li><a href="#tabs-2">Indoor Patient Queue</a></li>
         <li><a href="#tabs-3">Billing Ambulance</a></li>
-        <li><a href="#">Billing Tender</a></li>
+        <li><a href="#tabs-4">Billing Tender</a></li>
         <li><a href="#">Billing Misc Service</a></li>
     </ul>
 
@@ -172,6 +172,58 @@
                     <thead>
                     <tr align="center">
                         <th>Driver Name</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr align="center">
+                        <td>Name</td>
+                        <td>Description</td>
+                    </tr>
+                    <tr align="left">
+                        <td colspan="7">No Result</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div id="tabs-4">
+        <div>
+            <ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
+                <li>
+                    <a class="button confirm" href="#">
+                        Add New Company
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <article id="tables4" style="margin-bottom: 10px;">
+            <table>
+                <thead>
+                <tr>
+                    <th>Search Company</th>
+                </tr>
+                </thead>
+            </table>
+        </article>
+        <label for="username4">Enter Company's Name:</label>
+        <input id="username4" type="text" name="username" placeholder="Name:">
+
+        <div>
+            <ul style=" margin-top: 10px; margin-bottom: 15px;margin-left: 1px;" class="grid">
+                <li>
+                    <button class="button confirm">Search</button>
+                    <button class="button confirm">List all</button>
+                </li>
+            </ul>
+        </div>
+        <section>
+            <div>
+                <table cellpadding="5" cellspacing="0" width="100%" id="queueList4">
+                    <thead>
+                    <tr align="center">
+                        <th>Company Name</th>
                         <th>Description</th>
                     </tr>
                     </thead>
