@@ -66,23 +66,74 @@
             </p>
             <label for="username">Search patient in Queue:</label>
             <input id="ipdusername" type="text" name="username" placeholder="Enter Patient Name/ID:">
-        <p class="left">
-            ${ui.includeFragment("uicommons", "field/datetimepicker", [id: 'datetime', label: 'Date', formFieldName: 'date picker', useTime: false, defaultToday : true])}
-        </p>
-        <label for="username">Search patient in Queue:</label>
-        <input id="ipdusername" type="text" name="username" placeholder="Enter Patient Name/ID:">
 
-        <div>
-            <ul style=" margin-top: 5px;margin-left: 39px;margin-bottom: 10px;" class="grid">
-                <li>
-                    <a class="button confirm" id="getOpdPatients">
-                        Get Patients
-                    </a>
-                </li>
-            </ul>
+            <div>
+                <ul style=" margin-top: 5px;margin-left: 39px;margin-bottom: 10px;" class="grid">
+                    <li>
+                        <a class="button confirm" href="#">
+                            Get Patients
+                        </a>
+                    </li>
+                </ul>
+                <section>
+                    <div>
+                        <table cellpadding="5" cellspacing="0" width="100%" id="queueList" >
+                            <thead>
+                            <tr align="center">
+                                <th>S.No</th>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr align="center">
+                                <td>S.No</td>
+                                <td>Patient ID</td>
+                                <td>Name</td>
+                                <td>Age</td>
+                                <td>Gender</td>
+                            </tr>
+                            <tr align="center">
+                                <td colspan="7">No patient found</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+
+    <div id="tabs-2">
+        <section>
+            <p>
+            <h3>Inpatient Patient Queue</h3>
+            <article id="tables" style="margin-bottom: 15px;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Get Queue</th>
+                    </tr>
+                    </thead>
+                </table>
+            </article>
+            <label for="username">Search patient in Queue:</label>
+            <input id="username" type="text" name="username" placeholder="Enter Patient Name/ID:">
+
+            <div>
+                <ul style=" margin-top: 3px; margin-bottom: 10px;margin-left: 1px;" class="grid">
+                    <li>
+                        <a class="button confirm" href="#">
+                            Get Patients
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <section>
                 <div>
-                    <table cellpadding="5" cellspacing="0" width="100%" id="queueList">
+                    <table cellpadding="5" cellspacing="0" width="100%" id="queueList2">
                         <thead>
                         <tr align="center">
                             <th>S.No</th>
@@ -97,7 +148,19 @@
                         <tbody>
 
                         <tr align="center">
-                            <td colspan="5">No patient found</td>
+                            <td>S.No</td>
+                            <td>Admission Date</td>
+                            <td>Patient ID</td>
+                            <td>Name</td>
+                            <td>Age</td>
+                            <td>Admission Ward</td>
+
+                            <td><button class="button confirm">Add Bill</button>
+                                <button class="button confirm">View Bill</button>
+                            </td>
+                        </tr>
+                        <tr align="center">
+                            <td colspan="7">No patient found</td>
                         </tr>
                         </tbody>
                     </table>
@@ -105,22 +168,6 @@
             </section>
         </section>
     </div>
-
-    <div id="tabs-2">
-        <p>
-
-        <h3>Inpatient Patient Queue</h3>
-        <article id="tables" style="margin-bottom: 15px;">
-            <table>
-                <thead>
-                <tr>
-                    <th>Get Queue</th>
-                </tr>
-                </thead>
-            </table>
-        </article>
-        <label for="username">Search patient in Queue:</label>
-        <input id="username" type="text" name="username" placeholder="Enter Patient Name/ID:">
 
     <div id="tabs-3">
         <section>
@@ -231,28 +278,6 @@
             </section>
         </section>
     </div>
-
-    <div id="tabs-4">
-        <div>
-            <ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
-                <li>
-                    <a class="button confirm" href="#">
-                        Add New Company
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <article id="tables4" style="margin-bottom: 10px;">
-            <table>
-                <thead>
-                <tr>
-                    <th>Search Company</th>
-                </tr>
-                </thead>
-            </table>
-        </article>
-        <label for="username4">Enter Company's Name:</label>
-        <input id="username4" type="text" name="username" placeholder="Name:">
 
     <div id="tabs-5">
         <section>
