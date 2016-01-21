@@ -34,7 +34,7 @@
         </article>
 
         <p class="left">
-            ${ui.includeFragment("uicommons", "field/datetimepicker", [id: 'datetime', label: 'Date', formFieldName: 'date picker', useTime: false])}
+            ${ui.includeFragment("uicommons", "field/datetimepicker", [id: 'datetime', label: 'Date', formFieldName: 'date picker', useTime: false, defaultToday : true])}
         </p>
         <label for="username">Search patient in Queue:</label>
         <input id="ipdusername" type="text" name="username" placeholder="Enter Patient Name/ID:">
@@ -42,14 +42,14 @@
         <div>
             <ul style=" margin-top: 5px;margin-left: 39px;margin-bottom: 10px;" class="grid">
                 <li>
-                    <a class="button confirm" href="#">
+                    <a class="button confirm" >
                         Get Patients
                     </a>
                 </li>
             </ul>
             <section>
                 <div>
-                    <table cellpadding="5" cellspacing="0" width="100%" id="queueList" >
+                    <table cellpadding="5" cellspacing="0" width="100%" id="queueList">
                         <thead>
                         <tr align="center">
                             <th>S.No</th>
@@ -60,15 +60,9 @@
                         </tr>
                         </thead>
                         <tbody>
+
                         <tr align="center">
-                            <td>S.No</td>
-                            <td>Patient ID</td>
-                            <td>Name</td>
-                            <td>Age</td>
-                            <td>Gender</td>
-                        </tr>
-                        <tr align="center">
-                            <td colspan="7">No patient found</td>
+                            <td colspan="5">No patient found</td>
                         </tr>
                         </tbody>
                     </table>
@@ -76,8 +70,10 @@
             </section>
         </div>
     </div>
+
     <div id="tabs-2">
         <p>
+
         <h3>Inpatient Patient Queue</h3>
         <article id="tables" style="margin-bottom: 15px;">
             <table>
@@ -188,6 +184,7 @@
             </div>
         </section>
     </div>
+
     <div id="tabs-4">
         <div>
             <ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
