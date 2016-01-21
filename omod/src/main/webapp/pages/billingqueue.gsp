@@ -4,6 +4,31 @@
         var jq = jQuery;
         jq(function () {
             jq("#tabs").tabs();
+
+
+            // get queue
+            function getBillingQueue(currentPage){
+                jq("#selection").show(0);
+                this.currentPage = currentPage;
+                var date = jQuery("#date").val();
+                var searchKey = jQuery("#searchKey").val();
+                var pgSize = jQuery("#sizeSelector").val();
+                jQuery.ajax({
+                    type : "GET",
+                    url : getContextPath() + "/module/billing/patientsearchbillingqueue.form",
+                    data : ({
+                        date			: date,
+                        searchKey		: searchKey,
+                        currentPage		: currentPage,
+                        pgSize			: pgSize
+                    }),
+                    success : function(data) {
+                        jQuery("#billingqueue").show(0);
+                        jQuery("#billingqueue").html(data);
+                    },
+
+                });
+            }
         });
     </script>
 </head>
@@ -50,7 +75,7 @@
         <div>
             <ul style=" margin-top: 5px;margin-left: 39px;margin-bottom: 10px;" class="grid">
                 <li>
-                    <a class="button confirm" >
+                    <a class="button confirm" id="getOpdPatients">
                         Get Patients
                     </a>
                 </li>
