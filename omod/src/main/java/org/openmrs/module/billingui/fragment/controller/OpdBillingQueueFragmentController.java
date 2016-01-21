@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 /**
  * Created by ngarivictor on 1/20/2016.
  */
-public class BillingQueueFragmentController {
+public class OpdBillingQueueFragmentController {
 
     public SimpleObject getBillingQueue(
             @RequestParam(value = "date", required = false) String dateStr,
@@ -51,15 +51,12 @@ public class BillingQueueFragmentController {
             getpatient = SimpleObject.fromCollection(getpatient, ui, "date", "searchKey", "page", "pgSize", "id", "name");
         }
 
-
         if (currentPage == null) currentPage = 1;
         int total = billingService.countSearchListOfPatient(date, searchKey, currentPage);
         PagingUtil pagingUtil = new PagingUtil(pgSize, currentPage, total);
         model.addAttribute("pagingUtil", pagingUtil);
         model.addAttribute("patientList", patientSearchResult);
         model.addAttribute("date", dateStr);
-
-
         return SimpleObject.create(getpatient);
     }
 
