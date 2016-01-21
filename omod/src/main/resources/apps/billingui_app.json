@@ -1,0 +1,18 @@
+[
+  {
+    "id": "billingui.billingApp",        // unique id for this app, unique across all apps, typically starts with your module id
+    "description": "App for managing Billing operations",        // plain text or a message code (not displayed to end-users),
+    "order": 2,
+    "extensions": [
+      {
+        "id": "billingui.registrationAppHomepageLink",
+        "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+        "type": "link",
+        "label": "Cashier",        // text or message code (this is shown to the user)
+        "url": "billingui/billingqueue.page",        // clicking on the app icon goes to this link
+        "icon": "icon-tasks",        // see the uicommons style guide icons
+        "requiredPrivilege": "App: registration.activeVisits"        // require this privilege to show the link
+      }
+    ]
+  }
+]
