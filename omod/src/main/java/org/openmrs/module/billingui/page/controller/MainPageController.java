@@ -14,28 +14,28 @@ import java.util.List;
  */
 public class MainPageController {
 
-        private Log log = LogFactory.getLog(this.getClass());
+    private Log log = LogFactory.getLog(this.getClass());
 
-        /*@RequestMapping(method= RequestMethod.GET)*/
-        public void get(PageModel model){
-
-            String prefix = Context.getAdministrationService().getGlobalProperty("registration.identifier_prefix");
-            model.addAttribute("idPrefix", prefix);
-
-        }
-    /*@RequestMapping(method=RequestMethod.POST)*/
-    public void submit(PageModel model, @RequestParam("identifier") String identifier){
+    /*@RequestMapping(method= RequestMethod.GET)*/
+    public void get(PageModel model) {
 
         String prefix = Context.getAdministrationService().getGlobalProperty("registration.identifier_prefix");
-        if( identifier.contains("-") && !identifier.contains(prefix)){
-            identifier = prefix+identifier;
+        model.addAttribute("idPrefix", prefix);
+
+    }
+
+    /*@RequestMapping(method=RequestMethod.POST)*/
+    public void submit(PageModel model, @RequestParam("identifier") String identifier) {
+
+        String prefix = Context.getAdministrationService().getGlobalProperty("registration.identifier_prefix");
+        if (identifier.contains("-") && !identifier.contains(prefix)) {
+            identifier = prefix + identifier;
         }
-        List<Patient> patientsList = Context.getPatientService().getPatients( identifier.trim() );
+        List<Patient> patientsList = Context.getPatientService().getPatients(identifier.trim());
         model.addAttribute("patients", patientsList);
 
 
     }
-
 
 
 }
