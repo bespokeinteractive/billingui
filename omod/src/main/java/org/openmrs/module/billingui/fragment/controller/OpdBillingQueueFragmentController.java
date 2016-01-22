@@ -66,7 +66,6 @@ public class OpdBillingQueueFragmentController {
         Date date = null;
         try {
             date = sdf.parse(dateStr);
-            System.out.println("DATE "+date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
