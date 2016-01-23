@@ -3,6 +3,7 @@ package org.openmrs.module.billingui.fragment.controller;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.BillingService;
 import org.openmrs.module.hospitalcore.model.PatientSearch;
+import org.openmrs.module.hospitalcore.util.PagingUtil;
 import org.openmrs.ui.framework.SimpleObject;
 
 import org.openmrs.ui.framework.UiUtils;
@@ -74,7 +75,7 @@ public class OpdBillingQueueFragmentController {
         List<PatientSearch> patientSearchResult = billingService.searchListOfPatient(date, searchKey, currentPage, pgSize);
         if (currentPage == null) currentPage = 1;
         int total = billingService.countSearchListOfPatient(date, searchKey, currentPage);
-//        PagingUtil pagingUtil = new PagingUtil(pgSize, currentPage, total);
+        PagingUtil pagingUtil = new PagingUtil(pgSize, currentPage, total);
 //        sharedPageModel.addAttribute("pagingUtil", pagingUtil);
 //        sharedPageModel.addAttribute("patientList", patientSearchResult);
 //        sharedPageModel.addAttribute("date", dateStr);
@@ -83,7 +84,7 @@ public class OpdBillingQueueFragmentController {
 //                User authenticatedUser=Context.getAuthenticatedUser();
 //                sharedPageModel.addAttribute("user", authenticatedUser);
 
-        return SimpleObject.fromCollection(patientSearchResult, ui, "givenName", "identifier", "age", "gender","patientId");
+        return SimpleObject.fromCollection(patientSearchResult, ui, "fullname", "identifier", "age", "gender","patientId");
     }
 
 }
