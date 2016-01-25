@@ -136,7 +136,7 @@
         <div class="demographics">
             <h1 class="name">
                 <span><small></small>,<em>surname</em></span>
-                <span><small> &nbsp;</small><em>name</em>
+                <span><small></small><em>name</em>
                 </span>
             </h1>
 
