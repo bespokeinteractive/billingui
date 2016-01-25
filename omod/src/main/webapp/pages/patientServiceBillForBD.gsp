@@ -13,42 +13,12 @@
 </style>
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        jQuery("#waiverCommentDiv").hide();
-        jQuery('.serquncalc').keyup(function () {
-            var result = 0;
-            jQuery('#total').attr('value', function () {
-                jQuery('.serpricalc').each(function () {
-                    if (jQuery(this).val() !== '') {
-                        result += parseInt(jQuery(this).val());
-                    }
-                });
-                return result;
-            });
-        });
-        var sos =${serviceOrderSize};
-        if (sos == 0) {
-            jQuery("#savebill").hide();
-        }
-
-        var result = 0;
-        jQuery('#total').attr('value', function () {
-            jQuery('.serpricalc').each(function () {
-                if (jQuery(this).val() !== '') {
-                    result += parseInt(jQuery(this).val());
-                }
-            });
-            return result;
-        });
-
 
     });
 
     ///end of ready
 
 
-    function loadWaiverCommentDiv() {
-        jQuery("#waiverCommentDiv").show();
-    }
 </script>
 
 <script type="text/javascript">
@@ -160,8 +130,8 @@
     <div class="patient-header new-patient-header">
         <div class="demographics">
             <h1 class="name">
-                <span><small>${patientSearch.familyName}</small>,<em>surname</em></span>
-                <span><small>${patientSearch.givenName} &nbsp;${(patientSearch.middleName).replace(',', ' ')}</small><em>name</em>
+                <span><small>${patient.familyName}</small>,<em>surname</em></span>
+                <span><small>${patient.givenName} &nbsp;${(patient.middleName)?.replace(',', ' ')}</small><em>name</em>
                 </span>
             </h1>
 
@@ -181,7 +151,7 @@
 
         <div class="identifiers">
             <em>Patient ID</em>
-            <span>${patientSearch.identifier}</span>
+            <span>${patient.identifier}</span>
             <em>Payment Category</em>
             <span>${category}</span>
         </div>
@@ -193,105 +163,5 @@
         </div>
     </div>
 
-    <form id="orderBillingForm"
-          action="procedureInvestigationOrder.page?patientId=${patientId}&encounterId=${encounterId}&indCount=${serviceOrderSize}&billType=mixed"
-          method="POST"
-          onsubmit="javascript:return validate(${serviceOrderSize});">
-        <div class="dashboard clear">
-            <div class="info-container">
-                <div class="info-header">
-                    <i class="icon-calendar"></i>
 
-                    <h3>List of Procedures/Investigations</h3>
-                </div>
-            </div>
-            <br/>
-
-            <table cellpadding="5" cellspacing="0" width="100%" id="myTable" class="tablesorter thickbox">
-                <thead>
-                <tr align="center">
-                    <th>S.No</th>
-                    <th>Service</th>
-                    <th>Select</th>
-                    <th>Quantity</th>
-                    <th>Pay</th>
-                    <th style="text-align: right;">Unit Price</th>
-                    <th style="text-align: right;">Item Total</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <% if (serviceOrderList != null || serviceOrderList != "") { %>
-                <% serviceOrderList.eachWithIndex { queue, index -> %>
-                <tr align="center">
-                    <td>${index + 1}</td>
-                    <td><input type="text" class="form-textbox" id="${index + 1}service" name="${index + 1}service"
-                               value="${queue.name}" readOnly="true">
-                    </td>
-                    <td>
-                        <input type="checkbox" class="form-textbox" id="${index + 1}selectservice"
-                               name="${index + 1}selectservice"
-                               checked="checked" value="billed" onclick="disable(${index+ 1});">
-                    </td>
-                    <td>
-                        <input type="text" class="form-textbox" id="${index + 1}servicequantity"
-                               name="${index + 1}servicequantity" size="7" value=1
-                               onkeyup="updatePrice(${index+ 1});" class="serquncalc"/>
-                    </td>
-                    <td>
-                        <input type="checkbox" class="form-textbox" id="${index + 1}paybill" name="${index + 1}paybill"
-                               checked="checked" value="pay" onclick="payCheckBox(${index+ 1});">
-                    </td>
-                    <td>
-                        <input type="text" class="form-textbox" id="${index + 1}unitprice" name="${index + 1}unitprice"
-                               size="7"
-                               value="${queue.price}" readOnly="true">
-                    </td>
-                    <td>
-                        <input type="text" class="form-textbox" id="${index + 1}serviceprice"
-                               name="${index + 1}serviceprice"
-                               size="7" value="${queue.price}" readOnly="true" class="serpricalc">
-                    </td>
-                </tr>
-                <% } %>
-
-                <% } else { %>
-                <tr align="center">
-                    <td colspan="7">No Orders Found</td>
-                </tr>
-                <% } %>
-
-                </tbody>
-                <tr>
-                    <td colspan="6" align="right">Total</td>
-                    <td align="right"><input type="text" class="form-textbox" id="total" name="total" size="7" value="0"
-                                             readOnly="true"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="6" align="right">Waiver Amount</td>
-                    <td align="right"><input type="text" id="waiverAmount" name="waiverAmount" size="7"
-                                             class="form-textbox"
-                                             onblur="loadWaiverCommentDiv();"/></td>
-                </tr>
-            </table>
-
-            <div align="right" id="waiverCommentDiv" class="form-group">
-                Waiver Number/Comment <input type="text" id="waiverComment" name="waiverComment" size="7"
-                                             class="form-textbox"/>
-            </div>
-            <tr>
-                <td><input type="button" class="button cancel"
-                           onclick="javascript:window.location.href = 'billingQueue.page?'"
-                           value="Cancel">
-                </td>
-                <td>
-
-                    <input type="submit" id="savebill" name="savebill" float="right" class="button confirm"
-                           value="Save Bill">
-                </td>
-
-            </tr>
-        </div>
-    </form>
 </div>

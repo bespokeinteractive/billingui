@@ -16,6 +16,7 @@ import org.openmrs.module.hospitalcore.util.PagingUtil;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
 import org.openmrs.module.hospitalcore.util.RequestUtil;
 import org.openmrs.ui.framework.UiUtils;
+import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,9 +28,9 @@ import java.util.*;
  * @author Stanslaus Odhiambo
  * Created on 1/25/2016.
  */
-public class BillableServiceBillListForBDPageController {
+public class PatientServiceBillForBDPageController {
 
-    public String get(Model model, @RequestParam("patientId") Integer patientId,
+    public String get(PageModel model, @RequestParam("patientId") Integer patientId,
                       @RequestParam(value = "billId", required = false) Integer billId,
                       @RequestParam(value = "pageSize", required = false) Integer pageSize,
                       @RequestParam(value = "currentPage", required = false) Integer currentPage,
@@ -200,10 +201,10 @@ public class BillableServiceBillListForBDPageController {
                 model.addAttribute("billList", bills);
             }
             model.addAttribute("requestForDischargeStatus", requestForDischargeStatus);
-            return "redirect:" + uiUtils.pageLink("billinngui", "billListForIndoorPatient");
+            return "redirect:" + uiUtils.pageLink("billingui", "billListForIndoorPatient");
 
         } else {
-            return "redirect:" + uiUtils.pageLink("billinngui", "billableServiceBillListForBD");
+            return "redirect:" + uiUtils.pageLink("billingui", "billableServiceBillListForBD");
         }
 
     }
