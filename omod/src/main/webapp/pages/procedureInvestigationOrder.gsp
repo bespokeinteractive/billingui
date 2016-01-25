@@ -161,7 +161,7 @@
         <div class="demographics">
             <h1 class="name">
                 <span><small>${patientSearch.familyName}</small>,<em>surname</em></span>
-                <span><small>${patientSearch.givenName} &nbsp;${(patientSearch.middleName).replace(',', ' ')}</small><em>name</em>
+                <span><small>${patientSearch.givenName} &nbsp;${(patientSearch.middleName)?.replace(',', ' ')}</small><em>name</em>
                 </span>
             </h1>
 

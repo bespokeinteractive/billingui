@@ -203,6 +203,6 @@ public class ProcedureInvestigationOrderPageController {
         redirectParams.put("patientId", patientId);
         redirectParams.put("billId", bill.getPatientServiceBillId());
         redirectParams.put("billType", billType);
-        return "redirect:" + uiUtils.pageLink("billinngui", "patientServiceBillForBD", redirectParams);
+        return "redirect:" + uiUtils.pageLink("billingui", "patientServiceBillForBD", redirectParams);
     }
 }
