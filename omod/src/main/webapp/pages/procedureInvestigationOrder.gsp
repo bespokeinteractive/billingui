@@ -41,7 +41,25 @@
         });
 
 
+
+        recalculate(sos);
+
     });
+
+    function recalculate(sos){
+
+        var mytot=0;
+        for(i=1;i<=sos;i++){
+            if(jQuery("#" + i + "paybill").attr('unchecked') || jQuery("#" + i + "selectservice").attr('unchecked')){
+                //do nothing
+            }else{
+                var servQuantity = parseInt(jQuery("#" + i + "servicequantity").val());
+                mytot+=(parseInt(jQuery("#" + i + "serviceprice").val())*servQuantity);
+            }
+        }
+        jQuery("#total").val(mytot);
+
+    }
 
     ///end of ready
 
@@ -194,7 +212,7 @@
     </div>
 
     <form id="orderBillingForm"
-          action="procedureInvestigationOrder.page?patientId=${patientId}&encounterId=${encounterId}&indCount=${serviceOrderSize}&billType=mixed"
+          action="procedureInvestigationOrder.page?patientId=${patientId}&encounterId=${encounterId}&indCount=${serviceOrderSize}&billType=mixed&date=${date}"
           method="POST"
           onsubmit="javascript:return validate(${serviceOrderSize});">
         <div class="dashboard clear">

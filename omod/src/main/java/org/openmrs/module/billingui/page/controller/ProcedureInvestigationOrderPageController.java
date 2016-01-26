@@ -60,7 +60,7 @@ public class ProcedureInvestigationOrderPageController {
     public String post(PageModel model, Object command, HttpServletRequest request, @RequestParam("patientId") Integer patientId, @RequestParam("encounterId") Integer encounterId,
                        @RequestParam("indCount") Integer indCount, @RequestParam(value = "waiverAmount", required = false) BigDecimal waiverAmount,
                        @RequestParam(value = "waiverComment", required = false) String waiverComment, @RequestParam(value = "paymentMode", required = false) String paymentMode,
-                       @RequestParam(value = "billType", required = false) String billType, UiUtils uiUtils) {
+                       @RequestParam(value = "billType", required = false) String billType, UiUtils uiUtils,@RequestParam(value = "date", required = true) String date) {
         Map<String, Object> redirectParams = new HashMap<String, Object>();
 
         BillingService billingService = Context.getService(BillingService.class);
