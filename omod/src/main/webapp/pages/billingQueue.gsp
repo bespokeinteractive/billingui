@@ -44,7 +44,6 @@
             var pgSize = jQuery("#sizeSelector").val();
             jQuery.ajax({
                 type: "GET",
-//                url: getContextPath() + "/module/billing/patientsearchbillingqueue.form",
                 url: "${ui.actionLink('billingui','opdBillingQueue','getBillingQueue')}",
                 dataType: "json",
                 data: ({

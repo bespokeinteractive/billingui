@@ -279,12 +279,8 @@
     }
     </style>
     <input type="hidden" id="contextPath" value="openmrs"/>
-    <img
-            class="donotprint"
-            src="openmrs/moduleResources/billing/HEADEROPDSLIP.jpg"
-            width="981" height="212"/>
-    <center><img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS"
-                 src="openmrs/moduleResources/billing/kenya_logo.bmp"><center>
+    <img class="donotprint" src="${ui.resourceLink("billingui", "images/HEADEROPDSLIP.jpg")}" width="981" height="212"/>
+    <center><img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS" src="${ui.resourceLink("billingui", "images/kenya_logo.bmp")}"><center>
         <table class="spacer" style="margin-left: 30px;">
             <tr><h3><center><u><b>${userLocation}</b></u></center></h3>
             </tr>
