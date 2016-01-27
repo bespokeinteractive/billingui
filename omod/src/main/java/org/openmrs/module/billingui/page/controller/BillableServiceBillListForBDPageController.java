@@ -313,7 +313,14 @@ public class BillableServiceBillListForBDPageController {
                 ipdService.saveIpdPatientAdmissionLog(ipdPatientAdmissionLog);
                 ipdService.saveIpdPatientAdmitted(ipdPatientAdmitted);
             }
-            return "redirect:/module/billing/indoorPatientServiceBill.list?patientId=" + patientId + "&billId=" + bill.getPatientServiceBillId() + "&encounterId=" + encounterId + "&admissionLogId=" + admissionLogId;
+            Map<String,Object> params = new HashMap<String, Object>();
+            params.put("patientId",patientId);
+            params.put("billId",bill.getPatientServiceBillId());
+            params.put("encounterId",encounterId);
+            params.put("admissionLogId",admissionLogId);
+            return "redirect:" + uiUtils.pageLink("billingui","billListForIndoorPatient",params);
+//            return "redirect:/module/billing/indoorPatientServiceBill.list?patientId=" + patientId
+//                    + "&billId=" + bill.getPatientServiceBillId() + "&encounterId=" + encounterId + "&admissionLogId=" + admissionLogId;
         } else {
             BillingService billingService = (BillingService) Context.getService(BillingService.class);
             PatientServiceBill patientServiceBill = billingService.getPatientServiceBillById(billId);
@@ -338,7 +345,8 @@ public class BillableServiceBillListForBDPageController {
                 billingService.saveBillEncounterAndOrder(patientServiceBill);
             }
 //			return "redirect:/module/billing/patientServiceBillForBD.list?patientId=" + patientId;
-            return "redirect:/module/billing/billingqueue.form";
+//            return "redirect:/module/billing/billingqueue.form";
+            return "redirect:" + uiUtils.pageLink("billingui","billingQueue");
         }
     }
 }
