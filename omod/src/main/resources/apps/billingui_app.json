@@ -2,7 +2,7 @@
   {
     "id": "billingui.billingApp",        // unique id for this app, unique across all apps, typically starts with your module id
     "description": "App for managing Billing operations",        // plain text or a message code (not displayed to end-users),
-    "order": 2,
+    "order": 4,
     "extensions": [
       {
         "id": "billingui.registrationAppHomepageLink",
