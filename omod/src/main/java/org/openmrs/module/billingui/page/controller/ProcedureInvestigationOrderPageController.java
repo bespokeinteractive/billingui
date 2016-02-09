@@ -110,7 +110,7 @@ public class ProcedureInvestigationOrderPageController {
             } else if (attributeType.getPersonAttributeTypeId() == personAttributeSSCT.getPersonAttributeTypeId()) {
                 patientCategory = pa.getValue();
             }else{
-                //temporarily set to general paying
+                //TO-DO temporarily set to general paying
 
             }
         }

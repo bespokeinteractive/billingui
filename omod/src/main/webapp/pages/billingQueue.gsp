@@ -49,7 +49,6 @@
                 data: ({
                     date: date,
                     searchKey: searchKey,
-                    searchKey: searchKey,
                     currentPage: currentPage,
                     pgSize: pgSize
                 }),

@@ -58,17 +58,21 @@
 </script>
 
 <script type="text/javascript">
-    function validate(){
+    function validate() {
         if (StringUtils.isBlank(jQuery("#comment").val())) {
             alert("Please enter comment");
             return false;
         }
-        else{
+        else {
 
             var patientId = ${patient.patientId};
             var billType = "free";
             var comment = jQuery("#comment").val();
-            window.location.href=emr.pageLink("billingui","addPatientServiceBillForBD",{"patientId":patientId, "billType":billType, "comment":comment});
+            window.location.href = emr.pageLink("billingui", "addPatientServiceBillForBD", {
+                "patientId": patientId,
+                "billType": billType,
+                "comment": comment
+            });
         }
     }
 </script>
@@ -244,7 +248,6 @@
         </tbody>
 
     </table>
-    <br>
 
     <form method="POST" id="billForm">
         <center>
@@ -280,7 +283,8 @@
     </style>
     <input type="hidden" id="contextPath" value="openmrs"/>
     <img class="donotprint" src="${ui.resourceLink("billingui", "images/HEADEROPDSLIP.jpg")}" width="981" height="212"/>
-    <center><img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS" src="${ui.resourceLink("billingui", "images/kenya_logo.bmp")}"><center>
+    <center><img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS"
+                 src="${ui.resourceLink("billingui", "images/kenya_logo.bmp")}"><center>
         <table class="spacer" style="margin-left: 30px;">
             <tr><h3><center><u><b>${userLocation}</b></u></center></h3>
             </tr>
@@ -412,91 +416,93 @@
     </center></center>
 
     <!-- END PRINT DIV -->
-
-    <script>
-        function printDivNoJQuery() {
-            var divToPrint = document.getElementById('printDiv');
-            var newWin = window
-                    .open('', '',
-                    'letf=0,top=0,width=1,height=1,toolbar=0,scrollbars=0,status=0');
-            newWin.document.write(divToPrint.innerHTML);
-            newWin.print();
-            newWin.close();
-        }
-        function printDiv2() {
-            var printer = window.open('', '', 'width=300,height=300');
-            printer.document.open("text/html");
-            printer.document.write(document.getElementById('printDiv').innerHTML);
-            printer.document.close();
-            printer.window.close();
-            printer.print();
-            jQuery("#billForm").submit();
-            //alert("Printing ...");
-        }
-    </script>
-
-    <% if(listBill !=null) {%>
-        <table class="box" style="position:relative;border:0px;">
-            <tr><td>
-                <span class="boxHeader"><b>List of Previous Bills</b></span>
-            </td></tr>
-            <tr><td>
-                <table class="box">
-                    <thead>
-                    <th><center>#</center></th>
-                    <th>Bill ID</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                    </thead>
-                    <% listBill.eachWithIndex{bill,index  -> %>
-                        <tr class='${index % 2 == 0 ? "oddRow" : "evenRow" } '>
-                            <td align="center" class='<% if(bill.voided) {%>retired <% }%>'>
-                                    value="${(( pagingUtil.currentPage - 1  ) * pagingUtil.pageSize ) + index }" />
-                            </td>
-                        <td class='<% if(bill.voided){%>retired <% } %>'>
-                            <% if(bill.voided ==false || ( bill.printed == true && canEdit == true ) ){%>
-                                <a
-                                        href="openmrs/module/billingui/editPatientServiceBillForBD.page?billId=${bill.patientServiceBillId}&patientId=${patient.patientId}">
-                                    <b>${bill.receipt.id}</b>,${bill.createdDate } /> </a>
-                                </td>
-                            <% } else { %>
-                                <b>${bill.receipt.id}</b>,
-                                ${bill.createdDate }
-                            <% } %>
-                            <td>${bill.description}</td>
-                            <td class='<%if(bill.voided){%>retired <%} %>'>
-                                    <%if(bill.voided){%>
-                                        <input type="button" value="View"
-                                               onclick="javascript:window.location.href='patientServiceVoidedBillViewForBD.list?patientId=${patient.patientId}&billId=${bill.patientServiceBillId}'" />
-                                    <%} else {%>
-                                        <input type="button" value="View"
-                                               onclick="javascript:window.location.href='patientServiceBillForBD.list?patientId=${patient.patientId}&billId=${bill.patientServiceBillId}'" />
-                                    <% } %>
-                            </td>
-                        </tr>
-                    <%}%>
-                    <tr class="paging-container">
-                        <td colspan="3"><%@ include file="../paging.jsp"%></td>
-                    </tr>
-                </table>
-            </td></tr>
-        </table>
-    <% }%>
-
-    <input type="hidden" id="total" value="${bill.actualAmount - bill.waiverAmount}">
-
-    <script>
-        function printDiv() {
-            jQuery("div#printDiv").printArea({
-                mode : "iframe"
-            });
-            jQuery("#billForm").submit();
-        }
-        jQuery(document).ready(function() {
-            jQuery("#totalValue2").html(toWords(jQuery("#total").val()));
-        });
-    </script>
-
-
-
 </div>
+
+<script>
+    function printDivNoJQuery() {
+        var divToPrint = document.getElementById('printDiv');
+        var newWin = window
+                .open('', '',
+                'letf=0,top=0,width=1,height=1,toolbar=0,scrollbars=0,status=0');
+        newWin.document.write(divToPrint.innerHTML);
+        newWin.print();
+        newWin.close();
+    }
+    function printDiv2() {
+        var printer = window.open('', '', 'width=300,height=300');
+        printer.document.open("text/html");
+        printer.document.write(document.getElementById('printDiv').innerHTML);
+        printer.document.close();
+        printer.window.close();
+        printer.print();
+        jQuery("#billForm").submit();
+        //alert("Printing ...");
+    }
+</script>
+
+
+
+<% if (listBill != null) { %>
+<table class="box" style="position:relative;border:0px;">
+    <tr><td>
+        <span class="boxHeader"><b>List of Previous Bills</b></span>
+    </td></tr>
+    <tr><td>
+        <table class="box">
+            <thead>
+            <th><center>#</center></th>
+            <th>Bill ID</th>
+            <th>Description</th>
+            <th>Action</th>
+            </thead>
+            <% listBill.eachWithIndex { bill, index -> %>
+            <tr class='${index % 2 == 0 ? "oddRow" : "evenRow"} '>
+                <td align="center" class='<% if (bill.voided) { %>retired <% } %>'>
+                    ${index + 1}
+                </td>
+                <td class='<% if (bill.voided) { %>retired <% } %>'>
+                    <% if (bill.voided == false || (bill.printed == true && canEdit == true)) { %>
+                    <a href="editPatientServiceBillForBD.page?billId=${bill.patientServiceBillId}&patientId=${
+                            patient.patientId}">
+                        <b>${bill.receipt.id}</b>,${bill.createdDate}</a>
+                </td>
+                <% } else { %>
+                <b>${bill.receipt.id}</b>,
+            ${bill.createdDate}
+            <% } %>
+                <td>
+                    <% if (bill.description != null) { %>
+                    ${bill.description}
+                    <% } %>
+                </td>
+                <td class='<% if (bill.voided) { %>retired <% } %>'>
+                    <% if (bill.voided) { %>
+                    <input type="button" value="View" class="task"
+                           onclick="javascript:window.location.href = 'patientServiceVoidedBillViewForBD.page?patientId=${patient.patientId}&billId=${bill.patientServiceBillId}'"/>
+                    <% } else { %>
+                    <input type="button" value="View" class="task"
+                           onclick="javascript:window.location.href = 'patientServiceBillForBD.page?patientId=${patient.patientId}&billId=${bill.patientServiceBillId}'"/>
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+        </table>
+    </td></tr>
+</table>
+<% } %>
+
+<input type="hidden" id="total" value="${bill.actualAmount - bill.waiverAmount}">
+
+<script>
+    function printDiv() {
+        jQuery("div#printDiv").printArea({
+            mode: "iframe"
+        });
+        jQuery("#billForm").submit();
+    }
+    jQuery(document).ready(function () {
+        jQuery("#totalValue2").html(toWords(jQuery("#total").val()));
+    });
+</script>
+
+
