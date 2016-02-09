@@ -90,11 +90,12 @@
 
 <div id="tabs">
     <ul>
-        <li><a href="#tabs-1">Outdoor Patient Queue</a></li>
-        <li><a href="#tabs-2">Indoor Patient Queue</a></li>
+        <li><a href="#tabs-1">OPD Queue</a></li>
+        <li><a href="#tabs-2">IPD Queue</a></li>
         <li><a href="#tabs-3">Billing Ambulance</a></li>
         <li><a href="#tabs-4">Billing Tender</a></li>
         <li><a href="#">Billing Misc Service</a></li>
+        <li><a href="#tabs-5">Search Patient</a></li>
     </ul>
 
     <div id="tabs-1">
@@ -327,5 +328,9 @@
                 </table>
             </div>
         </section>
+    </div>
+
+    <div id="tabs-5">
+        ${ui.includeFragment("billingui", "searchPatient")}
     </div>
 </div>
