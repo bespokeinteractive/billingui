@@ -18,16 +18,8 @@
             }
         });
 
-        jq('#lastDayOfVisit').datepicker({
-            yearRange: 'c-100:c',
-            maxDate: '0',
-            dateFormat: 'dd/mm/yy',
-            changeMonth: true,
-            changeYear: true,
-            constrainInput: false
-        }).on("change", function (dateText) {
-            jQuery("#lastDayOfVisit").val(this.value);
-            PAGE.checkBirthDate();
+        jq('#lastDayOfVisit-display').on("change", function (dateText) {
+			ADVSEARCH.delay();
         });
 
 
@@ -139,7 +131,7 @@
         var age = jQuery("#age").val();
         var ageRange = jQuery("#ageRange").val();
         var patientMaritalStatus = jQuery("#patientMaritalStatus").val();
-        var lastVisit = jQuery("#lastVisit").val();
+        var lastVisit = moment(jq('#lastDayOfVisit-field').val()).format('DD/MM/YYYY');
         var phoneNumber = jQuery("#phoneNumber").val();
         var relativeName = jQuery("#relativeName").val();
         var nationalId = jQuery("#nationalId").val();
@@ -182,20 +174,11 @@
         jQuery('#dashboard').toggle(500);
         jQuery('#patient-search-form').clearForm();
     }
-
-
-
-
-
-
-
-
-
 </script>
 
 <form onsubmit="return false" id="patient-search-form" method="get">
-    <input type="text" autocomplete="off" placeholder="Search by ID or Name" id="searchPhrase"
-           style="float:left; width:70%; padding:6px 10px 7px;" onkeyup="ADVSEARCH.startSearch(event);">
+    <input autocomplete="off" placeholder="Search by ID or Name" id="searchPhrase"
+           style="float:left; width:70%; padding:6px 10px -1px;" onkeyup="ADVSEARCH.startSearch(event);">
     <img id="ajaxLoader" style="display:none; float:left; margin: 3px -4%;"
          src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
 
@@ -210,7 +193,7 @@
                 <h3>ADVANCED SEARCH</h3>
                 <span id="as_close" onclick="HideDashboard();">
                     <div class="identifiers">
-                        <span style="background:#00463f; padding-bottom: 5px;">x</span>
+                        <span style="background:#00463f; padding: 1px 8px 5px;">x</span>
                     </div>
                 </span>
             </div>
@@ -221,7 +204,7 @@
                         <div class="onerow">
                             <div class="col4">
                                 <label for="gender">Gender</label>
-                                <select style="width: 172px" id="gender" name="gender">
+                                <select style="width: 166px" id="gender" name="gender">
                                     <option value="Any">Any</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
@@ -230,28 +213,25 @@
 
                             <div class="col4">
                                 <label for="lastDayOfVisit">Last Visit</label>
-
-                                <div class="addon"><i class="icon-calendar small">&nbsp;</i></div>
-                                <input id="lastDayOfVisit" name="lastDayOfVisit" style="width: 149px"
-                                       placeholder="Last Visit Date">
+								${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'lastDayOfVisit', id: 'lastDayOfVisit', label: '', useTime: false, defaultToday: false, class: ['newdtp'], endDate: new Date()])}
                             </div>
 
                             <div class="col4 last">
                                 <label for="relativeName">Relative Name</label>
-                                <input id="relativeName" name="relativeName" style="width: 151px"
+                                <input type="text" id="relativeName" name="relativeName" style="width: 166px"
                                        placeholder="Relative Name">
                             </div>
                         </div>
 
-                        <div class="onerow" style="padding-top: 0px;">
+                        <div class="onerow" style="padding-top: 2px;">
                             <div class="col4">
                                 <label for="age">Age</label>
-                                <input id="age" name="age" style="width: 149px" placeholder="Patient Age">
+                                <input type="text" id="age" name="age" style="width: 166px" placeholder="Patient Age">
                             </div>
 
                             <div class="col4">
                                 <label for="gender">Previous Visit</label>
-                                <select style="width: 172px" id="lastVisit">
+                                <select style="width: 166px" id="lastVisit">
                                     <option value="Any">Anytime</option>
                                     <option value="31">Last month</option>
                                     <option value="183">Last 6 months</option>
@@ -261,15 +241,15 @@
 
                             <div class="col4 last">
                                 <label for="nationalId">National ID</label>
-                                <input id="nationalId" name="nationalId" style="width: 151px"
+                                <input type="text" id="nationalId" name="nationalId" style="width: 166px"
                                        placeholder="National ID">
                             </div>
                         </div>
 
-                        <div class="onerow" style="padding-top: 0px;">
+                        <div class="onerow" style="padding-top:2px;">
                             <div class="col4">
                                 <label for="ageRange">Range &plusmn;</label>
-                                <select id="ageRange" name="ageRange" style="width: 172px">
+                                <select id="ageRange" name="ageRange" style="width: 166px">
                                     <option value="0">Exact</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -281,21 +261,21 @@
 
                             <div class="col4">
                                 <label for="phoneNumber">Phone No.</label>
-                                <input id="phoneNumber" name="phoneNumber" style="width: 149px"
+                                <input type="text" id="phoneNumber" name="phoneNumber" style="width: 166px"
                                        placeholder="Phone No.">
                             </div>
 
                             <div class="col4 last">
                                 <label for="fileNumber">File Number</label>
-                                <input id="fileNumber" name="fileNumber" style="width: 151px"
+                                <input type="text" id="fileNumber" name="fileNumber" style="width: 166px"
                                        placeholder="File Number">
                             </div>
                         </div>
 
-                        <div class="onerow" style="padding-top: 0px;">
+                        <div class="onerow" style="padding-top: 1px;">
                             <div class="col4">
                                 <label for="patientMaritalStatus">Marital Status</label>
-                                <select id="patientMaritalStatus" style="width: 172px">
+                                <select id="patientMaritalStatus" style="width: 166px">
                                     <option value="Any">Any</option>
                                     <option value="Single">Single</option>
                                     <option value="Married">Married</option>

@@ -1,7 +1,10 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [title: "Cashier Module"])
-    ui.includeJavascript("billingui", "moment.js")
-    ui.includeJavascript("billingui", "jquery.dataTables.min.js")
+	
+	ui.includeCss("billingui", "onepcssgrid.css")
+    
+	ui.includeJavascript("uicommons", "moment.js")
+	ui.includeJavascript("billingui", "jquery.dataTables.min.js")
     def props = ["identifier", "fullname", "age", "gender", "patientId", "action"]
 %>
 <head>
@@ -84,6 +87,122 @@
 
         });
     </script>
+	
+	<style>
+		body {
+			margin-top: 20px;
+		}
+
+		.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+			color: #555;
+			text-align: left;
+		}
+
+		form input,
+		form select{
+			margin: 0px;
+			display: inline-block;
+			min-width: 50px;
+			padding: 2px 10px;
+			height: 32px !important;
+		}
+		.info-header span{
+			cursor: pointer;
+			display: inline-block;
+			float: right;
+			margin-top: -2px;
+			padding-right: 5px;
+		}
+		.dashboard .info-section {
+			margin: 2px 5px 5px;
+		}
+		.toast-item{
+			background-color: #222;
+		}
+
+		@media all and (max-width: 768px) {
+			.onerow {
+				margin: 0 0 100px;
+			}
+		}
+		form .advanced {
+			background: #363463 none repeat scroll 0 0;
+			border-color: #dddddd;
+			border-style: solid;
+			border-width: 1px;
+			color: #fff;
+			cursor: pointer;
+			float: right;
+			padding: 6px 0;
+			text-align: center;
+			width: 27%;
+		}
+		form .advanced i{
+			font-size: 22px;
+		}
+		.col4 label {
+			width: 110px;
+			display: inline-block;
+		}
+
+		.col4 input[type=text] {
+			display: inline-block;
+			padding: 4px 10px;
+		}
+
+		.col4 select {
+			padding: 4px 10px;
+		}
+
+		form select {
+			min-width: 50px;
+			display: inline-block;
+		}
+		.addon{
+			display: inline-block;
+			float: right;
+			margin: 5px 0 0 140px;
+			position: absolute;
+		}
+		.identifiers span {
+			border-radius: 50px;
+			color: white;
+			display: inline;
+			font-size: 0.8em;
+			letter-spacing: 1px;
+			margin: 5px;
+		}
+		table.dataTable thead th, table.dataTable thead td {
+			padding: 5px 10px;
+		}
+		form input:focus{
+			border: 1px solid #00f!important;
+		}
+		input[type="text"], select {
+			 border: 1px solid #aaa;
+			 border-radius: 2px!important;
+			 box-shadow: none!important;
+			 box-sizing: border-box!important;
+		 }
+		 
+		.newdtp{
+			width: 166px;
+		}
+		#lastDayOfVisit label{
+			display:none;
+		}
+		#lastDayOfVisit input{
+			width:166px;
+		}
+		.add-on {
+			float: right;
+			left: auto;
+			margin-left: -29px;
+			margin-top: 5px;
+			position: absolute;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -115,6 +234,8 @@
         <p class="left">
             ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'datetime', id: 'datetime', label: 'Date', useTime: false, defaultToday: true])}
         </p>
+		
+		
         <label for="searchKey">Search patient in Queue:</label>
         <input id="searchKey" type="text" name="searchKey" placeholder="Enter Patient Name/ID:">
 
