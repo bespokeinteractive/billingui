@@ -201,6 +201,9 @@
 			margin-top: 5px;
 			position: absolute;
 		}
+		.ui-widget-content a {
+			color: #007fff;
+		}
 	</style>
 
 </head>
