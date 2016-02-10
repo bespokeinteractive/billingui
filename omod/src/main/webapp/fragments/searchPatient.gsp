@@ -1,6 +1,6 @@
 
 <%
-    def props = ["wrapperIdentifier","names", "age", "gender","lastVisitTime","action"]
+    def props = ["wrapperIdentifier", "names", "age", "gender", "formartedVisitDate", "action"]
 %>
 <script>
 
@@ -163,7 +163,6 @@
                 fileNumber: fileNumber
             }),
             success: function (data) {
-
                 jQuery("#ajaxLoader").hide();
                 console.log(data);
                 pData = data;
@@ -343,9 +342,8 @@
                     <div class="DataTables_sort_wrapper">Gender<span class="DataTables_sort_icon"></span></div>
                 </th>
 
-                <th class="ui-state-default" role="columnheader" style="width:120px;">
-                    <div class="DataTables_sort_wrapper">Last Visit<span class="DataTables_sort_icon"></span>
-                    </div>
+                <th class="ui-state-default" role="columnheader" style="width: 60px;">
+                    <div class="DataTables_sort_wrapper">Last Visit<span class="DataTables_sort_icon"></span></div>
                 </th>
 
                 <th class="ui-state-default" role="columnheader" style="width: 100px;">
