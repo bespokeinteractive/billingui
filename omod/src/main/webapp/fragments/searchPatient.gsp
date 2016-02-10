@@ -102,8 +102,8 @@
             var row = '<tr>';
             <% props.each {
                if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("billingui", "");
-                  def pageLinkEdit = ui.pageLink("billingui", "");
+                  def pageLinkRevisit = ui.pageLink("registration", "revisitPatient");
+                  def pageLinkEdit = ui.pageLink("registration", "editPatient");
                    %>
             row += '<td> ' +
                     '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
@@ -310,7 +310,7 @@
                     </div>
                 </th>
 
-                <th class="ui-state-default" role="columnheader">
+                <th class="ui-state-default" role="columnheader" width="*">
                     <div class="DataTables_sort_wrapper">Name<span class="DataTables_sort_icon"></span></div>
                 </th>
 
@@ -322,11 +322,11 @@
                     <div class="DataTables_sort_wrapper">Gender<span class="DataTables_sort_icon"></span></div>
                 </th>
 
-                <th class="ui-state-default" role="columnheader" style="width: 60px;">
+                <th class="ui-state-default" role="columnheader" style="width: 100px;">
                     <div class="DataTables_sort_wrapper">Last Visit<span class="DataTables_sort_icon"></span></div>
                 </th>
 
-                <th class="ui-state-default" role="columnheader" style="width: 100px;">
+                <th class="ui-state-default" role="columnheader" style="width: 60px;">
                     <div class="DataTables_sort_wrapper">Action<span class="DataTables_sort_icon"></span></div>
                 </th>
             </tr>
