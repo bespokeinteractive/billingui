@@ -13,19 +13,21 @@
 </style>
 <script type="text/javascript">
     jQuery(document).ready(function () {
+        var sos =${serviceOrderSize};
         jQuery("#waiverCommentDiv").hide();
         jQuery('.serquncalc').keyup(function () {
             var result = 0;
-            jQuery('#total').attr('value', function () {
-                jQuery('.serpricalc').each(function () {
-                    if (jQuery(this).val() !== '') {
-                        result += parseInt(jQuery(this).val());
-                    }
-                });
-                return result;
+            jQuery('.serpricalc').each(function () {
+                var valueAdd= jQuery(this).val();
+                if (valueAdd !== '') {
+                    result += parseInt(jQuery(this).val());
+                }
             });
+
+            jQuery('#total').attr('value', result);
+
         });
-        var sos =${serviceOrderSize};
+
         if (sos == 0) {
             jQuery("#savebill").hide();
         }
@@ -41,20 +43,19 @@
         });
 
 
-
         recalculate(sos);
 
     });
 
-    function recalculate(sos){
+    function recalculate(sos) {
 
-        var mytot=0;
-        for(i=1;i<=sos;i++){
-            if(jQuery("#" + i + "paybill").attr('unchecked') || jQuery("#" + i + "selectservice").attr('unchecked')){
+        var mytot = 0;
+        for (i = 1; i <= sos; i++) {
+            if (jQuery("#" + i + "paybill").attr('unchecked') || jQuery("#" + i + "selectservice").attr('unchecked')) {
                 //do nothing
-            }else{
+            } else {
                 var servQuantity = parseInt(jQuery("#" + i + "servicequantity").val());
-                mytot+=(parseInt(jQuery("#" + i + "serviceprice").val())*servQuantity);
+                mytot += (parseInt(jQuery("#" + i + "serviceprice").val()) * servQuantity);
             }
         }
         jQuery("#total").val(mytot);
@@ -79,6 +80,7 @@
         serqun = jQuery("#" + serqunid).val();
         unpri = jQuery("#" + unipriid).val();
         jQuery("#" + serpriid).val(serqun * unpri);
+
     }
 </script>
 
@@ -192,9 +194,14 @@
             <div class="status-container">
                 <span class="status active"></span>
                 Active Visit
+
+                <em>
+                    <span>${date}</span>
+                </em>
+
             </div>
 
-            <div class="tag">Outpatient (File Number :${fileNumber})</div>
+            <div class="tag">Outpatient File Number :${fileNumber}</div>
         </div>
 
         <div class="identifiers">
@@ -204,11 +211,6 @@
             <span>${category}</span>
         </div>
 
-        <div class="identifiers">
-            <em>Date/ Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
-            <span>${date}</span>
-
-        </div>
     </div>
 
     <form id="orderBillingForm"
@@ -252,9 +254,9 @@
                                checked="checked" value="billed" onclick="disable(${index+ 1});">
                     </td>
                     <td>
-                        <input type="text" class="form-textbox" id="${index + 1}servicequantity"
+                        <input type="text" class="form-textbox serquncalc" id="${index + 1}servicequantity"
                                name="${index + 1}servicequantity" size="7" value=1
-                               onkeyup="updatePrice(${index+ 1});" class="serquncalc"/>
+                               onkeyup="updatePrice(${index+ 1});" />
                     </td>
                     <td>
                         <input type="checkbox" class="form-textbox" id="${index + 1}paybill" name="${index + 1}paybill"
@@ -266,9 +268,9 @@
                                value="${queue.price}" readOnly="true">
                     </td>
                     <td>
-                        <input type="text" class="form-textbox" id="${index + 1}serviceprice"
+                        <input type="text" class="form-textbox serpricalc" id="${index + 1}serviceprice"
                                name="${index + 1}serviceprice"
-                               size="7" value="${queue.price}" readOnly="true" class="serpricalc">
+                               size="7" value="${queue.price}" readOnly="true" />
                     </td>
                 </tr>
                 <% } %>
