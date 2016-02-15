@@ -5,6 +5,9 @@
     jQuery(function(){
         jQuery("#waiverCommentDiv").hide();
 
+
+
+
     });//end of document ready
 
 </script>
