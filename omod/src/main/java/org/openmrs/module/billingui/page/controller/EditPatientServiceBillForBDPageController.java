@@ -49,6 +49,7 @@ public class EditPatientServiceBillForBDPageController {
         Integer conceptId = Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
                 "billing.rootServiceConceptId"));
         Concept concept = Context.getConceptService().getConcept(conceptId);
+        model.addAttribute("serviceMap",mapServices);
         model.addAttribute("tabs", billingService.traversTab(concept, mapServices, 1));
         model.addAttribute("patientId", patientId);
 
@@ -56,6 +57,7 @@ public class EditPatientServiceBillForBDPageController {
         model.addAttribute("freeBill", bill.getFreeBill());
         model.addAttribute("waiverAm", bill.getWaiverAmount());
         model.addAttribute("bill", bill);
+        model.addAttribute("billId", billId);
         model.addAttribute("patient", patient);
         model.addAttribute("category", patient.getAttribute(14));
         model.addAttribute("fileNumber", patient.getAttribute(43));
