@@ -8,7 +8,18 @@
 
 
 
+
+
     });//end of document ready
+    function loadWaiverCommentDiv() {
+        jQuery("#waiverCommentDiv").show();
+    }
+    function voidBillItems(){
+        jQuery("#action").val("void");
+        jQuery("#voidBill").attr("disabled", "disabled");
+        jQuery("#voidBill").addClass("disabled");
+        return 0;
+    }
 
 </script>
 
@@ -45,6 +56,7 @@
 <form id="orderBillingForm"
       action=""
       method="POST">
+    <input type="hidden" value="" name="action" id="action" />
     <div class="dashboard clear">
         <div class="info-container">
             <div class="info-header">
@@ -77,7 +89,7 @@
                 </td>
                 <td>
                     <input type="text" class="form-textbox" id="${index + 1}servicequantity"
-                           name="${index + 1}servicequantity" size="7" value=1
+                           name="${index + 1}servicequantity" size="7"  value="${queue.quantity}"
                            onkeyup="updatePrice(${index+ 1});" class="serquncalc"/>
                 </td>
                 <td>
@@ -105,14 +117,15 @@
             </tbody>
             <tr>
                 <td colspan="4" align="right">Total</td>
-                <td align="right"><input type="text" class="form-textbox" id="total" name="total" size="7" value="0"
+                <td align="right"><input type="text" class="form-textbox" id="total" name="total" size="7" value="0.00"
                                          readOnly="true"/>
                 </td>
             </tr>
             <tr>
                 <td colspan="4" align="right">Waiver Amount</td>
+                <input id="freePat" name="freePat" type='hidden' value="${freeBill}" size='5' />
                 <td align="right"><input type="text" id="waiverAmount" name="waiverAmount" size="7"
-                                         class="form-textbox"
+                                         class="form-textbox" value="${waiverAm}"
                                          onblur="loadWaiverCommentDiv();"/></td>
             </tr>
         </table>
@@ -122,9 +135,10 @@
                                          class="form-textbox"/>
         </div>
         <tr>
-            <td><input type="button" class="button cancel" value="Cancel">
+            <td><input type="button" class="button cancel" value="Cancel" id="submitBill"
+                       onclick="javascript:window.location.href='billableServiceBillListForBD.page?patientId=${patientId}&billId=${billId}'">
             </td>
-            <td><input type="button" class="button cancel" value="Void Bill">
+            <td><input type="button" class="button cancel" value="Void Bill" id="voidBill" onclick="voidBillItems();">
             </td>
             <td>
 
