@@ -100,7 +100,7 @@
             alert("Please select item for billing");
         } else {
             var totalValue = parseInt(jQuery("#total").val());
-            var waiver = parseInt(jQuery("#waiverAmount").val());
+            var waiver = parseInt(jQuery("#waiverAmountEdit").val());
             if (totalValue <waiver) {
                 alert("Please enter correct Waiver Amount");
                 return false;
@@ -224,7 +224,7 @@
             <tr>
                 <td colspan="4" align="right">Waiver Amount</td>
                 <input id="freePat" name="freePat" type='hidden' value="${freeBill}" size='5'/>
-                <td align="right"><input type="text" id="waiverAmount" name="waiverAmount" size="7"
+                <td align="right"><input type="text" id="waiverAmountEdit" name="waiverAmountEdit" size="7"
                                          class="form-textbox" value="${waiverAm}"
                                          onblur="loadWaiverCommentDiv();"/></td>
             </tr>

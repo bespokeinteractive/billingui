@@ -15,6 +15,7 @@ import org.openmrs.module.hospitalcore.model.PatientServiceBillItem;
 import org.openmrs.module.hospitalcore.util.HospitalCoreUtils;
 import org.openmrs.module.hospitalcore.util.Money;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
+import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,7 +50,7 @@ public class EditPatientServiceBillForBDPageController {
         Integer conceptId = Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
                 "billing.rootServiceConceptId"));
         Concept concept = Context.getConceptService().getConcept(conceptId);
-        model.addAttribute("serviceMap",mapServices);
+        model.addAttribute("serviceMap", mapServices);
         model.addAttribute("tabs", billingService.traversTab(concept, mapServices, 1));
         model.addAttribute("patientId", patientId);
 
@@ -73,17 +74,18 @@ public class EditPatientServiceBillForBDPageController {
     }
 
 
-    public String post(Model model, Object command, BindingResult bindingResult, HttpServletRequest request,
-                           @RequestParam("cons") Integer[] cons, @RequestParam("patientId") Integer patientId,
-                           @RequestParam("billId") Integer billId, @RequestParam("action") String action,
-                           @RequestParam(value = "description", required = false) String description,
-                           @RequestParam(value = "waiverAmountEdit", required = false) BigDecimal waiverAmount,
-                           @RequestParam(value = "waiverNumber", required = false) String waiverNumber) {
+    public String post(PageModel pageModel, Object command, BindingResult bindingResult, HttpServletRequest request,
+                       @RequestParam("cons") Integer[] cons, @RequestParam("patientId") Integer patientId,
+                       @RequestParam("billId") Integer billId, @RequestParam("action") String action,
+                       @RequestParam(value = "description", required = false) String description,
+                       @RequestParam(value = "waiverAmountEdit", required = false) BigDecimal waiverAmount,
+                       @RequestParam(value = "waiverNumber", required = false) String waiverNumber,
+                       UiUtils uiUtils) {
 
         validate(cons, bindingResult, request);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "module/billing/main/patientServiceBillEdit";
+            pageModel.addAttribute("errors", bindingResult.getAllErrors());
+            return "editPatientServiceBillForBD.page";
         }
         BillingService billingService = Context.getService(BillingService.class);
 
@@ -104,8 +106,8 @@ public class EditPatientServiceBillForBDPageController {
             for (PatientServiceBillItem item : bill.getBillItems()) {
                 item.setVoided(true);
                 item.setVoidedDate(new Date());
-				/*ghanshyam 7-sept-2012 these 5 lines of code written only due to voided item is being updated in "billing_patient_service_bill_item" table
-				  but not being updated in "orders" table */
+                /*ghanshyam 7-sept-2012 these 5 lines of code written only due to voided item is being updated in "billing_patient_service_bill_item" table
+                  but not being updated in "orders" table */
                 Order ord = item.getOrder();
                 if (ord != null) {
                     ord.setVoided(true);
@@ -115,7 +117,9 @@ public class EditPatientServiceBillForBDPageController {
             }
             billingService.savePatientServiceBill(bill);
             //ghanshyam 7-sept-2012 Support #343 [Billing][3.2.7-SNAPSHOT]No Queue to be generated from Old bill
-            return "redirect:/module/billing/patientServiceBillEditForBD.list?patientId=" + patientId;
+            Map<String, Object> redirectParams=new HashMap<String, Object>();
+            redirectParams.put("patientId",patientId);
+            return "redirect:" + uiUtils.pageLink("billingui", "billableServiceBillListForBD", redirectParams);
         }
 
         // void old items and reset amount
@@ -125,7 +129,7 @@ public class EditPatientServiceBillForBDPageController {
             item.setVoidedDate(new Date());
             //ghanshyam-kesav 16-08-2012 Bug #323 [BILLING] When a bill with a lab\radiology order is edited the order is re-sent
             Order ord = item.getOrder();
-			/*ghanshyam 18-08-2012 [Billing - Bug #337] [3.2.7 snap shot][billing(DDU,DDU SDMX,Tanda,mohali)]error in edit bill.
+            /*ghanshyam 18-08-2012 [Billing - Bug #337] [3.2.7 snap shot][billing(DDU,DDU SDMX,Tanda,mohali)]error in edit bill.
 			  the problem was while we are editing the bill of other than lab and radiology.
 			*/
             if (ord != null) {
@@ -149,7 +153,6 @@ public class EditPatientServiceBillForBDPageController {
         BillableService service;
 
         for (int conceptId : cons) {
-
             unitPrice = NumberUtils.createBigDecimal(request.getParameter(conceptId + "_unitPrice"));
             quantity = NumberUtils.createInteger(request.getParameter(conceptId + "_qty"));
             name = request.getParameter(conceptId + "_name");
@@ -177,14 +180,14 @@ public class EditPatientServiceBillForBDPageController {
                     String billType = "mixed";
                     PatientServiceBillItem patientServiceBillItem = billingService
                             .getPatientServiceBillItem(billId, name);
-                    String psbi= patientServiceBillItem.getActualAmount().toString();
+                    String psbi = patientServiceBillItem.getActualAmount().toString();
                     if (psbi.equals("0.00")) {
                         rate = new BigDecimal(0);
                     } else {
                         rate = new BigDecimal(1);
                     }
                     item.setActualAmount(item.getAmount().multiply(rate));
-                }else {
+                } else {
                     String billType = "paid";
                     rate = calculator.getRate(parameters, billType);
                 }
@@ -216,14 +219,14 @@ public class EditPatientServiceBillForBDPageController {
                     String billType = "mixed";
                     PatientServiceBillItem patientServiceBillItem = billingService
                             .getPatientServiceBillItem(billId, name);
-                    String psbi= patientServiceBillItem.getActualAmount().toString();
+                    String psbi = patientServiceBillItem.getActualAmount().toString();
                     if (psbi.equals("0.00")) {
                         rate = new BigDecimal(0);
                     } else {
                         rate = new BigDecimal(1);
                     }
                     item.setActualAmount(item.getAmount().multiply(rate));
-                }else {
+                } else {
                     String billType = "paid";
                     rate = calculator.getRate(parameters, billType);
                 }
@@ -263,16 +266,15 @@ public class EditPatientServiceBillForBDPageController {
         bill.setAmount(totalAmount.getAmount());
         bill.setActualAmount(totalActualAmount);
 		/*added waiver amount */
-        if(waiverAmount != null){
+        if (waiverAmount != null) {
             bill.setWaiverAmount(waiverAmount);
-        }
-        else {
+        } else {
             BigDecimal wavAmt = new BigDecimal(0);
             bill.setWaiverAmount(wavAmt);
         }
 
-        if(waiverNumber != null && waiverNumber !=""){
-            bill.setPatientCategory("Waiver Number - "+waiverNumber);
+        if (waiverNumber != null && waiverNumber != "") {
+            bill.setPatientCategory("Waiver Number - " + waiverNumber);
         }
 
 
@@ -295,15 +297,18 @@ public class EditPatientServiceBillForBDPageController {
 
         bill = billingService.savePatientServiceBill(bill);
         //ghanshyam 7-sept-2012 Support #343 [Billing][3.2.7-SNAPSHOT]No Queue to be generated from Old bill
+        Map<String, Object> redirectParams=new HashMap<String, Object>();
+        redirectParams.put("patientId",patientId);
+        redirectParams.put("billId",billId);
 
-        return "redirect:/module/billing/patientServiceBillEditForBD.list?patientId=" + patientId + "&billId=" + billId;
+        return "redirect:" + uiUtils.pageLink("billingui","billableServiceBillListForBD",redirectParams);
     }
+
     private void validate(Integer[] ids, BindingResult binding, HttpServletRequest request) {
         for (int id : ids) {
             try {
                 Integer.parseInt(request.getParameter(id + "_qty"));
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
                 return;
             }
