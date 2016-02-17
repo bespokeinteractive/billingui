@@ -34,7 +34,7 @@
             var type = this.type, tag = this.tagName.toLowerCase();
             if (tag == 'form')
                 return jQuery(':input',this).clearForm();
-            if (type == 'text' && jQuery(this).attr('id') != 'searchPhrase')
+            if ((type == 'text' || type == 'hidden') && jQuery(this).attr('id') != 'searchPhrase')
                 this.value = '';
             else if (type == 'checkbox' || type == 'radio')
                 this.checked = false;
@@ -54,7 +54,7 @@
         timeoutId: 0,
         showing: false,
         params: "",
-        delayDuration: 1000,
+        delayDuration: 1,
         pageSize: 10,
         beforeSearch: function () {
         },
@@ -107,7 +107,7 @@
                    %>
             row += '<td> ' +
                     '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
-                    <% if (context.authenticatedUser.hasPrivilege('Edit Patients') ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
+                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
                     '</td>';
             <% } else {%>
             row += '<td>' + item.${ it} + '</td>';
@@ -131,7 +131,7 @@
         var age = jQuery("#age").val();
         var ageRange = jQuery("#ageRange").val();
         var patientMaritalStatus = jQuery("#patientMaritalStatus").val();
-        var lastDayOfVisit = jQuery("#lastDayOfVisit-display").val();
+        var lastDayOfVisit = jq('#lastDayOfVisit-field').val() && moment(jq('#lastDayOfVisit-field').val()).format('DD/MM/YYYY');
         var lastVisit = jQuery('#lastVisit').val();
         var phoneNumber = jQuery("#phoneNumber").val();
         var relativeName = jQuery("#relativeName").val();
@@ -171,6 +171,7 @@
 
     function HideDashboard() {
         jQuery('#dashboard').hide();
+        jQuery('#patient-search-form').clearForm();
     }
     function ShowDashboard() {
         jQuery('#dashboard').toggle(500);
