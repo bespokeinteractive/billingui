@@ -67,7 +67,7 @@
     }
 
     function submitBillForm() {
-        jQuery("#action").val("submit");
+//        jQuery("#action").val("submit");
         jQuery("#total").focus();
         var waiverNumber = jQuery("#waiverNumber").val();
         var desc = jQuery("#description").val();
@@ -153,7 +153,7 @@
 <form id="billForm"
       action=""
       method="POST">
-    <input type="hidden" value="" name="action" id="action"/>
+    <input type="hidden" value="none" name="action" id="action"/>
 
     <div class="dashboard clear">
         <div class="info-container">

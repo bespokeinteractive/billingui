@@ -20,6 +20,9 @@
 .hidden {
     display: none;
 }
+.retired{
+    text-decoration: line-through;
+}
 </style>
 <style>
 @media print {
