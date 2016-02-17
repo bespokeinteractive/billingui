@@ -83,10 +83,10 @@ public class EditPatientServiceBillForBDPageController {
                        UiUtils uiUtils) {
 
         validate(cons, bindingResult, request);
-        if (bindingResult.hasErrors()) {
+        /*if (bindingResult.hasErrors()) {
             pageModel.addAttribute("errors", bindingResult.getAllErrors());
             return "editPatientServiceBillForBD.page";
-        }
+        }*/
         BillingService billingService = Context.getService(BillingService.class);
 
         PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
