@@ -20,6 +20,9 @@
 .hidden {
     display: none;
 }
+.retired{
+    text-decoration: line-through;
+}
 </style>
 <style>
 @media print {
@@ -153,17 +156,17 @@
                 <% if (it.actualAmount != null) { %>
                 <% if (it.actualAmount == it.amount) { %>
                 <% if (it.voidedDate != null) { %>
-                <span style="text-decoration: line-through;">${item.amount}</span>
+                <span style="text-decoration: line-through;">${it.amount}</span>
                 <% } else { %>
                 ${it.amount}
                 <% } %>
                 <% } else { %>
 
-                <span style="text-decoration: line-through;">${item.amount}</span>
-                <b>${item.actualAmount}</b>
+                <span style="text-decoration: line-through;">${it.amount}</span>
+                <b>${it.actualAmount}</b>
                 <% } %>
                 <% } else { %>
-                ${item.amount}
+                ${it.amount}
                 <% } %>
             </td>
         </tr>

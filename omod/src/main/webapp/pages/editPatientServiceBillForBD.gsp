@@ -44,9 +44,9 @@
     function updatePrice(incon) {
         var objRegExp = /^ *[0-9]+ *\$/;
         var con = incon.toString();
-        var serqunid = con.concat("servicequantity");
-        var serpriid = con.concat("serviceprice");
-        var unipriid = con.concat("unitprice");
+        var serqunid = con.concat("_qty");
+        var serpriid = con.concat("_price");
+        var unipriid = con.concat("_unitPrice");
 
 //alert(document.getElementById(serqunid).value);
         serqun = jQuery("#" + serqunid).val();
@@ -67,7 +67,7 @@
     }
 
     function submitBillForm() {
-        jQuery("#action").val("submit");
+//        jQuery("#action").val("submit");
         jQuery("#total").focus();
         var waiverNumber = jQuery("#waiverNumber").val();
         var desc = jQuery("#description").val();
@@ -101,7 +101,7 @@
         } else {
             var totalValue = parseInt(jQuery("#total").val());
             var waiver = parseInt(jQuery("#waiverAmountEdit").val());
-            if (totalValue <waiver) {
+            if (totalValue < waiver) {
                 alert("Please enter correct Waiver Amount");
                 return false;
             } else if (isNaN(waiver)) {
@@ -153,7 +153,7 @@
 <form id="billForm"
       action=""
       method="POST">
-    <input type="hidden" value="" name="action" id="action"/>
+    <input type="hidden" value="none" name="action" id="action"/>
 
     <div class="dashboard clear">
         <div class="info-container">
@@ -183,22 +183,24 @@
             <tr align="center">
 
                 <td>${index + 1}<input name='cons' type='hidden' value='${queue.service.conceptId}'></td>
-                <td><input type="text" class="form-textbox" id="${index + 1}service" name="${index + 1}service"
+                <td>
+                    <input type="text" class="form-textbox" id="${queue.service.conceptId}_name" name="${queue.service.conceptId}_name"
                            value="${queue.name}" readOnly="true">
                 </td>
                 <td>
-                    <input type="text" class="form-textbox serquncalc" id="${index + 1}servicequantity"
-                           name="${index + 1}servicequantity" size="7" value="${queue.quantity}"
-                           onkeyup="updatePrice(${index+ 1});"/>
+                    <input id="${queue.service.conceptId}_itemId" name="${queue.service.conceptId}_itemId" value="${queue.patientServiceBillItemId}" type='hidden'/>
+                    <input type="text" class="form-textbox serquncalc" id="${queue.service.conceptId}_qty"
+                           name="${queue.service.conceptId}_qty" size="7" value="${queue.quantity}"
+                           onkeyup="updatePrice(${queue.service.conceptId});"/>
                 </td>
                 <td>
-                    <input type="text" class="form-textbox" id="${index + 1}unitprice" name="${index + 1}unitprice"
+                    <input type="text" class="form-textbox" id="${queue.service.conceptId}_unitPrice" name="${queue.service.conceptId}_unitPrice"
                            size="7"
                            value="${queue.unitPrice}" readOnly="true">
                 </td>
                 <td>
-                    <input type="text" class="form-textbox serpricalc" id="${index + 1}serviceprice"
-                           name="${index + 1}serviceprice"
+                    <input type="text" class="form-textbox serpricalc" id="${queue.service.conceptId}_price"
+                           name="${queue.service.conceptId}_price"
                            size="7" value="${queue.amount}" readOnly="true">
                 </td>
                 <td>

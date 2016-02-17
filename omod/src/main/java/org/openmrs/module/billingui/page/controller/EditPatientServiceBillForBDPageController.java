@@ -1,5 +1,6 @@
 package org.openmrs.module.billingui.page.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +18,6 @@ import org.openmrs.module.hospitalcore.util.Money;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -83,10 +83,10 @@ public class EditPatientServiceBillForBDPageController {
                        UiUtils uiUtils) {
 
         validate(cons, bindingResult, request);
-        if (bindingResult.hasErrors()) {
+        /*if (bindingResult.hasErrors()) {
             pageModel.addAttribute("errors", bindingResult.getAllErrors());
             return "editPatientServiceBillForBD.page";
-        }
+        }*/
         BillingService billingService = Context.getService(BillingService.class);
 
         PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
@@ -97,29 +97,33 @@ public class EditPatientServiceBillForBDPageController {
 
         BillCalculatorForBDService calculator = new BillCalculatorForBDService();
 
-        if (!"".equals(description))
+        if (!"".equals(description)){
             bill.setDescription(description);
+        }
 
-        if ("void".equalsIgnoreCase(action)) {
-            bill.setVoided(true);
-            bill.setVoidedDate(new Date());
-            for (PatientServiceBillItem item : bill.getBillItems()) {
-                item.setVoided(true);
-                item.setVoidedDate(new Date());
+        if(StringUtils.isNotBlank(action)){
+            if(action.equalsIgnoreCase("void")){
+                bill.setVoided(true);
+                bill.setVoidedDate(new Date());
+                for (PatientServiceBillItem item : bill.getBillItems()) {
+                    item.setVoided(true);
+                    item.setVoidedDate(new Date());
                 /*ghanshyam 7-sept-2012 these 5 lines of code written only due to voided item is being updated in "billing_patient_service_bill_item" table
                   but not being updated in "orders" table */
-                Order ord = item.getOrder();
-                if (ord != null) {
-                    ord.setVoided(true);
-                    ord.setDateVoided(new Date());
+                    Order ord = item.getOrder();
+                    if (ord != null) {
+                        ord.setVoided(true);
+                        ord.setDateVoided(new Date());
+                    }
+                    item.setOrder(ord);
                 }
-                item.setOrder(ord);
+                billingService.savePatientServiceBill(bill);
+                //ghanshyam 7-sept-2012 Support #343 [Billing][3.2.7-SNAPSHOT]No Queue to be generated from Old bill
+                Map<String, Object> redirectParams=new HashMap<String, Object>();
+                redirectParams.put("patientId",patientId);
+                redirectParams.put("billId",billId);
+                return "redirect:" + uiUtils.pageLink("billingui", "billableServiceBillListForBD", redirectParams);
             }
-            billingService.savePatientServiceBill(bill);
-            //ghanshyam 7-sept-2012 Support #343 [Billing][3.2.7-SNAPSHOT]No Queue to be generated from Old bill
-            Map<String, Object> redirectParams=new HashMap<String, Object>();
-            redirectParams.put("patientId",patientId);
-            return "redirect:" + uiUtils.pageLink("billingui", "billableServiceBillListForBD", redirectParams);
         }
 
         // void old items and reset amount
