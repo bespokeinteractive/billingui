@@ -34,6 +34,7 @@
             var type = this.type, tag = this.tagName.toLowerCase();
             if (tag == 'form')
                 return jQuery(':input',this).clearForm();
+
             if ((type == 'text' || type == 'hidden') && jQuery(this).attr('id') != 'searchPhrase')
                 this.value = '';
             else if (type == 'checkbox' || type == 'radio')
