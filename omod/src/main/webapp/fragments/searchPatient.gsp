@@ -179,7 +179,7 @@
 </script>
 
 <form onsubmit="return false" id="patient-search-form" method="get">
-    <input autocomplete="off" placeholder="Search by ID or Name" id="searchPhrase"
+    <input autocomplete="off" placeholder="Search by ID,Name or BillId" id="searchPhrase"
            style="float:left; width:70%; padding:6px 10px -1px;" onkeyup="ADVSEARCH.startSearch(event);">
     <img id="ajaxLoader" style="display:none; float:left; margin: 3px -4%;"
          src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
