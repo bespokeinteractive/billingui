@@ -183,6 +183,7 @@
 			 box-shadow: none!important;
 			 box-sizing: border-box!important;
 			 height: 32px;
+
 		 }
 		 
 		.newdtp{

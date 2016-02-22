@@ -1,12 +1,15 @@
 package org.openmrs.module.billingui.fragment.controller;
 
 
+import org.apache.commons.chain.web.servlet.PathInfoMapper;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.billingui.PatientWrapper;
+import org.openmrs.module.hospitalcore.BillingService;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.matcher.*;
+import org.openmrs.module.hospitalcore.model.PatientServiceBill;
 import org.openmrs.module.hospitalcore.util.HospitalCoreConstants;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -55,9 +58,26 @@ public class SearchPatientFragmentController {
 
         HospitalCoreService hcs = (HospitalCoreService) Context
                 .getService(HospitalCoreService.class);
-        List<Patient> patients = hcs.searchPatient(phrase, gender, age, ageRange, lastDayOfVisit, lastVisitRange, relativeName
-                , maritalStatus, phoneNumber, nationalId, fileNumber
-        );
+        BillingService billingService = (BillingService)Context.getService(BillingService.class);
+
+        List<Patient> patients = new ArrayList<Patient>();
+
+        int billId;
+
+        try {
+            billId=Integer.parseInt(phrase);
+            PatientServiceBill patientSerciceBill = billingService.getPatientServiceBillById(billId);
+            Patient patient1 = patientSerciceBill.getPatient();
+            patients.add(patient1);
+        }
+        catch (NumberFormatException e) {
+            patients = hcs.searchPatient(phrase, gender, age, ageRange, lastDayOfVisit, lastVisitRange, relativeName
+                    , maritalStatus, phoneNumber, nationalId, fileNumber
+            );
+            e.printStackTrace();
+        }
+
+
         List<PatientWrapper> wrapperList = patientsWithLastVisit(patients);
 
         return SimpleObject.fromCollection(wrapperList, uiUtils, "patientId", "wrapperIdentifier", "names", "age", "gender", "formartedVisitDate");
