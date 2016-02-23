@@ -30,6 +30,7 @@ public class BillableServiceBillAddPageController {
         Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
         for (BillableService ser : services) {
             mapServices.put(ser.getConceptId(), ser);
+            System.out.println(ser.getName());
         }
         Integer conceptId = Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
                 "billing.rootServiceConceptId"));

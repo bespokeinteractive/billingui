@@ -48,7 +48,7 @@ public class AddPatientServiceBillForBDPageController {
         if(StringUtils.isNotBlank(billType)){
             params.put("billType",billType);
         }
-        if(encounterId>0){
+        if(encounterId !=null){
             params.put("encounterId",encounterId);
         }
 
