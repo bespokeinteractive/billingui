@@ -1,31 +1,22 @@
-
 <%
     def props = ["wrapperIdentifier", "names", "age", "gender", "formartedVisitDate", "action"]
 %>
+
 <script>
 
     jQuery(document).ready(function () {
-
-
         jq('select').bind('change keyup', function() {
             ADVSEARCH.delay();
         });
-
         jq('input').keydown(function (e) {
             var key = e.keyCode || e.which;
             if ((key == 9 || key == 13) && jq(this).attr('id') != 'searchPhrase') {
                 ADVSEARCH.delay();
             }
         });
-
         jq('#lastDayOfVisit-display').on("change", function (dateText) {
-			ADVSEARCH.delay();
+            ADVSEARCH.delay();
         });
-
-
-
-
-
         //end of ready method
     });
 
@@ -34,7 +25,6 @@
             var type = this.type, tag = this.tagName.toLowerCase();
             if (tag == 'form')
                 return jQuery(':input',this).clearForm();
-
             if ((type == 'text' || type == 'hidden') && jQuery(this).attr('id') != 'searchPhrase')
                 this.value = '';
             else if (type == 'checkbox' || type == 'radio')
@@ -49,7 +39,6 @@
         res=res.replace("]","");
         return res;
     }
-
 
     ADVSEARCH = {
         timeoutId: 0,
@@ -93,36 +82,6 @@
         }
     };
 
-    //update the queue table
-    function updateQueueTable(data) {
-        var jq = jQuery;
-        jq('#patient-search-results-table > tbody > tr').remove();
-        var tbody = jq('#patient-search-results-table > tbody');
-        for (index in data) {
-            var item = data[index];
-            var row = '<tr>';
-            <% props.each {
-               if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("registration", "revisitPatient");
-                  def pageLinkEdit = ui.pageLink("registration", "editPatient");
-                   %>
-            row += '<td> ' +
-                    '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
-                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
-                    '</td>';
-            <% } else {%>
-            row += '<td>' + item.${ it} + '</td>';
-            row=strReplace(row);
-            <% }
-               } %>
-            row += '</tr>';
-            tbody.append(row);
-        }
-
-        if (jq('#patient-search-results-table tr').length <= 1){
-            tbody.append('<tr align="center"><td colspan="6">No patients found</td></tr>');
-        }
-    }
     // get queue
     function getPatientQueue(currentPage) {
         this.currentPage = currentPage;
@@ -161,7 +120,7 @@
                 jQuery("#ajaxLoader").hide();
                 console.log(data);
                 pData = data;
-                updateQueueTable(data);
+                updateSystemQueueTable(data);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert(xhr);
@@ -169,22 +128,59 @@
             }
         });
     }
-
     function HideDashboard() {
         jQuery('#dashboard').hide();
-        jQuery('#patient-search-form').clearForm();
+        jQuery('#patientSystemSearchForm').clearForm();
     }
     function ShowDashboard() {
         jQuery('#dashboard').toggle(500);
-        jQuery('#patient-search-form').clearForm();
+        jQuery('#patientSystemSearchForm').clearForm();
     }
+
+
+
+    //update the queue table
+    function updateSystemQueueTable(data) {
+        var jq = jQuery;
+        jq('#patient-search-results-table > tbody > tr').remove();
+        var tbody = jq('#patient-search-results-table > tbody');
+        for (index in data) {
+            var item = data[index];
+            var row = '<tr>';
+            <% props.each {
+               if(it == props.last()){
+                  def pageLinkRevisit = ui.pageLink("registration", "revisitPatient");
+                  def pageLinkEdit = ui.pageLink("registration", "editPatient");
+                   %>
+            row += '<td> ' +
+                    '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
+                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
+                    '</td>';
+            <% } else {%>
+            row += '<td>' + item.${ it} + '</td>';
+            row=strReplace(row);
+            <% }
+               } %>
+            row += '</tr>';
+            tbody.append(row);
+        }
+        if (jq('#patient-search-results-table tr').length <= 1){
+            tbody.append('<tr align="center"><td colspan="6">No patients found</td></tr>');
+        }
+    }
+
+
+
+
+
+
 </script>
 
-<form onsubmit="return false" id="patient-search-form" method="get">
+<form onsubmit="return false" id="patientSystemSearchForm" method="get">
     <input autocomplete="off" placeholder="Search by ID,Name or BillId" id="searchPhrase"
            style="float:left; width:70%; padding:6px 10px -1px;" onkeyup="ADVSEARCH.startSearch(event);">
     <img id="ajaxLoader" style="display:none; float:left; margin: 3px -4%;"
-         src="${ui.resourceLink("registration", "images/ajax-loader.gif")}"/>
+         src="${ui.resourceLink("billingui", "images/ajax-loader.gif")}"/>
 
     <div id="advanced" class="advanced" onclick="ShowDashboard();"><i class="icon-filter"></i>ADVANCED SEARCH
     </div>
@@ -216,8 +212,8 @@
                             </div>
 
                             <div class="col4">
-                                <label for="lastDayOfVisit">Last Visit</label>
-								${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'lastDayOfVisit', id: 'lastDayOfVisit', label: '', useTime: false, defaultToday: false, class: ['newdtp'], endDate: new Date()])}
+                                <label>Last Visit</label>
+                                ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'lastDayOfVisit', id: 'lastDayOfVisit', label: '', useTime: false, defaultToday: false, class: ['newdtp'], endDate: new Date()])}
                             </div>
 
                             <div class="col4 last">
@@ -345,3 +341,4 @@
 
     </div>
 </div>
+

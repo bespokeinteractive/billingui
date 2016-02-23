@@ -285,6 +285,7 @@
     }
     </style>
     <input type="hidden" id="contextPath" value="openmrs"/>
+    <img class="donotprint" src="${ui.resourceLink("billingui", "images/HEADEROPDSLIP.jpg")}" width="981" height="212"/>
     <center><img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS"
                  src="${ui.resourceLink("billingui", "images/kenya_logo.bmp")}"><center>
         <table class="spacer" style="margin-left: 30px;">
@@ -431,13 +432,14 @@
         newWin.close();
     }
     function printDiv2() {
-        var printDiv = jq("#printDiv").html();
-        var printWindow = window.open('', '', 'height=400,width=800');
-        printWindow.document.write('<html><head><title>Patient Information</title>');
-        printWindow.document.write(printDiv);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
+        var printer = window.open('', '', 'width=300,height=300');
+        printer.document.open("text/html");
+        printer.document.write(document.getElementById('printDiv').innerHTML);
+        printer.document.close();
+        printer.window.close();
+        printer.print();
+        jQuery("#billForm").submit();
+        //alert("Printing ...");
     }
 </script>
 
