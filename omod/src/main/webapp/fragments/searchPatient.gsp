@@ -149,12 +149,13 @@
             var row = '<tr>';
             <% props.each {
                if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("registration", "revisitPatient");
-                  def pageLinkEdit = ui.pageLink("registration", "editPatient");
+                  def pageLinkRevisit = ui.pageLink("", "");
+                  def pageLinkEdit = ui.pageLink("", "");
                    %>
             row += '<td> ' +
-                    '<a title="Patient Revisit" href="${pageLinkRevisit}?patientId=' + item.patientId + '&revisit=true"><i class="icon-user-md small" ></i></a>' +
-                    <% if (context.authenticatedUser.hasPrivilege("Edit Patients") ) { %>'<a title="Edit Patient" href="${pageLinkEdit}?patientId=' + item.patientId + '"><i class="icon-edit small" ></i></a>'<% } %> +
+                    '<a><i class="icon-user-md small" ></i></a>' +
+                    '<a><i class="icon-edit small" ></i></a>' +
+
                     '</td>';
             <% } else {%>
             row += '<td>' + item.${ it} + '</td>';
