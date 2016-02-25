@@ -1,146 +1,16 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [title: "Cashier Module"])
-    ui.includeJavascript("billingui", "moment.js")
+    
+	ui.includeCss("billingui", "jquery.dataTables.min.css")
     ui.includeCss("registration", "onepcssgrid.css")
+	
+    ui.includeJavascript("billingui", "moment.js")
     ui.includeJavascript("billingui", "jquery.dataTables.min.js")
+	
     def props = ["identifier", "fullname", "age", "gender", "patientId", "action"]
 %>
 <head>
-    <style>
-    body {
-        margin-top: 20px;
-    }
-
-    .col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
-        color: #555;
-        text-align: left;
-    }
-
-    form input,
-    form select {
-        margin: 0px;
-        display: inline-block;
-        min-width: 50px;
-        padding: 2px 10px;
-        height: 32px !important;
-    }
-
-    .info-header span {
-        cursor: pointer;
-        display: inline-block;
-        float: right;
-        margin-top: -2px;
-        padding-right: 5px;
-    }
-
-    .dashboard .info-section {
-        margin: 2px 5px 5px;
-    }
-
-    .toast-item {
-        background-color: #222;
-    }
-
-    @media all and (max-width: 768px) {
-        .onerow {
-            margin: 0 0 100px;
-        }
-    }
-
-    form .advanced {
-        background: #363463 none repeat scroll 0 0;
-        border-color: #dddddd;
-        border-style: solid;
-        border-width: 1px;
-        color: #fff;
-        cursor: pointer;
-        float: right;
-        padding: 6px 0;
-        text-align: center;
-        width: 27%;
-    }
-
-    form .advanced i {
-        font-size: 22px;
-    }
-
-    .col4 label {
-        width: 110px;
-        display: inline-block;
-    }
-
-    .col4 input[type=text] {
-        display: inline-block;
-        padding: 4px 10px;
-    }
-
-    .col4 select {
-        padding: 4px 10px;
-    }
-
-    form select {
-        min-width: 50px;
-        display: inline-block;
-    }
-
-    .addon {
-        display: inline-block;
-        float: right;
-        margin: 5px 0 0 140px;
-        position: absolute;
-    }
-
-    .identifiers span {
-        border-radius: 50px;
-        color: white;
-        display: inline;
-        font-size: 0.8em;
-        letter-spacing: 1px;
-        margin: 5px;
-    }
-
-    table.dataTable thead th, table.dataTable thead td {
-        padding: 5px 10px;
-    }
-
-    form input:focus {
-        border: 1px solid #00f !important;
-    }
-
-    input[type="text"], select {
-        border: 1px solid #aaa;
-        border-radius: 2px !important;
-        box-shadow: none !important;
-        box-sizing: border-box !important;
-        height: 32px;
-    }
-
-    .newdtp {
-        width: 166px;
-    }
-
-    #lastDayOfVisit label {
-        display: none;
-    }
-
-    #lastDayOfVisit input {
-        width: 166px;
-    }
-
-    .add-on {
-        float: right;
-        left: auto;
-        margin-left: -29px;
-        margin-top: 5px;
-        position: absolute;
-    }
-
-    .ui-widget-content a {
-        color: #007fff;
-    }
-    </style>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
-    <script>
+	<script>
         currentPage = 1;
         var pData;
         var jq = jQuery;
@@ -217,253 +87,464 @@
 
         });
     </script>
+
+    <style>
+		body {
+			margin-top: 20px;
+		}
+
+		.col1, .col2, .col3, .col4, .col5, .col6, .col7, .col8, .col9, .col10, .col11, .col12 {
+			color: #555;
+			text-align: left;
+		}
+
+		form input,
+		form select {
+			margin: 0px;
+			display: inline-block;
+			min-width: 50px;
+			padding: 2px 10px;
+			height: 32px !important;
+		}
+
+		.info-header span {
+			cursor: pointer;
+			display: inline-block;
+			float: right;
+			margin-top: -2px;
+			padding-right: 5px;
+		}
+
+		.dashboard .info-section {
+			margin: 2px 5px 5px;
+		}
+
+		.toast-item {
+			background-color: #222;
+		}
+
+		@media all and (max-width: 768px) {
+			.onerow {
+				margin: 0 0 100px;
+			}
+		}
+
+		form .advanced {
+			background: #363463 none repeat scroll 0 0;
+			border-color: #dddddd;
+			border-style: solid;
+			border-width: 1px;
+			color: #fff;
+			cursor: pointer;
+			float: right;
+			padding: 6px 0;
+			text-align: center;
+			width: 27%;
+		}
+
+		form .advanced i {
+			font-size: 22px;
+		}
+
+		.col4 label {
+			width: 110px;
+			display: inline-block;
+		}
+
+		.col4 input[type=text] {
+			display: inline-block;
+			padding: 4px 10px;
+		}
+
+		.col4 select {
+			padding: 4px 10px;
+		}
+
+		form select {
+			min-width: 50px;
+			display: inline-block;
+		}
+
+		.addon {
+			display: inline-block;
+			float: right;
+			margin: 5px 0 0 140px;
+			position: absolute;
+		}
+
+		.identifiers span {
+			border-radius: 50px;
+			color: white;
+			display: inline;
+			font-size: 0.8em;
+			letter-spacing: 1px;
+			margin: 5px;
+		}
+
+		table.dataTable thead th, table.dataTable thead td {
+			padding: 5px 10px;
+		}
+
+		form input:focus {
+			border: 1px solid #00f !important;
+		}
+
+		input[type="text"], select {
+			border: 1px solid #aaa;
+			border-radius: 2px !important;
+			box-shadow: none !important;
+			box-sizing: border-box !important;
+			height: 32px;
+		}
+
+		.newdtp {
+			width: 166px;
+		}
+
+		#lastDayOfVisit label {
+			display: none;
+		}
+
+		#lastDayOfVisit input {
+			width: 166px;
+		}
+		.add-on {
+			float: right;
+			left: auto;
+			margin-left: -29px;
+			margin-top: 5px;
+			position: absolute;
+		}
+
+		.ui-widget-content a {
+			color: #007fff;
+		}
+		#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+			text-decoration: none;
+		}
+		.new-patient-header .identifiers {
+			margin-top: 5px;
+		}
+		.name {
+			color: #f26522;
+		}
+		#inline-tabs {
+			background: #f9f9f9 none repeat scroll 0 0;
+		}
+		.formfactor{
+			background: #f3f3f3 none repeat scroll 0 0;
+			border: 1px solid #ddd;
+			padding: 5px 10px;
+			text-align: left;
+			width: auto;
+		}
+		.formfactor .first-col{
+			background: #fff none repeat scroll 0 0;
+			display: inline-block;
+			width: 300px;
+			overflow: hidden;
+		}
+		.formfactor .second-col{
+			background: #fff none repeat scroll 0 0;
+			display: inline-block;
+			float: right;
+			width: 600px;
+			overflow: hidden;
+		}
+    </style>
 </head>
 
 <body>
+	<div class="clear"></div>
+	<div class="container">
+		<div class="example">
+			<ul id="breadcrumbs">
+				<li>
+					<a href="${ui.pageLink('referenceapplication','home')}">
+						<i class="icon-home small"></i></a>
+				</li>
+				
+				<li>
+					<i class="icon-chevron-right link"></i>
+					<a>Billing UI</a>
+				</li>
+				
+				<li>
+					<i class="icon-chevron-right link"></i>
+					Cashier Module
+				</li>
+			</ul>
+		</div>
+		
+		<div class="patient-header new-patient-header">
+			<div class="demographics">
+				<h1 class="name" style="border-bottom: 1px solid #ddd;">
+					<span>LABORATORY DASHBOARD &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+				</h1>
+			</div>
 
-<div id="tabs">
-    <ul>
-        <li><a href="#tabs-1">OPD Queue</a></li>
-        <li><a href="#tabs-2">IPD Queue</a></li>
-        <li><a href="#tabs-3">Billing Ambulance</a></li>
-        <li><a href="#tabs-4">Billing Tender</a></li>
-        <li><a href="#">Billing Misc Service</a></li>
-        <li><a href="#tabs-5">Search Patient</a></li>
-    </ul>
+			<div class="identifiers">
+				<em>Current Time:</em>
+				<span>${currentTime}</span>
+			</div>
 
-    <div id="tabs-1">
-        <p>
+			<div id="tabs" style="margin-top: 40px!important;">
+				<ul id="inline-tabs">
+					<li><a href="#tabs-1">OPD Queue</a></li>
+					<li><a href="#tabs-2">IPD Queue</a></li>
+					<li><a href="#tabs-3">Billing Ambulance</a></li>
+					<li><a href="#tabs-4">Billing Tender</a></li>
+					<li><a href="#">Billing Misc Service</a></li>
+					<li><a href="#tabs-5">Search Patient</a></li>
+				</ul>
 
-        <h3>Outdoor Patient Queue</h3>
-        <article style="margin-bottom: 20px;">
-            <table>
-                <thead>
-                <tr>
-                    <th>Get Queue</th>
-                </tr>
-                </thead>
-            </table>
-        </article>
+				<div id="tabs-1">
+					<p>
 
-        <p class="left">
-            ${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'datetime', id: 'datetime', label: 'Date', useTime: false, defaultToday: true])}
-        </p>
-        <label for="searchKey">Search patient in Queue:</label>
-        <input id="searchKey" type="text" name="searchKey" placeholder="Enter Patient Name/ID:">
+					<h2>Outdoor Patient Queue</h2>
+					
+					<div class="formfactor onerow">
+						<div class="first-col">DATE FIELD HERE</div>
+						<div class="second-col">SEARCH field HERE</div>
+					
+					</div>
+					
+					
+					
+					
+					
+					
 
-        <div>
-            <ul style=" margin-top: 5px;margin-left: 39px;margin-bottom: 10px;" class="grid">
-                <li>
-                    <a class="button confirm" id="getOpdPatients">
-                        Get Patients
-                    </a>
-                </li>
-            </ul>
-            <section>
-                <div>
-                    <table cellpadding="5" cellspacing="0" width="100%" id="queueList">
-                        <thead>
-                        <tr align="center">
-                            <th>Patient ID</th>
-                            <th>Given Name</th>
-                            <th>Age</th>
-                            <th>Gender</th>
-                            <th>Patient ID</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+					<p class="left">
+						${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'datetime', id: 'datetime', label: 'Date', useTime: false, defaultToday: true])}
+					</p>
+					<label for="searchKey">Search patient in Queue:</label>
+					<input id="searchKey" type="text" name="searchKey" placeholder="Enter Patient Name/ID:">
 
-                        <tr align="center">
-                            <td colspan="6">No patient found</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+					<div>
+						<ul style=" margin-top: 5px;margin-left: 39px;margin-bottom: 10px;" class="grid">
+							<li>
+								<a class="button confirm" id="getOpdPatients">
+									Get Patients
+								</a>
+							</li>
+						</ul>
+						<section>
+							<div>
+								<table cellpadding="5" cellspacing="0" width="100%" id="queueList">
+									<thead>
+									<tr align="center">
+										<th>Patient ID</th>
+										<th>Given Name</th>
+										<th>Age</th>
+										<th>Gender</th>
+										<th>Patient ID</th>
+										<th>Action</th>
+									</tr>
+									</thead>
+									<tbody>
 
-            <div id="selection">
-                Show
-                <select name="sizeSelector" id="sizeSelector" onchange="getBillingQueue(1)">
-                    <option value="10" id="1">10</option>
-                    <option value="20" id="2" selected>20</option>
-                    <option value="50" id="3">50</option>
-                    <option value="100" id="4">100</option>
-                    <option value="150" id="5">150</option>
-                </select>
-                entries
-            </div>
-        </div>
-    </div>
+									<tr align="center">
+										<td colspan="6">No patient found</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
 
-    <div id="tabs-2">
-        <p>
+						<div id="selection">
+							Show
+							<select name="sizeSelector" id="sizeSelector" onchange="getBillingQueue(1)">
+								<option value="10" id="1">10</option>
+								<option value="20" id="2" selected>20</option>
+								<option value="50" id="3">50</option>
+								<option value="100" id="4">100</option>
+								<option value="150" id="5">150</option>
+							</select>
+							entries
+						</div>
+					</div>
+				</div>
 
-        <h3>Inpatient Patient Queue</h3>
-        <article id="tables" style="margin-bottom: 15px;">
-            <table>
-                <thead>
-                <tr>
-                    <th>Get Queue</th>
-                </tr>
-                </thead>
-            </table>
-        </article>
-        <label for="username">Search patient in Queue:</label>
-        <input id="username" type="text" name="username" placeholder="Enter Patient Name/ID:">
+				<div id="tabs-2">
+					<p>
 
-        <div>
-            <ul style=" margin-top: 3px; margin-bottom: 10px;margin-left: 1px;" class="grid">
-                <li>
-                    <a class="button confirm" href="#">
-                        Get Patients
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <section>
-            <div>
-                <table cellpadding="5" cellspacing="0" width="100%" id="queueList2">
-                    <thead>
-                    <tr align="center">
-                        <th>S.No</th>
-                        <th>Admission Date</th>
-                        <th>Patient ID</th>
-                        <th>Name</th>
-                        <th>Age</th>
-                        <th>Admission Ward</th>
-                        <th>Select Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr align="center">
-                        <td>S.No</td>
-                        <td>Admission Date</td>
-                        <td>Patient ID</td>
-                        <td>Name</td>
-                        <td>Age</td>
-                        <td>Admission Ward</td>
+					<h3>Inpatient Patient Queue</h3>
+					<article id="tables" style="margin-bottom: 15px;">
+						<table>
+							<thead>
+							<tr>
+								<th>Get Queue</th>
+							</tr>
+							</thead>
+						</table>
+					</article>
+					<label for="username">Search patient in Queue:</label>
+					<input id="username" type="text" name="username" placeholder="Enter Patient Name/ID:">
 
-                        <td><button class="button confirm">Add Bill</button>
-                            <button class="button confirm">View Bill</button>
-                        </td>
-                    </tr>
-                    <tr align="center">
-                        <td colspan="7">No patient found</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
+					<div>
+						<ul style=" margin-top: 3px; margin-bottom: 10px;margin-left: 1px;" class="grid">
+							<li>
+								<a class="button confirm" href="#">
+									Get Patients
+								</a>
+							</li>
+						</ul>
+					</div>
+					<section>
+						<div>
+							<table cellpadding="5" cellspacing="0" width="100%" id="queueList2">
+								<thead>
+								<tr align="center">
+									<th>S.No</th>
+									<th>Admission Date</th>
+									<th>Patient ID</th>
+									<th>Name</th>
+									<th>Age</th>
+									<th>Admission Ward</th>
+									<th>Select Action</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr align="center">
+									<td>S.No</td>
+									<td>Admission Date</td>
+									<td>Patient ID</td>
+									<td>Name</td>
+									<td>Age</td>
+									<td>Admission Ward</td>
 
-    <div id="tabs-3">
-        <div>
-            <ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
-                <li>
-                    <a class="button confirm" href="#">
-                        Add New Driver
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <article id="tables3" style="margin-bottom: 10px;">
-            <table>
-                <thead>
-                <tr>
-                    <th>Search Driver</th>
-                </tr>
-                </thead>
-            </table>
-        </article>
-        <label for="username3">Enter Driver's Name:</label>
-        <input id="username3" type="text" name="username" placeholder="Name:">
+									<td><button class="button confirm">Add Bill</button>
+										<button class="button confirm">View Bill</button>
+									</td>
+								</tr>
+								<tr align="center">
+									<td colspan="7">No patient found</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
 
-        <div>
-            <ul style=" margin-top: 10px; margin-bottom: 15px;margin-left: 1px;" class="grid">
-                <li>
-                    <button class="button confirm">Search</button>
-                    <button class="button confirm">List all</button>
-                </li>
-            </ul>
-        </div>
-        <section>
-            <div>
-                <table cellpadding="5" cellspacing="0" width="100%" id="queueList3">
-                    <thead>
-                    <tr align="center">
-                        <th>Driver Name</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr align="center">
-                        <td>Name</td>
-                        <td>Description</td>
-                    </tr>
-                    <tr align="left">
-                        <td colspan="7">No Result</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
+				<div id="tabs-3">
+					<div>
+						<ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
+							<li>
+								<a class="button confirm" href="#">
+									Add New Driver
+								</a>
+							</li>
+						</ul>
+					</div>
+					<article id="tables3" style="margin-bottom: 10px;">
+						<table>
+							<thead>
+							<tr>
+								<th>Search Driver</th>
+							</tr>
+							</thead>
+						</table>
+					</article>
+					<label for="username3">Enter Driver's Name:</label>
+					<input id="username3" type="text" name="username" placeholder="Name:">
 
-    <div id="tabs-4">
-        <div>
-            <ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
-                <li>
-                    <a class="button confirm" href="#">
-                        Add New Company
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <article id="tables4" style="margin-bottom: 10px;">
-            <table>
-                <thead>
-                <tr>
-                    <th>Search Company</th>
-                </tr>
-                </thead>
-            </table>
-        </article>
-        <label for="username4">Enter Company's Name:</label>
-        <input id="username4" type="text" name="username" placeholder="Name:">
+					<div>
+						<ul style=" margin-top: 10px; margin-bottom: 15px;margin-left: 1px;" class="grid">
+							<li>
+								<button class="button confirm">Search</button>
+								<button class="button confirm">List all</button>
+							</li>
+						</ul>
+					</div>
+					<section>
+						<div>
+							<table cellpadding="5" cellspacing="0" width="100%" id="queueList3">
+								<thead>
+								<tr align="center">
+									<th>Driver Name</th>
+									<th>Description</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr align="center">
+									<td>Name</td>
+									<td>Description</td>
+								</tr>
+								<tr align="left">
+									<td colspan="7">No Result</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
 
-        <div>
-            <ul style=" margin-top: 10px; margin-bottom: 15px;margin-left: 1px;" class="grid">
-                <li>
-                    <button class="button confirm">Search</button>
-                    <button class="button confirm">List all</button>
-                </li>
-            </ul>
-        </div>
-        <section>
-            <div>
-                <table cellpadding="5" cellspacing="0" width="100%" id="queueList4">
-                    <thead>
-                    <tr align="center">
-                        <th>Company Name</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr align="center">
-                        <td>Name</td>
-                        <td>Description</td>
-                    </tr>
-                    <tr align="left">
-                        <td colspan="7">No Result</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
+				<div id="tabs-4">
+					<div>
+						<ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
+							<li>
+								<a class="button confirm" href="#">
+									Add New Company
+								</a>
+							</li>
+						</ul>
+					</div>
+					<article id="tables4" style="margin-bottom: 10px;">
+						<table>
+							<thead>
+							<tr>
+								<th>Search Company</th>
+							</tr>
+							</thead>
+						</table>
+					</article>
+					<label for="username4">Enter Company's Name:</label>
+					<input id="username4" type="text" name="username" placeholder="Name:">
 
-    <div id="tabs-5">
-        ${ui.includeFragment("billingui", "searchPatient")}
-    </div>
-</div>
+					<div>
+						<ul style=" margin-top: 10px; margin-bottom: 15px;margin-left: 1px;" class="grid">
+							<li>
+								<button class="button confirm">Search</button>
+								<button class="button confirm">List all</button>
+							</li>
+						</ul>
+					</div>
+					<section>
+						<div>
+							<table cellpadding="5" cellspacing="0" width="100%" id="queueList4">
+								<thead>
+								<tr align="center">
+									<th>Company Name</th>
+									<th>Description</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr align="center">
+									<td>Name</td>
+									<td>Description</td>
+								</tr>
+								<tr align="left">
+									<td colspan="7">No Result</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+
+				<div id="tabs-5">
+					${ui.includeFragment("billingui", "searchPatient")}
+				</div>
+			</div>			
+
+			
+		
+		
+		
+		</div>
+	</div>
+
+
+
+

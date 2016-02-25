@@ -15,6 +15,7 @@ public class BillingQueuePageController {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String dateStr = sdf.format(new Date());
         pageModel.addAttribute("currentDate", dateStr);
+        pageModel.addAttribute("currentTime", new Date());
     }
 
 }
