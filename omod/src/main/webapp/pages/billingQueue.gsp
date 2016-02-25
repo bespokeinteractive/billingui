@@ -234,22 +234,28 @@
 		.formfactor{
 			background: #f3f3f3 none repeat scroll 0 0;
 			border: 1px solid #ddd;
+			margin-bottom: 5px;
 			padding: 5px 10px;
 			text-align: left;
 			width: auto;
 		}
 		.formfactor .first-col{
-			background: #fff none repeat scroll 0 0;
 			display: inline-block;
 			width: 300px;
 			overflow: hidden;
 		}
 		.formfactor .second-col{
-			background: #fff none repeat scroll 0 0;
 			display: inline-block;
 			float: right;
 			width: 600px;
 			overflow: hidden;
+		}
+		#datetime label{
+			display: none;
+		}
+		.formfactor .first-col input,
+		.formfactor .second-col input{
+			width: 100%;
 		}
     </style>
 </head>
@@ -301,12 +307,22 @@
 				<div id="tabs-1">
 					<p>
 
-					<h2>Outdoor Patient Queue</h2>
+					<h2 style="display: inline-block;">Outdoor Patient Queue</h2>
+					
+					<a class="button confirm" id="getOpdPatients" style="float: right;">
+						Get Patients
+					</a>
 					
 					<div class="formfactor onerow">
-						<div class="first-col">DATE FIELD HERE</div>
-						<div class="second-col">SEARCH field HERE</div>
-					
+						<div class="first-col">
+							<label for="datetime-display"> Date </label><br/>
+							${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'datetime', id: 'datetime', label: 'Date', useTime: false, defaultToday: true])}
+						</div>
+						
+						<div class="second-col">
+							<label for="searchKey">Search patient in Queue:</label><br/>
+							<input id="searchKey" type="text" name="searchKey" placeholder="Enter Patient Name/ID:">
+						</div>
 					</div>
 					
 					
@@ -316,19 +332,12 @@
 					
 
 					<p class="left">
-						${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'datetime', id: 'datetime', label: 'Date', useTime: false, defaultToday: true])}
+						
 					</p>
-					<label for="searchKey">Search patient in Queue:</label>
-					<input id="searchKey" type="text" name="searchKey" placeholder="Enter Patient Name/ID:">
+					
+					
 
 					<div>
-						<ul style=" margin-top: 5px;margin-left: 39px;margin-bottom: 10px;" class="grid">
-							<li>
-								<a class="button confirm" id="getOpdPatients">
-									Get Patients
-								</a>
-							</li>
-						</ul>
 						<section>
 							<div>
 								<table cellpadding="5" cellspacing="0" width="100%" id="queueList">
