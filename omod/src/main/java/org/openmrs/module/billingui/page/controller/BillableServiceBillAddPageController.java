@@ -27,6 +27,7 @@ public class BillableServiceBillAddPageController {
                     @RequestParam(value = "billType", required = false) String billType,
                     @RequestParam(value = "encounterId", required = false) Integer encounterId,
                     @RequestParam(value = "typeOfPatient", required = false) String typeOfPatient,
+                    @RequestParam(value = "lastBillId", required = false) String lastBillId,
                     UiUtils uiUtils) {
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
@@ -55,6 +56,7 @@ public class BillableServiceBillAddPageController {
         pageModel.addAttribute("currentDate",new Date());
         pageModel.addAttribute("category", patient.getAttribute(14));
         pageModel.addAttribute("fileNumber", patient.getAttribute(43));
+        pageModel.addAttribute("lastBillId",lastBillId);
 
     }
 }

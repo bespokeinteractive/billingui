@@ -26,6 +26,7 @@ public class AddPatientServiceBillForBDPageController {
                       @RequestParam(value = "billType", required = false) String billType,
                       @RequestParam(value = "encounterId", required = false) Integer encounterId,
                       @RequestParam(value = "typeOfPatient", required = false) String typeOfPatient,
+                      @RequestParam(value = "lastBillId", required = false) String lastBillId,
                       UiUtils uiUtils) {
         BillingService billingService = Context.getService(BillingService.class);
         List<BillableService> services = billingService.getAllServices();
@@ -47,6 +48,9 @@ public class AddPatientServiceBillForBDPageController {
         }
         if(StringUtils.isNotBlank(billType)){
             params.put("billType",billType);
+        }
+        if(StringUtils.isNotBlank(lastBillId)){
+            params.put("lastBillId",lastBillId);
         }
         if(encounterId !=null){
             params.put("encounterId",encounterId);

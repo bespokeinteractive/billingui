@@ -61,7 +61,6 @@
 	}
 </style>
 
-
 <div class="clear"></div>
 
 <div class="container">
@@ -140,7 +139,7 @@
             <tr align="center">
                 <td>${queue.opdOrderId}</td>
                 <td><a class="button task"
-                       href="${ui.pageLink("billingui", "procedureInvestigationOrder", [patientId: queue.patient.patientId, encounterId:queue.encounter.encounterId,date:date])}">
+                       href="${ui.pageLink("billingui", "procedureInvestigationOrder", [patientId: queue.patient.patientId, encounterId: queue.encounter.encounterId, date: date])}">
                     <i class="icon-signout"></i>${queue.encounter.encounterId}</a></td>
                 <td style="text-align: left">${date}</td>
                 <td style="text-align: left">${queue.fromDept}</td>
