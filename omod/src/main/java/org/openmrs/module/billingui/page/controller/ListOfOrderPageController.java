@@ -23,6 +23,8 @@
 
 package org.openmrs.module.billingui.page.controller;
 
+
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
@@ -71,7 +73,17 @@ public class ListOfOrderPageController {
             model.addAttribute("gender", "Female");
         }
         model.addAttribute("category", patient.getAttribute(14));
-        model.addAttribute("fileNumber", patient.getAttribute(43));
+        model.addAttribute("previousVisit",hospitalCoreService.getLastVisitTime(patient));
+
+        if (patient.getAttribute(43) == null){
+            model.addAttribute("fileNumber", "");
+        }
+        else if (StringUtils.isNotBlank(patient.getAttribute(43).getValue())){
+            model.addAttribute("fileNumber", "(File: "+patient.getAttribute(43)+")");
+        }
+        else {
+            model.addAttribute("fileNumber", "");
+        }
         /*
 		if(patient.getAttribute(14).getValue() == "Waiver"){
 			model.addAttribute("exemption", patient.getAttribute(32));
