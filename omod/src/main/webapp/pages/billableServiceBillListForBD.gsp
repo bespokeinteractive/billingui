@@ -104,7 +104,7 @@
                 Date/ Time: ${bill.createdDate}
             </div>
 
-            <div class="tag">Bill ID :${bill.receipt.id} - File Number : ${fileNumber}</div>
+            <div class="tag">Bill ID :${bill.patientServiceBillId} - File Number : ${fileNumber}</div>
         </div>
 
         <div class="identifiers">
@@ -119,7 +119,7 @@
     <p>
         <b>
             <td><input type="button" value="Add Paid Bill"
-                       onclick="window.location.href = 'addPatientServiceBillForBD.page?patientId=${patient.patientId}&billType=paid'"/>
+                       onclick="window.location.href = 'addPatientServiceBillForBD.page?patientId=${patient.patientId}&billType=paid&lastBillId=${bill.patientServiceBillId}'"/>
             </td>
             <td><input type="button" value="Add Free Bill" style="color: red"
                        onclick="showAndHide();"/></td>
@@ -467,10 +467,10 @@
                     <% if (bill.voided == false || (bill.printed == true && canEdit == true)) { %>
                     <a href="editPatientServiceBillForBD.page?billId=${bill.patientServiceBillId}&patientId=${
                             patient.patientId}">
-                        <b>${bill.receipt.id}</b>,${bill.createdDate}</a>
+                        <b>${bill.patientServiceBillId}</b>,${bill.createdDate}</a>
                 </td>
                 <% } else { %>
-                <b>${bill.receipt.id}</b>,
+                <b>${bill.patientServiceBillId}</b>,
             ${bill.createdDate}
             <% } %>
                 <td>

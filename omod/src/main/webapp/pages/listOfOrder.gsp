@@ -14,22 +14,6 @@
 
     jQuery(function () {
 
-        jq('#queueList > tbody > tr').remove();
-        var tbody = jq('#queueList > tbody');
-        for (index in ${listOfOrders}) {
-            var item = ${listOfOrders}[index];
-            var row = '<tr>';
-            <% props.each {
-               if(it == props.last()){
-                  def pageLink = ui.pageLink("patientdashboardui", "main") %>
-            row += '<td> <a href="${pageLink}?patientId=' + item.patient.id + '&opdId=' + jq("#opd-choice").val() + '"><i class="icon-signin small"></i></a> </td>';
-            <% } else {%>
-            row += '<td>' + item.${ it } + '</td>';
-            <% }
-               } %>
-            row += '</tr>';
-            tbody.append(row);
-        }
     });
 </script>
 
@@ -98,7 +82,7 @@
             <tr align="center">
                 <td>${queue.opdOrderId}</td>
                 <td><a class="button task"
-                       href="${ui.pageLink("billingui", "procedureInvestigationOrder", [patientId: queue.patient.patientId, encounterId:queue.encounter.encounterId,date:date])}">
+                       href="${ui.pageLink("billingui", "procedureInvestigationOrder", [patientId: queue.patient.patientId, encounterId: queue.encounter.encounterId, date: date])}">
                     <i class="icon-signout"></i>${queue.encounter.encounterId}</a></td>
                 <td>${date}</td>
                 <td>${queue.fromDept}</td>
