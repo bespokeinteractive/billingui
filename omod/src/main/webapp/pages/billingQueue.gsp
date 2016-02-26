@@ -6,6 +6,7 @@
 	
     ui.includeJavascript("billingui", "moment.js")
     ui.includeJavascript("billingui", "jquery.dataTables.min.js")
+	ui.includeJavascript("laboratoryapp", "jq.browser.select.js")
 	
     def props = ["identifier", "fullname", "age", "gender", "patientId", "action"]
 %>
@@ -14,38 +15,44 @@
         currentPage = 1;
         var pData;
         var jq = jQuery;
-        function loadOpdPatients() {
-            alert(this.options[this.selectedIndex].text);
-        }
 
         //update the queue table
         function updateQueueTable(data) {
             var date = moment(jq("#datetime-field").val()).format('DD/MM/YYYY');
             jq('#queueList > tbody > tr').remove();
             var tbody = jq('#queueList > tbody');
-            for (index in data) {
-                var item = data[index];
-                var row = '<tr>';
-                <% props.each {
-               if(it == props.last()){
-                  def pageLink = ui.pageLink("billingui", "listOfOrder") %>
-                row += '<td> <a href="${pageLink}?patientId=' + item.patientId + '&date=' + date + '"><i class="icon-signin small"></i></a> </td>';
-                <% } else {%>
-                row += '<td>' + item.${ it } + '</td>';
-                <% }
-               } %>
-                row += '</tr>';
-                tbody.append(row);
-            }
+			
+			if (data.length == 0){
+				tbody.append('<tr align="center"><td colspan="6">No patient found</td></tr>');
+				jq().toastmessage('showErrorToast', "No Records found in the Billing OPD Queue!");
+				jq("#selection").hide();
+			}
+			else {
+				for (index in data) {
+					var item = data[index];
+					var row = '<tr>';
+					<% props.each {
+				   if(it == props.last()){
+					  def pageLink = ui.pageLink("billingui", "listOfOrder") %>
+					row += '<td> <a href="${pageLink}?patientId=' + item.patientId + '&date=' + date + '"><i class="icon-signin small"></i></a> </td>';
+					<% } else {%>
+					row += '<td>' + item.${ it } + '</td>';
+					<% }
+				   } %>
+					row += '</tr>';
+					tbody.append(row);
+				}
+				
+				jq("#selection").show();
+			}
         }
 
         // get queue
         function getBillingQueue(currentPage) {
-            jq("#selection").show(0);
             this.currentPage = currentPage;
             var date = moment(jq("#datetime-field").val()).format('DD/MM/YYYY');
-            var searchKey = jQuery("#searchKey").val();
-            var pgSize = jQuery("#sizeSelector").val();
+            var searchKey = jq("#searchKey").val();
+            var pgSize = jq("#sizeSelector").val();
             jQuery.ajax({
                 type: "GET",
                 url: "${ui.actionLink('billingui','opdBillingQueue','getBillingQueue')}",
@@ -69,6 +76,7 @@
 
         jq(function () {
             jq("#tabs").tabs();
+			
             jq("#selection").hide(0);
             jq("#getOpdPatients").click(function () {
                 getBillingQueue(1);
@@ -76,8 +84,6 @@
 
             var lastValue = '';
             jq("#searchKey").on('change keyup paste mouseup', function () {
-
-
                 if (jq(this).val() != lastValue) {
                     lastValue = jq(this).val();
                     getBillingQueue(1);
@@ -141,37 +147,25 @@
 			text-align: center;
 			width: 27%;
 		}
-
 		form .advanced i {
 			font-size: 22px;
 		}
-
 		.col4 label {
 			width: 110px;
 			display: inline-block;
 		}
-
 		.col4 input[type=text] {
 			display: inline-block;
 			padding: 4px 10px;
 		}
-
 		.col4 select {
 			padding: 4px 10px;
 		}
-
 		form select {
 			min-width: 50px;
 			display: inline-block;
 		}
-
-		.addon {
-			display: inline-block;
-			float: right;
-			margin: 5px 0 0 140px;
-			position: absolute;
-		}
-
+		
 		.identifiers span {
 			border-radius: 50px;
 			color: white;
@@ -209,13 +203,18 @@
 			width: 166px;
 		}
 		.add-on {
+			color: #f26522;
 			float: right;
 			left: auto;
 			margin-left: -29px;
-			margin-top: 5px;
+			margin-top: 10px;
 			position: absolute;
 		}
-
+		.chrome .add-on {
+		  margin-left:-31px;
+		  margin-top:-27px !important;
+		  position:relative !important;
+		}
 		.ui-widget-content a {
 			color: #007fff;
 		}
@@ -241,21 +240,31 @@
 		}
 		.formfactor .first-col{
 			display: inline-block;
-			width: 300px;
+			margin-top: 5px;
 			overflow: hidden;
+			width: 300px;
 		}
 		.formfactor .second-col{
 			display: inline-block;
 			float: right;
-			width: 600px;
+			margin-top: 5px;
 			overflow: hidden;
+			width: 600px;
 		}
 		#datetime label{
 			display: none;
 		}
 		.formfactor .first-col input,
 		.formfactor .second-col input{
+			 margin-top: 5px;
+			padding: 5px 15px;
 			width: 100%;
+		}
+		.formfactor .first-col label,
+		.formfactor .second-col label{
+			padding-left: 5px;
+			color: #363463;
+			cursor: pointer;
 		}
     </style>
 </head>
@@ -285,12 +294,12 @@
 		<div class="patient-header new-patient-header">
 			<div class="demographics">
 				<h1 class="name" style="border-bottom: 1px solid #ddd;">
-					<span>LABORATORY DASHBOARD &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+					<span>CASHIER DASHBOARD &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
 				</h1>
 			</div>
 
 			<div class="identifiers">
-				<em>Current Time:</em>
+				<em>&nbsp; &nbsp; Current Time:</em>
 				<span>${currentTime}</span>
 			</div>
 
@@ -309,7 +318,7 @@
 
 					<h2 style="display: inline-block;">Outdoor Patient Queue</h2>
 					
-					<a class="button confirm" id="getOpdPatients" style="float: right;">
+					<a class="button confirm" id="getOpdPatients" style="float: right; margin: 8px 5px 0 0;">
 						Get Patients
 					</a>
 					
@@ -325,18 +334,6 @@
 						</div>
 					</div>
 					
-					
-					
-					
-					
-					
-
-					<p class="left">
-						
-					</p>
-					
-					
-
 					<div>
 						<section>
 							<div>
@@ -361,16 +358,16 @@
 							</div>
 						</section>
 
-						<div id="selection">
-							Show
-							<select name="sizeSelector" id="sizeSelector" onchange="getBillingQueue(1)">
+						<div id="selection" style="display: none; padding-top: 5px;">
+							<select name="sizeSelector" id="sizeSelector" onchange="getBillingQueue(1);" style="width: 60px">
 								<option value="10" id="1">10</option>
 								<option value="20" id="2" selected>20</option>
 								<option value="50" id="3">50</option>
 								<option value="100" id="4">100</option>
 								<option value="150" id="5">150</option>
 							</select>
-							entries
+							
+							Entries showing
 						</div>
 					</div>
 				</div>
@@ -546,11 +543,6 @@
 					${ui.includeFragment("billingui", "searchPatient")}
 				</div>
 			</div>			
-
-			
-		
-		
-		
 		</div>
 	</div>
 

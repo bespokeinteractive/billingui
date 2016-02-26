@@ -5,7 +5,7 @@
 <script>
 
     jQuery(document).ready(function () {
-        jq('select').bind('change keyup', function() {
+        jq('.col4 select').bind('change keyup', function() {
             ADVSEARCH.delay();
         });
         jq('input').keydown(function (e) {
@@ -17,7 +17,6 @@
         jq('#lastDayOfVisit-display').on("change", function (dateText) {
             ADVSEARCH.delay();
         });
-        //end of ready method
     });
 
     jQuery.fn.clearForm = function() {
