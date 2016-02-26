@@ -73,11 +73,8 @@
                 }else if(isNaN(self.waiverAmount()) || self.waiverAmount() < 0){
                     alert("Please enter correct Waiver Amount");
                 }else{
-                    console.log("about to submit");
-                    var items = ko.toJSON(bill);
-                    console.log(items);
                     //submit the details to the server
-                    //jQuery("#billsForm").submit();
+                    jQuery("#billsForm").submit();
 
                 }
             }
@@ -213,7 +210,7 @@
         <br /><br />
 
 
-        <form action="/tasks/saveform" method="post" id="billsForm">
+        <form  method="post" id="billsForm">
 
             <textarea name="tasks" data-bind="value: ko.toJSON(\$root)"></textarea>
             <button data-bind="click: submitBill, enable: billItems().length > 0 ">Save</button>  <button data-bind="click: cancelBillAddition">Cancel</button>
