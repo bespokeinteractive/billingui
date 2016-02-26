@@ -136,8 +136,6 @@
         jQuery('#patientSystemSearchForm').clearForm();
     }
 
-
-
     //update the queue table
     function updateSystemQueueTable(data) {
         var jq = jQuery;
@@ -168,12 +166,6 @@
             tbody.append('<tr align="center"><td colspan="6">No patients found</td></tr>');
         }
     }
-
-
-
-
-
-
 </script>
 
 <form onsubmit="return false" id="patientSystemSearchForm" method="get">
@@ -204,7 +196,7 @@
                         <div class="onerow">
                             <div class="col4">
                                 <label for="gender">Gender</label>
-                                <select style="width: 166px" id="gender" name="gender">
+                                <select style="width: 160px" id="gender" name="gender">
                                     <option value="Any">Any</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
@@ -218,7 +210,7 @@
 
                             <div class="col4 last">
                                 <label for="relativeName">Relative Name</label>
-                                <input type="text" id="relativeName" name="relativeName" style="width: 166px"
+                                <input type="text" id="relativeName" name="relativeName" style="width: 160px"
                                        placeholder="Relative Name">
                             </div>
                         </div>
@@ -226,12 +218,12 @@
                         <div class="onerow" style="padding-top: 2px;">
                             <div class="col4">
                                 <label for="age">Age</label>
-                                <input type="text" id="age" name="age" style="width: 166px" placeholder="Patient Age">
+                                <input type="text" id="age" name="age" style="width: 160px" placeholder="Patient Age">
                             </div>
 
                             <div class="col4">
                                 <label for="gender">Previous Visit</label>
-                                <select style="width: 166px" id="lastVisit">
+                                <select style="width: 160px" id="lastVisit">
                                     <option value="Any">Anytime</option>
                                     <option value="31">Last month</option>
                                     <option value="183">Last 6 months</option>
@@ -241,7 +233,7 @@
 
                             <div class="col4 last">
                                 <label for="nationalId">National ID</label>
-                                <input type="text" id="nationalId" name="nationalId" style="width: 166px"
+                                <input type="text" id="nationalId" name="nationalId" style="width: 160px"
                                        placeholder="National ID">
                             </div>
                         </div>
@@ -249,7 +241,7 @@
                         <div class="onerow" style="padding-top:2px;">
                             <div class="col4">
                                 <label for="ageRange">Range &plusmn;</label>
-                                <select id="ageRange" name="ageRange" style="width: 166px">
+                                <select id="ageRange" name="ageRange" style="width: 160px">
                                     <option value="0">Exact</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -261,13 +253,13 @@
 
                             <div class="col4">
                                 <label for="phoneNumber">Phone No.</label>
-                                <input type="text" id="phoneNumber" name="phoneNumber" style="width: 166px"
+                                <input type="text" id="phoneNumber" name="phoneNumber" style="width: 160px"
                                        placeholder="Phone No.">
                             </div>
 
                             <div class="col4 last">
                                 <label for="fileNumber">File Number</label>
-                                <input type="text" id="fileNumber" name="fileNumber" style="width: 166px"
+                                <input type="text" id="fileNumber" name="fileNumber" style="width: 160px"
                                        placeholder="File Number">
                             </div>
                         </div>
@@ -275,7 +267,7 @@
                         <div class="onerow" style="padding-top: 1px;">
                             <div class="col4">
                                 <label for="patientMaritalStatus">Marital Status</label>
-                                <select id="patientMaritalStatus" style="width: 166px">
+                                <select id="patientMaritalStatus" style="width: 160px">
                                     <option value="">Any</option>
                                     <option value="Single">Single</option>
                                     <option value="Married">Married</option>

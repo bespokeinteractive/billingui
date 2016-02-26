@@ -8,7 +8,7 @@
     ui.includeJavascript("billingui", "jquery.dataTables.min.js")
 	ui.includeJavascript("laboratoryapp", "jq.browser.select.js")
 	
-    def props = ["identifier", "fullname", "age", "gender", "patientId", "action"]
+    def props = ["identifier", "fullname", "age", "gender", "action"]
 %>
 <head>
 	<script>
@@ -17,15 +17,22 @@
         var jq = jQuery;
 
         //update the queue table
-        function updateQueueTable(data) {
+        function updateQueueTable(data, alerts) {
             var date = moment(jq("#datetime-field").val()).format('DD/MM/YYYY');
             jq('#queueList > tbody > tr').remove();
             var tbody = jq('#queueList > tbody');
 			
+			if(typeof alerts === 'undefined'){
+				alerts = true;
+			}
+			
 			if (data.length == 0){
-				tbody.append('<tr align="center"><td colspan="6">No patient found</td></tr>');
-				jq().toastmessage('showErrorToast', "No Records found in the Billing OPD Queue!");
+				tbody.append('<tr align="center"><td colspan="5">No patient found</td></tr>');
 				jq("#selection").hide();
+				
+				if (alerts){
+					jq().toastmessage('showErrorToast', "No Records found in the Billing OPD Queue!");
+				}
 			}
 			else {
 				for (index in data) {
@@ -33,10 +40,22 @@
 					var row = '<tr>';
 					<% props.each {
 				   if(it == props.last()){
+						
 					  def pageLink = ui.pageLink("billingui", "listOfOrder") %>
-					row += '<td> <a href="${pageLink}?patientId=' + item.patientId + '&date=' + date + '"><i class="icon-signin small"></i></a> </td>';
-					<% } else {%>
-					row += '<td>' + item.${ it } + '</td>';
+					row += '<td> <a href="${pageLink}?patientId=' + item.patientId + '&date=' + date + '"> <i class="icon-signin small"> GO</i></a> </td>';
+					<% } else { if (it == "gender"){%>
+						if (item.${ it } == "M"){
+							row += '<td>Male</td>';
+						}
+						else {
+							row += '<tdFemale</td>';
+						}
+					<%}else if (it == "age"){ %>
+						row += '<td>' + item.${ it } + ' years </td>';
+					<%}else{ %>
+						row += '<td>' + item.${ it } + '</td>';
+					<% }%>
+					
 					<% }
 				   } %>
 					row += '</tr>';
@@ -48,7 +67,7 @@
         }
 
         // get queue
-        function getBillingQueue(currentPage) {
+        function getBillingQueue(currentPage, alerts) {
             this.currentPage = currentPage;
             var date = moment(jq("#datetime-field").val()).format('DD/MM/YYYY');
             var searchKey = jq("#searchKey").val();
@@ -65,7 +84,7 @@
                 }),
                 success: function (data) {
                     pData = data;
-                    updateQueueTable(data);
+                    updateQueueTable(data, alerts);
 
 //                    jQuery("#billingqueue").show(0);
 //                    jQuery("#billingqueue").html(data);
@@ -90,7 +109,8 @@
                 }
 
             });
-
+			
+			getBillingQueue(1, false);
         });
     </script>
 
@@ -200,7 +220,7 @@
 		}
 
 		#lastDayOfVisit input {
-			width: 166px;
+			width: 160px;
 		}
 		.add-on {
 			color: #f26522;
@@ -214,6 +234,9 @@
 		  margin-left:-31px;
 		  margin-top:-27px !important;
 		  position:relative !important;
+		}
+		#lastDayOfVisit-wrapper .add-on{
+			margin-top: 5px;
 		}
 		.ui-widget-content a {
 			color: #007fff;
@@ -238,6 +261,12 @@
 			text-align: left;
 			width: auto;
 		}
+		.formfactor .lone-col{
+			display: inline-block;
+			margin-top: 5px;
+			overflow: hidden;
+			width: 100%;
+		}
 		.formfactor .first-col{
 			display: inline-block;
 			margin-top: 5px;
@@ -254,17 +283,22 @@
 		#datetime label{
 			display: none;
 		}
+		.formfactor .lone-col input,
 		.formfactor .first-col input,
 		.formfactor .second-col input{
-			 margin-top: 5px;
+			margin-top: 5px;
 			padding: 5px 15px;
 			width: 100%;
 		}
+		.formfactor .lone-col label,
 		.formfactor .first-col label,
 		.formfactor .second-col label{
 			padding-left: 5px;
 			color: #363463;
 			cursor: pointer;
+		}
+		.ui-tabs-panel h2{
+			display: inline-block;
 		}
     </style>
 </head>
@@ -309,13 +343,11 @@
 					<li><a href="#tabs-2">IPD Queue</a></li>
 					<li><a href="#tabs-3">Billing Ambulance</a></li>
 					<li><a href="#tabs-4">Billing Tender</a></li>
-					<li><a href="#">Billing Misc Service</a></li>
-					<li><a href="#tabs-5">Search Patient</a></li>
+					<li><a href="#tabs-5">Billing Misc Service</a></li>
+					<li><a href="#tabs-6">Search Patient</a></li>
 				</ul>
 
 				<div id="tabs-1">
-					<p>
-
 					<h2 style="display: inline-block;">Outdoor Patient Queue</h2>
 					
 					<a class="button confirm" id="getOpdPatients" style="float: right; margin: 8px 5px 0 0;">
@@ -340,18 +372,17 @@
 								<table cellpadding="5" cellspacing="0" width="100%" id="queueList">
 									<thead>
 									<tr align="center">
-										<th>Patient ID</th>
+										<th style="width:200px">Patient ID</th>
 										<th>Given Name</th>
 										<th>Age</th>
 										<th>Gender</th>
-										<th>Patient ID</th>
-										<th>Action</th>
+										<th style="width: 60px">Action</th>
 									</tr>
 									</thead>
 									<tbody>
 
 									<tr align="center">
-										<td colspan="6">No patient found</td>
+										<td colspan="5">No patient found</td>
 									</tr>
 									</tbody>
 								</table>
@@ -373,30 +404,19 @@
 				</div>
 
 				<div id="tabs-2">
-					<p>
-
-					<h3>Inpatient Patient Queue</h3>
-					<article id="tables" style="margin-bottom: 15px;">
-						<table>
-							<thead>
-							<tr>
-								<th>Get Queue</th>
-							</tr>
-							</thead>
-						</table>
-					</article>
-					<label for="username">Search patient in Queue:</label>
-					<input id="username" type="text" name="username" placeholder="Enter Patient Name/ID:">
-
-					<div>
-						<ul style=" margin-top: 3px; margin-bottom: 10px;margin-left: 1px;" class="grid">
-							<li>
-								<a class="button confirm" href="#">
-									Get Patients
-								</a>
-							</li>
-						</ul>
+					<h2>Inpatient Patient Queue</h2>
+					
+					<a class="button confirm" style="float: right; margin: 8px 5px 0 0;">
+						Get Patients
+					</a>
+					
+					<div class="formfactor onerow">
+						<div class="lone-col">
+							<label for="username">Filter Patient in Queue</label>
+							<input id="username" type="text" name="username" placeholder="Enter Patient Name/ID:">
+						</div>
 					</div>
+					
 					<section>
 						<div>
 							<table cellpadding="5" cellspacing="0" width="100%" id="queueList2">
@@ -434,35 +454,23 @@
 				</div>
 
 				<div id="tabs-3">
-					<div>
-						<ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
-							<li>
-								<a class="button confirm" href="#">
-									Add New Driver
-								</a>
-							</li>
-						</ul>
+					<h2>Ambulance Billing</h2>
+					
+					<a class="button confirm" style="float: right; margin: 8px 5px 0 0;">
+						Get Drivers
+					</a>
+					
+					<a class="button task" style="float: right; margin: 8px 5px 0 0;">
+						Add Driver
+					</a>
+					
+					<div class="formfactor onerow">
+						<div class="lone-col">
+							<label for="username3">Enter Driver's Name:</label>
+							<input id="username3" type="text" name="username" placeholder="Name:">
+						</div>
 					</div>
-					<article id="tables3" style="margin-bottom: 10px;">
-						<table>
-							<thead>
-							<tr>
-								<th>Search Driver</th>
-							</tr>
-							</thead>
-						</table>
-					</article>
-					<label for="username3">Enter Driver's Name:</label>
-					<input id="username3" type="text" name="username" placeholder="Name:">
-
-					<div>
-						<ul style=" margin-top: 10px; margin-bottom: 15px;margin-left: 1px;" class="grid">
-							<li>
-								<button class="button confirm">Search</button>
-								<button class="button confirm">List all</button>
-							</li>
-						</ul>
-					</div>
+					
 					<section>
 						<div>
 							<table cellpadding="5" cellspacing="0" width="100%" id="queueList3">
@@ -487,35 +495,23 @@
 				</div>
 
 				<div id="tabs-4">
-					<div>
-						<ul style=" margin-top: 3px; margin-bottom: 20px;margin-left: 1px;" class="grid">
-							<li>
-								<a class="button confirm" href="#">
-									Add New Company
-								</a>
-							</li>
-						</ul>
+					<h2>Tender Billing</h2>
+					
+					<a class="button confirm" style="float: right; margin: 8px 5px 0 0;">
+						Get Companies
+					</a>
+					
+					<a class="button task" style="float: right; margin: 8px 5px 0 0;">
+						Add Company
+					</a>
+					
+					<div class="formfactor onerow">
+						<div class="lone-col">
+							<label for="username4">Enter Company's Name:</label>
+							<input id="username4" type="text" name="username" placeholder="Name:">
+						</div>
 					</div>
-					<article id="tables4" style="margin-bottom: 10px;">
-						<table>
-							<thead>
-							<tr>
-								<th>Search Company</th>
-							</tr>
-							</thead>
-						</table>
-					</article>
-					<label for="username4">Enter Company's Name:</label>
-					<input id="username4" type="text" name="username" placeholder="Name:">
-
-					<div>
-						<ul style=" margin-top: 10px; margin-bottom: 15px;margin-left: 1px;" class="grid">
-							<li>
-								<button class="button confirm">Search</button>
-								<button class="button confirm">List all</button>
-							</li>
-						</ul>
-					</div>
+					
 					<section>
 						<div>
 							<table cellpadding="5" cellspacing="0" width="100%" id="queueList4">
@@ -538,8 +534,50 @@
 						</div>
 					</section>
 				</div>
-
+				
 				<div id="tabs-5">
+					<h2>Misc Service Billing</h2>
+					
+					<a class="button confirm" style="float: right; margin: 8px 5px 0 0;">
+						Get Services
+					</a>
+					
+					<a class="button task" style="float: right; margin: 8px 5px 0 0;">
+						Add Service
+					</a>
+					
+					<div class="formfactor onerow">
+						<div class="lone-col">
+							<label for="username5">Enter Service Name:</label>
+							<input id ="username5" type="text" name="username" placeholder="Name:">
+						</div>
+					</div>
+					
+					<section>
+						<div>
+							<table cellpadding="5" cellspacing="0" width="100%" id="queueList4">
+								<thead>
+									<tr align="center">
+										<th>Service Name</th>
+										<th>Description</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr align="center">
+										<td>Name</td>
+										<td>Description</td>
+									</tr>
+									
+									<tr align="left">
+										<td colspan="7">No Result</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+				
+				<div id="tabs-6">
 					${ui.includeFragment("billingui", "searchPatient")}
 				</div>
 			</div>			
