@@ -23,7 +23,6 @@
 
 package org.openmrs.module.billingui.page.controller;
 
-import com.google.gson.Gson;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
