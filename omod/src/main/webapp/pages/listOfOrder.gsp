@@ -7,7 +7,6 @@
 
     def props = ["sno", "orderid", "date", "sentfrom", "notes"]
 %>
-
 <script type="text/javascript">
 	jq(document).ready(function () {
 		function strReplace(word) {

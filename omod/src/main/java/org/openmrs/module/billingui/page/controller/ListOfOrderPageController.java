@@ -22,11 +22,7 @@
  **/
 
 package org.openmrs.module.billingui.page.controller;
-
-
-
 import org.apache.commons.lang.StringUtils;
-
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
