@@ -57,6 +57,9 @@
             //observable waiver
             self.waiverAmount = ko.observable(0.00);
 
+            //observable comment
+            self.comment = ko.observable("");
+
             // Operations
             self.addBillItem = function (availableServices) {
                 self.billItems.push(new BillItem("1", availableServices));
@@ -204,15 +207,16 @@
         <h3 data-bind="visible: totalSurcharge() > 0">
 
             Total surcharge: Kshs. <span data-bind="text: totalSurcharge().toFixed(2)"></span><br />
-            Waiver Amount: Kshs. <input data-bind="value: waiverAmount" />
+            Waiver Amount: Kshs. <input data-bind="value: waiverAmount" /> &nbsp;&nbsp;Comments. <input data-bind="value: comment, enable: waiverAmount() > 0" />
         </h3>
 
         <br /><br />
 
 
         <form  method="post" id="billsForm">
+            <input id="patientId" type="hidden" value="${patientId}">
 
-            <textarea name="tasks" data-bind="value: ko.toJSON(\$root)"></textarea>
+            <textarea name="bill" data-bind="value: ko.toJSON(\$root)"></textarea>
             <button data-bind="click: submitBill, enable: billItems().length > 0 ">Save</button>  <button data-bind="click: cancelBillAddition">Cancel</button>
         </form>
 
