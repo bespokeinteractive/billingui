@@ -22,8 +22,6 @@
  **/
 
 package org.openmrs.module.billingui.page.controller;
-
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
@@ -33,10 +31,6 @@ import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.hospitalcore.model.PatientSearch;
 import org.openmrs.ui.framework.page.PageModel;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
@@ -95,9 +89,9 @@ public class ListOfOrderPageController {
 			model.addAttribute("exemption", " ");
 		}
 		*/
+
         model.addAttribute("patientSearch", patientSearch);
         model.addAttribute("listOfOrders", listOfOrders);
-        //model.addAttribute("serviceOrderSize", serviceOrderList.size());
         model.addAttribute("patientId", patientId);
         model.addAttribute("date", dateStr);
     }

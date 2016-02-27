@@ -7,7 +7,6 @@
 
     def props = ["sno", "orderid", "date", "sentfrom", "notes"]
 %>
-
 <script type="text/javascript">
 	jq(document).ready(function () {
 		function strReplace(word) {
@@ -60,7 +59,6 @@
 		margin: 35px 10px 0 0;
 	}
 </style>
-
 
 <div class="clear"></div>
 
@@ -140,7 +138,7 @@
             <tr align="center">
                 <td>${queue.opdOrderId}</td>
                 <td><a class="button task"
-                       href="${ui.pageLink("billingui", "procedureInvestigationOrder", [patientId: queue.patient.patientId, encounterId:queue.encounter.encounterId,date:date])}">
+                       href="${ui.pageLink("billingui", "procedureInvestigationOrder", [patientId: queue.patient.patientId, encounterId: queue.encounter.encounterId, date: date])}">
                     <i class="icon-signout"></i>${queue.encounter.encounterId}</a></td>
                 <td style="text-align: left">${date}</td>
                 <td style="text-align: left">${queue.fromDept}</td>

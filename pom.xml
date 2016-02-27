@@ -9,13 +9,13 @@
 	<name>Billingui Module</name>
 	<description>Billing UI module</description>
 	<url>https://wiki.openmrs.org/display/docs/Billingui+Module+Module</url>
-	
+
 	<developers>
 		<developer>
 			<name>Brian, Stanslaus , Victor</name>
 		</developer>
 	</developers>
-	
+
 	<organization>
 		<name>OpenMRS</name>
 		<url>http://openmrs.org</url>
@@ -31,7 +31,7 @@
 		<module>api</module>
 		<module>omod</module>
 	</modules>
-	
+
 	<properties>
 		<openMRSVersion>1.9.8</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,7 +39,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-		
+
 			<!--
 			Libraries to add as dependencies with compile or runtime scope:
 			Find matching dependencies in the maven central repository.
@@ -50,52 +50,52 @@
 				<scope>compile</scope>
 			</dependency>
 			-->
-			
-						
+
+
 			<!-- Begin OpenMRS modules -->
-			
-						
+
+
 			<dependency>
-			
+
 				<groupId>org.openmrs.module</groupId>
-												
+
 				<artifactId>hospitalcore-api</artifactId>
-																								
+
 				<version>1.5.3-SNAPSHOT</version>
-												
+
 				<scope>provided</scope>
-				
+
 			</dependency>
-						
+
 			<dependency>
-			
+
 				<groupId>org.openmrs.module</groupId>
-												
+
 				<artifactId>uiframework-api</artifactId>
-																								
+
 				<version>2.0</version>
-												
+
 				<scope>provided</scope>
-				
+
 			</dependency>
-						
+
 			<dependency>
-			
+
 				<groupId>org.openmrs.module</groupId>
-												
+
 				<artifactId>uilibrary-api</artifactId>
-																								
+
 				<version>2.0</version>
-												
+
 				<scope>provided</scope>
-				
+
 			</dependency>
-						
+
 			<!-- End OpenMRS modules -->
-			
+
 
 			<!-- Begin OpenMRS core -->
-			
+
 			<dependency>
 				<groupId>org.openmrs.api</groupId>
 				<artifactId>openmrs-api</artifactId>
@@ -111,7 +111,7 @@
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
-						
+
 			<dependency>
 				<groupId>org.openmrs.api</groupId>
 				<artifactId>openmrs-api</artifactId>
@@ -119,7 +119,7 @@
 				<type>test-jar</type>
 				<scope>test</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.openmrs.web</groupId>
 				<artifactId>openmrs-web</artifactId>
@@ -127,7 +127,7 @@
 				<type>test-jar</type>
 				<scope>test</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.openmrs.test</groupId>
 				<artifactId>openmrs-test</artifactId>
@@ -135,7 +135,7 @@
 				<type>pom</type>
 				<scope>test</scope>
 			</dependency>
-						
+
 			<!-- End OpenMRS core -->
 
 		</dependencies>

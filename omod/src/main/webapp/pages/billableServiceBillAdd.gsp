@@ -13,6 +13,9 @@
     jQuery(function () {
         var bill = new BillItemsViewModel();
         pData = getBillableServices();
+
+
+
         // Class to represent a row in the bill addition grid
         function BillItem(quantity, initialBill) {
             var self = this;
@@ -51,12 +54,32 @@
                 return total;
             });
 
+            //observable waiver
+            self.waiverAmount = ko.observable(0.00);
+
+            //observable comment
+            self.comment = ko.observable("");
+
             // Operations
             self.addBillItem = function (availableServices) {
                 self.billItems.push(new BillItem("1", availableServices));
             }
             self.removeBillItem = function (item) {
                 self.billItems.remove(item);
+            }
+            self.cancelBillAddition = function(){
+                window.location.replace("billableServiceBillListForBD.page?patientId=${patientId}&billId=${lastBillId}")
+            }
+            self.submitBill = function(){
+                if(self.totalSurcharge() < self.waiverAmount()){
+                    alert("Please enter correct Waiver Amount");
+                }else if(isNaN(self.waiverAmount()) || self.waiverAmount() < 0){
+                    alert("Please enter correct Waiver Amount");
+                }else{
+                    //submit the details to the server
+                    jQuery("#billsForm").submit();
+
+                }
             }
         }
 
@@ -182,12 +205,23 @@
         </table>
 
         <h3 data-bind="visible: totalSurcharge() > 0">
-            Total surcharge: Kshs. <span data-bind="text: totalSurcharge().toFixed(2)"></span>
+
+            Total surcharge: Kshs. <span data-bind="text: totalSurcharge().toFixed(2)"></span><br />
+            Waiver Amount: Kshs. <input data-bind="value: waiverAmount" /> &nbsp;&nbsp;Comments. <input data-bind="value: comment, enable: waiverAmount() > 0" />
         </h3>
 
-        <button data-bind="click: addBillItem, enable: billItems().length < 5">Add Bill Item</button>
+        <br /><br />
+
+
+        <form  method="post" id="billsForm">
+            <input id="patientId" type="hidden" value="${patientId}">
+
+            <textarea name="bill" data-bind="value: ko.toJSON(\$root)"></textarea>
+            <button data-bind="click: submitBill, enable: billItems().length > 0 ">Save</button>  <button data-bind="click: cancelBillAddition">Cancel</button>
+        </form>
 
     </div>
+
 
 </div>
 
