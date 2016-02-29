@@ -1,19 +1,21 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "Cashier Module"])
+    ui.decorateWith("appui", "standardEmrPage", [title: "Procedures / Investigations Order"])
     ui.includeCss("uicommons", "styleguide/index.css")
-//    ui.includeJavascript("billingui", "moment.js")
+    ui.includeJavascript("billingui", "moment.js")
 //    ui.includeJavascript("billingui", "jquery.dataTables.min.js")
     def props = ["sno", "service", "select", "quantity", "pay", "unitprice", "itemtotal"]
 %>
-<style>
-.form-textbox {
-    height: 12px !important;
-    font-size: 12px !important;
-}
-</style>
+
 <script type="text/javascript">
     jQuery(document).ready(function () {
         var sos =${serviceOrderSize};
+		
+		jq('#surname').html(strReplace('${patient.names.familyName}')+',<em>surname</em>');
+		jq('#othname').html(strReplace('${patient.names.givenName}')+' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <em>other names</em>');
+		jq('#agename').html('${patient.age} years ('+ moment('${patient.birthdate}').format('DD,MMM YYYY') +')');
+		
+		jq('.tad').text('Last Visit: '+ moment('${previousVisit}').format('DD.MM.YYYY hh:mm')+' HRS');
+		
         jQuery("#waiverCommentDiv").hide();
         jQuery('.serquncalc').keyup(function () {
             var result = 0;
@@ -41,14 +43,50 @@
             });
             return result;
         });
-
-
+		
+		jq('#waiverAmount').on('change keyup paste', function () {
+			var numb = jq('#waiverAmount').val();
+			
+			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
+				jq("#waiverCommentDiv").show();
+			}
+			else {
+				jq("#waiverCommentDiv").hide();
+			}
+        });
+		
+		jq('#waiverAmount').on('focus', function () {
+			var numb = jq('#waiverAmount').val();
+			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
+				jq('#waiverAmount').val(parseFloat(jq('#waiverAmount').val()))
+			}
+			else {
+				jq("#waiverAmount").val('');
+			}
+        });
+		
+		jq('#waiverAmount').on('blur', function () {
+			var numb = jq('#waiverAmount').val();
+			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
+				jq('#waiverAmount').val(formatAccountings(numb));
+			}
+			else {
+				jq("#waiverAmount").val('0.00');
+			}
+        });
+		
+		jq('#waiverAmount').val('0.00');
         recalculate(sos);
 
     });
+	
+	function strReplace(word) {
+		var res = word.replace("[", "");
+		res=res.replace("]","");
+		return res;
+	}
 
     function recalculate(sos) {
-
         var mytot = 0;
         for (i = 1; i <= sos; i++) {
             if (jQuery("#" + i + "paybill").attr('unchecked') || jQuery("#" + i + "selectservice").attr('unchecked')) {
@@ -58,7 +96,7 @@
                 mytot += (parseInt(jQuery("#" + i + "serviceprice").val()) * servQuantity);
             }
         }
-        jQuery("#total").val(mytot);
+        jQuery("#total").val(formatAccountings(mytot));
 
     }
 
@@ -66,11 +104,8 @@
 
 
     function loadWaiverCommentDiv() {
-        jQuery("#waiverCommentDiv").show();
+        ///jQuery("#waiverCommentDiv").show();
     }
-</script>
-
-<script type="text/javascript">
     function updatePrice(incon) {
         var con = incon.toString();
         var serqunid = con.concat("servicequantity");
@@ -82,9 +117,6 @@
         jQuery("#" + serpriid).val(serqun * unpri);
 
     }
-</script>
-
-<script type="text/javascript">
     function disable(incon) {
         var icon = incon.toString();
 
@@ -96,7 +128,7 @@
             var totalValue = jQuery("#total").val();
             var toBeAdded = jQuery("#" + icon + "serviceprice").val();
             var added = parseInt(totalValue, 10) + parseInt(toBeAdded, 10);
-            jQuery('#total').val(added);
+            jQuery('#total').val(formatAccountings(added));
         }
         else {
             jQuery("#" + icon + "servicequantity").attr("disabled", "disabled");
@@ -105,11 +137,23 @@
             var totalValue = jQuery("#total").val();
             var toBeMinus = jQuery("#" + icon + "serviceprice").val();
             var left = totalValue - toBeMinus;
-            jQuery('#total').val(left);
+            jQuery('#total').val(formatAccountings(left));
         }
 
     }
-
+	
+	function formatAccountings(nStr) {
+		nStr = parseFloat(nStr).toFixed(2);
+		nStr += '';
+		x = nStr.split('.');
+		x1 = x[0];
+		x2 = x.length > 1 ? '.' + x[1] : '';
+		var rgx = /(\\d+)(\\d{3})/;
+		while (rgx.test(x1)) {
+			x1 = x1.replace(rgx, '\$1' + ',' + '\$2');
+		}
+		return x1 + x2;
+	}
 
     function payCheckBox(incon) {
 
@@ -119,24 +163,18 @@
             var totalValue = jQuery("#total").val();
             var toBeAdded = jQuery("#" + icon + "serviceprice").val();
             var added = parseInt(totalValue, 10) + parseInt(toBeAdded, 10);
-            jQuery('#total').val(added);
+            jQuery('#total').val(formatAccountings(added));
 
         }
         else {
             var totalValue = jQuery("#total").val();
             var toBeMinus = jQuery("#" + icon + "serviceprice").val();
             var left = totalValue - toBeMinus;
-            jQuery('#total').val(left);
+            jQuery('#total').val(formatAccountings(left));
             jQuery("#" + icon + "serviceprice").attr("disabled", "disabled");
         }
-
-
     }
-
-
-</script>
-
-<script type="text/javascript">
+	
     function validate(serviceOrderSize) {
         for (var i = 1; i <= serviceOrderSize; i++) {
             var con = i.toString();
@@ -170,63 +208,135 @@
             }
         }
     }
-
 </script>
+
+<style>
+	.form-textbox {
+		height: 12px !important;
+		font-size: 12px !important;
+	}
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
+	.new-patient-header .demographics .gender-age {
+		font-size: 14px;
+		margin-left: -55px;
+		margin-top: 12px;
+	}
+	.new-patient-header .demographics .gender-age span {
+		border-bottom: 1px none #ddd;
+	}
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
+	.tag {
+		padding: 2px 10px;
+	}
+	.tad {
+		background: #666 none repeat scroll 0 0;
+		border-radius: 1px;
+		color: white;
+		display: inline;
+		font-size: 0.8em;
+		margin-left: 4px;
+		padding: 2px 10px;
+	}
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
+	.catg{
+		color: #363463;
+		margin: 35px 10px 0 0;
+	}
+	form input, form select, form textarea, form ul.select, .form input, .form select, .form textarea, .form ul.select {
+		background: transparent none repeat scroll 0 0;
+		border: 1px none #ddd;
+	}
+	.arcpricalc,
+	.serpricalc,
+	.rights	{
+		text-align: right;
+	}
+	.hasborder {
+		border: 1px solid #ddd;
+	}
+	form input:focus, form select:focus, form textarea:focus {
+		outline: 1px none #ddd!important;
+	}
+	.ar
+</style>
 
 <div class="clear"></div>
 
 <div class="container">
-
+	<div class="example">
+		<ul id="breadcrumbs">
+			<li>
+				<a href="${ui.pageLink('referenceapplication','home')}">
+				<i class="icon-home small"></i></a>
+			</li>
+			<li>
+				<i class="icon-chevron-right link"></i>
+				<a href="${ui.pageLink('billingui','billingQueue')}">Billing</a>
+			</li>
+			
+			<li>
+				<i class="icon-chevron-right link"></i>
+				<a href="${ui.pageLink('billingui','listOfOrder')}?patientId=${patientId}&date=${date}">Orders</a>
+			</li>
+			
+			<li>
+				<i class="icon-chevron-right link"></i>
+				Procedure & Investigation
+			</li>
+		</ul>
+	</div>
+	
     <div class="patient-header new-patient-header">
         <div class="demographics">
-            <h1 class="name">
-                <span><small>${patientSearch.familyName}</small>,<em>surname</em></span>
-                <span><small>${patientSearch.givenName} &nbsp;${(patientSearch.middleName)?.replace(',', ' ')}</small><em>name</em>
-                </span>
-            </h1>
+			<h1 class="name">
+				<span id="surname">${patient.names.familyName},<em>surname</em></span>
+				<span id="othname">${patient.names.givenName} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em></span>
+				
+				<span class="gender-age">
+					<span>
+						<% if (patient.gender == "F") { %>
+							Female
+						<% } else { %>
+							Male
+						<% } %>
+						</span>
+					<span id="agename">${patient.age} years (15.Oct.1996) </span>
+					
+				</span>
+			</h1>
+			
+			<br/>
+			<div id="stacont" class="status-container">
+				<span class="status active"></span>
+				Visit Status
+			</div>
+			<div class="tag">Outpatient ${fileNumber}</div>
+			<div class="tad">Last Visit</div>
+		</div>
 
-            <div class="gender-age">
-                <span>${gender}</span>
-                <span>${age} year(s)</span>
-            </div>
-            <br>
-
-            <div class="status-container">
-                <span class="status active"></span>
-                Active Visit
-
-                <em>
-                    <span>${date}</span>
-                </em>
-
-            </div>
-
-            <div class="tag">Outpatient File Number :${fileNumber}</div>
-        </div>
-
-        <div class="identifiers">
-            <em>Patient ID</em>
-            <span>${patientSearch.identifier}</span>
-            <em>Payment Category</em>
-            <span>${category}</span>
-        </div>
-
+       <div class="identifiers">
+			<em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
+			<span>${patient.getPatientIdentifier()}</span>
+			<br>
+			
+			<div class="catg">
+				<i class="icon-tags small" style="font-size: 16px"></i><small>Category:</small> ${category} 
+			</div>
+		</div>
+		<div class="close"></div>
     </div>
 
     <form id="orderBillingForm"
           action="procedureInvestigationOrder.page?patientId=${patientId}&encounterId=${encounterId}&indCount=${serviceOrderSize}&billType=mixed&date=${date}"
           method="POST"
-          onsubmit="javascript:return validate(${serviceOrderSize});">
+          onsubmit="javascript:return validate(${serviceOrderSize});" style="padding-top: 5px">
         <div class="dashboard clear">
-            <div class="info-container">
-                <div class="info-header">
-                    <i class="icon-calendar"></i>
-
-                    <h3>List of Procedures/Investigations</h3>
-                </div>
-            </div>
-            <br/>
-
             <table cellpadding="5" cellspacing="0" width="100%" id="myTable" class="tablesorter thickbox">
                 <thead>
                 <tr align="center">
@@ -263,7 +373,7 @@
                                checked="checked" value="pay" onclick="payCheckBox(${index+ 1});">
                     </td>
                     <td>
-                        <input type="text" class="form-textbox" id="${index + 1}unitprice" name="${index + 1}unitprice"
+                        <input type="text" class="form-textbox arcpricalc" id="${index + 1}unitprice" name="${index + 1}unitprice"
                                size="7"
                                value="${queue.price}" readOnly="true">
                     </td>
@@ -283,22 +393,22 @@
 
                 </tbody>
                 <tr>
-                    <td colspan="6" align="right">Total</td>
-                    <td align="right"><input type="text" class="form-textbox" id="total" name="total" size="7" value="0"
+                    <td colspan="6" align="right" style="padding-right: 23px">Total</td>
+                    <td align="right"><input type="text" class="form-textbox rights" id="total" name="total" size="7" value="0"
                                              readOnly="true"/>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="6" align="right">Waiver Amount</td>
+                    <td colspan="6" align="right" style="padding-right: 23px">Waiver Amount</td>
                     <td align="right"><input type="text" id="waiverAmount" name="waiverAmount" size="7"
-                                             class="form-textbox"
-                                             onblur="loadWaiverCommentDiv();"/></td>
+                                             class="form-textbox rights hasborder" /></td>
                 </tr>
             </table>
 
-            <div align="right" id="waiverCommentDiv" class="form-group">
-                Waiver Number/Comment <input type="text" id="waiverComment" name="waiverComment" size="7"
-                                             class="form-textbox"/>
+            <div id="waiverCommentDiv" class="form-group">
+                <label for="waiverComment" style="color: rgb(54, 52, 99);">Waiver Number/Comment</label>
+				<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder" style="width: 97.7%; height: 60px;"></textarea>
+											
             </div>
             <tr>
                 <td><input type="button" class="button cancel"

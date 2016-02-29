@@ -110,6 +110,10 @@
 
             });
 			
+			jq('#datetime').on("change", function (dateText) {
+				getBillingQueue(1);
+			});
+			
 			getBillingQueue(1, false);
         });
     </script>
