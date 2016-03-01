@@ -14,6 +14,7 @@ import org.openmrs.module.hospitalcore.model.BillableService;
 import org.openmrs.module.hospitalcore.model.PatientServiceBill;
 import org.openmrs.module.hospitalcore.model.PatientServiceBillItem;
 import org.openmrs.module.hospitalcore.util.HospitalCoreUtils;
+import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.util.Money;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
 import org.openmrs.ui.framework.UiUtils;
@@ -42,6 +43,8 @@ public class EditPatientServiceBillForBDPageController {
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
 
         BillingService billingService = Context.getService(BillingService.class);
+        HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
+
         List<BillableService> services = billingService.getAllServices();
         Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
         for (BillableService ser : services) {
@@ -53,6 +56,7 @@ public class EditPatientServiceBillForBDPageController {
         model.addAttribute("serviceMap", mapServices);
         model.addAttribute("tabs", billingService.traversTab(concept, mapServices, 1));
         model.addAttribute("patientId", patientId);
+        model.addAttribute("previousVisit",hcs.getLastVisitTime(patient));
 
         PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
         model.addAttribute("freeBill", bill.getFreeBill());
@@ -61,8 +65,18 @@ public class EditPatientServiceBillForBDPageController {
         model.addAttribute("billId", billId);
         model.addAttribute("patient", patient);
         model.addAttribute("category", patient.getAttribute(14));
-        model.addAttribute("fileNumber", patient.getAttribute(43));
         model.addAttribute("age", patient.getAge());
+
+        if (patient.getAttribute(43) == null){
+            model.addAttribute("fileNumber", "");
+        }
+        else if (StringUtils.isNotBlank(patient.getAttribute(43).getValue())){
+            model.addAttribute("fileNumber", "(File: "+patient.getAttribute(43)+")");
+        }
+        else {
+            model.addAttribute("fileNumber", "");
+        }
+
 
         if (patient.getGender().equals("M")) {
             model.addAttribute("gender", "Male");
