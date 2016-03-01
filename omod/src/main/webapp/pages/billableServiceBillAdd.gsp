@@ -21,6 +21,38 @@
 		jq('#agename').html('${patient.age} years ('+ moment('${patient.birthdate}').format('DD,MMM YYYY') +')');
 		
 		jq('.tad').text('Last Visit: '+ moment('${previousVisit}').format('DD.MM.YYYY hh:mm')+' HRS');
+		
+		jq('#waiverAmount').on('change keyup paste', function () {
+			var numb = jq('#waiverAmount').val();
+			
+			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
+				jq("#waiverCommentDiv").show();
+			}
+			else {
+				jq("#waiverCommentDiv").hide();
+			}
+        });
+		
+		jq('#waiverAmount').on('focus', function () {
+			var numb = jq('#waiverAmount').val();
+			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
+				jq('#waiverAmount').val(parseFloat(jq('#waiverAmount').val()))
+			}
+			else {
+				jq("#waiverAmount").val('');
+			}
+        });
+		
+		jq('#waiverAmount').on('blur', function () {
+			var numb = jq('#waiverAmount').val();
+			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
+				jq('#waiverAmount').val(formatAccounting(numb));
+			}
+			else {
+				jq("#waiverAmount").val('0.00');
+			}
+        });
+		
 
         // Class to represent a row in the bill addition grid
         function BillItem(quantity, initialBill) {
@@ -72,6 +104,7 @@
             }
             self.removeBillItem = function (item) {
                 self.billItems.remove(item);
+				numberDataTables();
             }
             self.cancelBillAddition = function(){
                 window.location.replace("billableServiceBillListForBD.page?patientId=${patientId}&billId=${lastBillId}")
@@ -83,16 +116,16 @@
                     alert("Please enter correct Waiver Amount");
                 }else{
                     //submit the details to the server
-                    jQuery("#billsForm").submit();
+                    jq("#billsForm").submit();
 
                 }
             }
         }
 
 
-        ko.applyBindings(bill, jQuery("#example")[0]);
+        ko.applyBindings(bill, jq("#example")[0]);
 
-        jQuery("#service").autocomplete({
+        jq("#service").autocomplete({
             minLength: 3,
             source: function (request, response) {
                 jq.getJSON('${ ui.actionLink("billingui", "billableServiceBillAdd", "loadBillableServices") }',
@@ -110,7 +143,7 @@
                         });
             },
             focus: function (event, ui) {
-                jQuery("#service").val(ui.item.value.name);
+                jq("#service").val(ui.item.value.name);
                 return false;
             },
             select: function (event, ui) {
@@ -118,16 +151,32 @@
                 jQuery("#service").val(ui.item.value.name);
                 bill.addBillItem(ui.item.value);
                 jq('#service').val('');
+				jq('#datafield').show();
+				numberDataTables();
 
             }
-
-
         });
-
-
     });//end of document ready function
 
-
+	function formatDataTables(){
+		if (('#datafield tr').length == 0){
+			jq('#datafield').hide();
+		}
+		else {
+			jq('#datafield').show();
+		}
+		numberDataTables();
+	}
+	
+	function numberDataTables(){
+		var i =0;
+		
+		jq('#datafield  > tr').each(function() {
+			jq('#datafield tr').find("span.nombre").eq(i).text(i+1);
+			i++;
+		});
+	}
+		
     function getBillableServices() {
         var toReturn;
         jQuery.ajax({
@@ -217,6 +266,25 @@
 		margin-top: -40px;
 		padding-right: 10px;
 	}
+	td input{
+		background: transparent none repeat scroll 0 0;
+		border: 1px solid #aaa;
+		padding-right: 10px;
+		text-align: right;
+		width: 80px;
+	}
+	table th, table td {
+		border: 1px solid #ddd;
+		padding: 5px 20px;
+	}
+	#datafield{
+		display:none;
+	}
+	#waiverAmount{
+		margin-left: -12px;
+		margin-right: -12px;
+		width: 137px;
+	}
 </style>
 
 <div class="clear"></div>
@@ -298,35 +366,76 @@
 
         
         <table>
-            <thead><tr>
-                <th>Service Name</th><th>Quantity</th><th>Unit Price</th><th>Item Total</th><th></th>
-            </tr></thead>
-            <tbody data-bind="foreach: billItems">
-            <tr>
-                <td data-bind="text: initialBill().name"/></td>
-                <td><input data-bind="value: quantity"/></td>
-                <td data-bind="text: formattedPrice"></td>
-                <td><span data-bind="text: itemTotal().toFixed(2)"></span></td>
-                <td><a href="#" data-bind="click: \$root.removeBillItem"><i class="icon-remove small"
-                                                                            style="color:red"></i></a></td>
-            </tr>
+            <thead>
+				<tr>
+					<th style="width: 40px; text-align: center;">#</th>
+					<th>Service Name</th>
+					<th style="width: 90px">Quantity</th>
+					<th style="width:120px; text-align:right;">Unit Price</th>
+					<th style="width:120px; text-align:right;">Item Total</th>
+					<th style="width:20px; text-align:center;">&nbsp;</th>
+				</tr>
+			</thead>
+			
+            <tbody id="datafield" data-bind="foreach: billItems">
+				<tr>
+					<td style="text-align: center;"><span class="nombre"></span></td>
+					<td data-bind="text: initialBill().name"></td>
+					
+					<td>
+						<input data-bind="value: quantity">
+					</td>
+					
+					<td style="text-align: right;">
+						<span data-bind="text: formattedPrice"></span>
+					</td>
+					
+					<td style="text-align: right;">
+						<span data-bind="text: itemTotal().toFixed(2)"></span>
+					</td>
+					
+					<td style="text-align: center;">
+						<a class="remover" href="#" data-bind="click: \$root.removeBillItem">
+							<i class="icon-remove small" style="color:red"></i>
+						</a>
+					</td>
+				</tr>
             </tbody>
+			
+			<tbody>
+				<tr style="border: 1px solid #ddd;">
+					<td style="text-align: center;"></td>
+					<td colspan="3"><b>Total surcharge: Kshs</b></td>
+					
+					<td style="text-align: right;">
+						<span data-bind="text: totalSurcharge().toFixed(2)"></span>
+					</td>
+					<td style="text-align: right;"></td>
+				</tr>
+				
+				<tr style="border: 1px solid #ddd;">
+					<td style="text-align: center;"></td>
+					<td colspan="3"><b>Waiver Amount: Kshs</b></td>
+					
+					<td style="text-align: right;">
+						<input id="waiverAmount" data-bind="value: waiverAmount" />
+					</td>
+					<td style="text-align: right;"></td>
+				</tr>
+			</tbody>
+			
         </table>
+		
+		<div id="waiverCommentDiv" style="padding-top: 10px;">
+			<label for="waiverComment" style="color: rgb(54, 52, 99);">Waiver Number/Comment</label>
+			<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder" style="width: 99.4%; height: 60px;" data-bind="value: comment, enable: waiverAmount() > 0"></textarea>
+		</div>
 
-        <h3 data-bind="visible: totalSurcharge() > 0">
-
-            Total surcharge: Kshs. <span data-bind="text: totalSurcharge().toFixed(2)"></span><br />
-            Waiver Amount: Kshs. <input data-bind="value: waiverAmount" /> &nbsp;&nbsp;Comments. <input data-bind="value: comment, enable: waiverAmount() > 0" />
-        </h3>
-
-        <br /><br />
-
-
-        <form  method="post" id="billsForm">
+        <form  method="post" id="billsForm" style="padding-top: 10px">
             <input id="patientId" type="hidden" value="${patientId}">
-
-            <textarea name="bill" data-bind="value: ko.toJSON(\$root)"></textarea>
-            <button data-bind="click: submitBill, enable: billItems().length > 0 ">Save</button>  <button data-bind="click: cancelBillAddition">Cancel</button>
+            <textarea name="bill" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
+            <button data-bind="click: submitBill, enable: billItems().length > 0 "class="confirm">Save</button>  
+			<button data-bind="click: cancelBillAddition" class="cancel">Cancel</button>
         </form>
 
     </div>
