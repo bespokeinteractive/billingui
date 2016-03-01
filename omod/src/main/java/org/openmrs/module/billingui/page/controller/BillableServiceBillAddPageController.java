@@ -1,5 +1,6 @@
 package org.openmrs.module.billingui.page.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,6 +49,8 @@ public class BillableServiceBillAddPageController {
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
         BillingService billingService = Context.getService(BillingService.class);
+        HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
+
         List<BillableService> services = billingService.getAllServices();
         pageModel.addAttribute("services", services);
         Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
@@ -71,8 +74,18 @@ public class BillableServiceBillAddPageController {
         pageModel.addAttribute("age", patient.getAge());
         pageModel.addAttribute("currentDate", new Date());
         pageModel.addAttribute("category", patient.getAttribute(14));
-        pageModel.addAttribute("fileNumber", patient.getAttribute(43));
         pageModel.addAttribute("lastBillId", lastBillId);
+        pageModel.addAttribute("previousVisit",hcs.getLastVisitTime(patient));
+
+        if (patient.getAttribute(43) == null){
+            pageModel.addAttribute("fileNumber", "");
+        }
+        else if (StringUtils.isNotBlank(patient.getAttribute(43).getValue())){
+            pageModel.addAttribute("fileNumber", "(File: "+patient.getAttribute(43)+")");
+        }
+        else {
+            pageModel.addAttribute("fileNumber", "");
+        }
 
     }
 

@@ -89,9 +89,19 @@ public class BillableServiceBillListForBDPageController {
             model.addAttribute("ChildCatId", ChildCatId);
             model.addAttribute("categoryList", categoryList);
             model.addAttribute("encounterId", encounterId);
+            model.addAttribute("patientId", patientId);
 
             model.addAttribute("category", patient.getAttribute(14));
-            model.addAttribute("fileNumber", patient.getAttribute(43));
+
+            if (patient.getAttribute(43) == null){
+                model.addAttribute("fileNumber", "");
+            }
+            else if (StringUtils.isNotBlank(patient.getAttribute(43).getValue())){
+                model.addAttribute("fileNumber", "(File: "+patient.getAttribute(43)+")");
+            }
+            else {
+                model.addAttribute("fileNumber", "");
+            }
 
             if (patient.getGender().equals("M")) {
                 model.addAttribute("gender", "Male");

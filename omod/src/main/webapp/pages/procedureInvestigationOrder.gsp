@@ -68,7 +68,7 @@
 		jq('#waiverAmount').on('blur', function () {
 			var numb = jq('#waiverAmount').val();
 			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
-				jq('#waiverAmount').val(formatAccountings(numb));
+				jq('#waiverAmount').val(formatAccounting(numb));
 			}
 			else {
 				jq("#waiverAmount").val('0.00');
@@ -96,7 +96,7 @@
                 mytot += (parseInt(jQuery("#" + i + "serviceprice").val()) * servQuantity);
             }
         }
-        jQuery("#total").val(formatAccountings(mytot));
+        jQuery("#total").val(formatAccounting(mytot));
 
     }
 
@@ -128,7 +128,7 @@
             var totalValue = jQuery("#total").val();
             var toBeAdded = jQuery("#" + icon + "serviceprice").val();
             var added = parseInt(totalValue, 10) + parseInt(toBeAdded, 10);
-            jQuery('#total').val(formatAccountings(added));
+            jQuery('#total').val(formatAccounting(added));
         }
         else {
             jQuery("#" + icon + "servicequantity").attr("disabled", "disabled");
@@ -137,23 +137,10 @@
             var totalValue = jQuery("#total").val();
             var toBeMinus = jQuery("#" + icon + "serviceprice").val();
             var left = totalValue - toBeMinus;
-            jQuery('#total').val(formatAccountings(left));
+            jQuery('#total').val(formatAccounting(left));
         }
 
     }
-	
-	function formatAccountings(nStr) {
-		nStr = parseFloat(nStr).toFixed(2);
-		nStr += '';
-		x = nStr.split('.');
-		x1 = x[0];
-		x2 = x.length > 1 ? '.' + x[1] : '';
-		var rgx = /(\\d+)(\\d{3})/;
-		while (rgx.test(x1)) {
-			x1 = x1.replace(rgx, '\$1' + ',' + '\$2');
-		}
-		return x1 + x2;
-	}
 
     function payCheckBox(incon) {
 
@@ -163,14 +150,14 @@
             var totalValue = jQuery("#total").val();
             var toBeAdded = jQuery("#" + icon + "serviceprice").val();
             var added = parseInt(totalValue, 10) + parseInt(toBeAdded, 10);
-            jQuery('#total').val(formatAccountings(added));
+            jQuery('#total').val(formatAccounting(added));
 
         }
         else {
             var totalValue = jQuery("#total").val();
             var toBeMinus = jQuery("#" + icon + "serviceprice").val();
             var left = totalValue - toBeMinus;
-            jQuery('#total').val(formatAccountings(left));
+            jQuery('#total').val(formatAccounting(left));
             jQuery("#" + icon + "serviceprice").attr("disabled", "disabled");
         }
     }
@@ -320,7 +307,7 @@
 			<div class="tad">Last Visit</div>
 		</div>
 
-       <div class="identifiers">
+		<div class="identifiers">
 			<em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
 			<span>${patient.getPatientIdentifier()}</span>
 			<br>

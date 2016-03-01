@@ -1,8 +1,9 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "Cashier - Add Patient Bill"])
+    ui.decorateWith("appui", "standardEmrPage", [title: "Cashier - Add Paid Bill"])
     ui.includeCss("uicommons", "styleguide/index.css")
     ui.includeCss("billingui", "paging.css")
     ui.includeJavascript("billingui", "paging.js")
+    ui.includeJavascript("billingui", "moment.js")
     ui.includeJavascript("billingui", "common.js")
     ui.includeJavascript("billingui", "jquery.PrintArea.js")
     ui.includeJavascript("billingui", "knockout-3.4.0.js")
@@ -10,11 +11,16 @@
 %>
 <script>
     var pData;
-    jQuery(function () {
+    
+	jq(function () {
         var bill = new BillItemsViewModel();
         pData = getBillableServices();
 
-
+		jq('#surname').html(stringReplace('${patient.names.familyName}')+',<em>surname</em>');
+		jq('#othname').html(stringReplace('${patient.names.givenName}')+' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <em>other names</em>');
+		jq('#agename').html('${patient.age} years ('+ moment('${patient.birthdate}').format('DD,MMM YYYY') +')');
+		
+		jq('.tad').text('Last Visit: '+ moment('${previousVisit}').format('DD.MM.YYYY hh:mm')+' HRS');
 
         // Class to represent a row in the bill addition grid
         function BillItem(quantity, initialBill) {
@@ -147,47 +153,150 @@
 
 
 </script>
-<openmrs:require privilege="Add Bill" otherwise="/login.htm"
-                 redirect="/module/billing/main.form"/>
+
+<style>
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
+	.new-patient-header .demographics .gender-age {
+		font-size: 14px;
+		margin-left: -55px;
+		margin-top: 12px;
+	}
+	.new-patient-header .demographics .gender-age span {
+		border-bottom: 1px none #ddd;
+	}
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
+	.tag {
+		padding: 2px 10px;
+	}
+	.tad {
+		background: #666 none repeat scroll 0 0;
+		border-radius: 1px;
+		color: white;
+		display: inline;
+		font-size: 0.8em;
+		margin-left: 4px;
+		padding: 2px 10px;
+	}
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
+	.catg{
+		color: #363463;
+		margin: 35px 10px 0 0;
+	}
+	.formfactor {
+		background: #f3f3f3 none repeat scroll 0 0;
+		border: 1px solid #ddd;
+		margin-bottom: 5px;
+		margin-top: 5px;
+		min-height: 38px;
+		padding: 5px 10px;
+		text-align: left;
+		width: auto;
+	}
+	.formfactor label {
+		color: #f26522;
+		padding-left: 5px;
+	}
+	.formfactor input {
+		border: 1px solid #aaa;
+		color: #222;
+		display: block;
+		height: 29px;
+		margin: 5px 0;
+		min-width: 98%;
+		padding: 5px 10px;
+	}
+	.formfactor h2 {
+		display: inline-block;
+		float: right;
+		margin-top: -40px;
+		padding-right: 10px;
+	}
+</style>
+
 <div class="clear"></div>
 
 <div class="container">
+	<div class="example">
+		<ul id="breadcrumbs">
+			<li>
+				<a href="${ui.pageLink('referenceapplication','home')}">
+				<i class="icon-home small"></i></a>
+			</li>
+			<li>
+				<i class="icon-chevron-right link"></i>
+				<a href="${ui.pageLink('billingui','billingQueue')}">Billing</a>
+			</li>
+			
+			<li>
+				<i class="icon-chevron-right link"></i>
+				<a href="${ui.pageLink('billingui','billingQueue')}">Service Bills</a>
+			</li>
+			
+			<li>
+				<i class="icon-chevron-right link"></i>
+				Add Paid Bill
+			</li>
+		</ul>
+	</div>
+	
     <div class="patient-header new-patient-header">
         <div class="demographics">
-            <h1 class="name">
-                <span><small>${patient.familyName}</small>,<em>surname</em></span>
-                <span><small>${patient.givenName} &nbsp;${(patient.middleName)?.replace(',', ' ')}</small><em>name</em>
-                </span>
-            </h1>
-
-            <div class="gender-age">
-                <span>${gender}</span>
-                <span>${age} year(s)</span>
-            </div>
-            <br>
-
-            <div class="status-container">
-                <span class="status active"></span>
-                Date/ Time: ${currentDate}
-            </div>
-
-            <div class="tag">File Number : ${fileNumber}</div>
-        </div>
+			<h1 class="name">
+				<span id="surname"></span>
+				<span id="othname"></span>
+				
+				<span class="gender-age">
+					<span>
+						<% if (patient.gender == "F") { %>
+							Female
+						<% } else { %>
+							Male
+						<% } %>
+					</span>
+					<span id="agename"></span>
+					
+				</span>
+			</h1>
+			
+			<br/>
+			<div id="stacont" class="status-container">
+				<span class="status active"></span>
+				Visit Status
+			</div>
+			<div class="tag">Outpatient ${fileNumber}</div>
+			<div class="tad">Last Visit</div>
+		</div>
 
         <div class="identifiers">
-            <em>Patient ID</em>
-            <span>${patient.patientIdentifier.identifier}</span>
-            <em>Payment Category</em>
-            <span>${category}</span>
-        </div>
+			<em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
+			<span>${patient.getPatientIdentifier()}</span>
+			<br>
+			
+			<div class="catg">
+				<i class="icon-tags small" style="font-size: 16px"></i><small>Category:</small> ${category} 
+			</div>
+		</div>
+		<div class="close"></div>
     </div>
 
 
     <div id="example">
-        <label for="service">Add Bill Item by typing:</label>
-        <input type="text" id="service" name="service"/>
+		<div class="formfactor">
+			<label for="service">Add Bill Item:</label><br/>
+			<input type="text" id="service" name="service" placeholder="Enter Bill Name"/>
+			
+			<h2>Bill Items (<span data-bind="text: billItems().length"></span>)</h2>
+		</div>
+		
+        
 
-        <h2>Bill Items (<span data-bind="text: billItems().length"></span>)</h2>
+        
         <table>
             <thead><tr>
                 <th>Service Name</th><th>Quantity</th><th>Unit Price</th><th>Item Total</th><th></th>
