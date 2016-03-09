@@ -355,16 +355,16 @@
     </table>
 	
 	
-	 
+	<form method="POST" id="billForm"> 
 	<div class="formfactor">
-        <form method="POST" id="billForm">
+        
 		<% if (!patient.dead) { %>
 			<button type="button" class="task" onclick="window.location.href = 'addPatientServiceBillForBD.page?patientId=${patient.patientId}&billType=paid&lastBillId=${bill.patientServiceBillId}'" style="margin-left: -3px">Add Paid Bill</button>
 			<button type="button" class="cancel">Add Free Bill</button>
 		<% } %>
 
         <button type="button" class="confirm" style="float: right; margin-right: -5px;">Print Bill</button>
-        </form>
+        
         <span id="commentField">
 			<label for="comment">Comment</label> 
 			<input id= "comment" name="comment"/>
@@ -374,6 +374,7 @@
 			<input type="button" value="Ok" onclick="return validate();"/>
 		</span>
 	</div>
+	</form>
 </div>
 
 <!-- PRINT DIV -->
