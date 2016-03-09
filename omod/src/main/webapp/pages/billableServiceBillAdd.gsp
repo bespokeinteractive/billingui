@@ -19,8 +19,9 @@
 		jq('#surname').html(stringReplace('${patient.names.familyName}')+',<em>surname</em>');
 		jq('#othname').html(stringReplace('${patient.names.givenName}')+' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <em>other names</em>');
 		jq('#agename').html('${patient.age} years ('+ moment('${patient.birthdate}').format('DD,MMM YYYY') +')');
-		
 		jq('.tad').text('Last Visit: '+ moment('${previousVisit}').format('DD.MM.YYYY hh:mm')+' HRS');
+		
+		jq("#waiverCommentDiv").hide();
 		
 		jq('#waiverAmount').on('change keyup paste', function () {
 			var numb = jq('#waiverAmount').val();
@@ -193,14 +194,7 @@
             }
         });
         return toReturn;
-
-
     }
-
-
-
-
-
 </script>
 
 <style>
@@ -428,7 +422,7 @@
 		
 		<div id="waiverCommentDiv" style="padding-top: 10px;">
 			<label for="waiverComment" style="color: rgb(54, 52, 99);">Waiver Number/Comment</label>
-			<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder" style="width: 99.4%; height: 60px;" data-bind="value: comment, enable: waiverAmount() > 0"></textarea>
+			<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder" style="width: 99.4%; height: 60px;" data-bind="value: comment"></textarea>
 		</div>
 
         <form  method="post" id="billsForm" style="padding-top: 10px">
