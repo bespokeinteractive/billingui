@@ -211,7 +211,7 @@ public class BillableServiceBillAddPageController {
             bill.setActualAmount(totalActualAmount);
 
             /*added waiver amount */
-            if (obj.getString("waiverAmount") != null) {
+            if (obj.getInt("waiverAmount") != 0) {
                 bill.setWaiverAmount(NumberUtils.createBigDecimal(obj.getString("waiverAmount")));
             } else {
                 BigDecimal wavAmt = new BigDecimal(0);
