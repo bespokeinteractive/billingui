@@ -433,9 +433,11 @@
 
         <form  method="post" id="billsForm" style="padding-top: 10px">
             <input id="patientId" type="hidden" value="${patientId}">
+
             <textarea name="bill" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
             <button data-bind="click: submitBill, enable: billItems().length > 0 "class="confirm">Save</button>  
 			<button data-bind="click: cancelBillAddition" class="cancel">Cancel</button>
+
         </form>
 
     </div>
