@@ -4,10 +4,13 @@ package org.openmrs.module.billingui.page.controller;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.BillingService;
 import org.openmrs.module.hospitalcore.model.BillableService;
+import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
@@ -21,13 +24,19 @@ import java.util.Map;
  */
 public class AddPatientServiceBillForBDPageController {
 
-    public String get(PageModel pageModel, @RequestParam("patientId") Integer patientId,
+    public String get(PageModel pageModel,
+                      UiSessionContext sessionContext,
+                      PageRequest pageRequest,
+                      UiUtils ui,
+                      @RequestParam("patientId") Integer patientId,
                       @RequestParam(value = "comment", required = false) String comment,
                       @RequestParam(value = "billType", required = false) String billType,
                       @RequestParam(value = "encounterId", required = false) Integer encounterId,
                       @RequestParam(value = "typeOfPatient", required = false) String typeOfPatient,
                       @RequestParam(value = "lastBillId", required = false) String lastBillId,
                       UiUtils uiUtils) {
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
+        sessionContext.requireAuthentication();
         BillingService billingService = Context.getService(BillingService.class);
         List<BillableService> services = billingService.getAllServices();
         Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();

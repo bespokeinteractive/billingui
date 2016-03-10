@@ -7,6 +7,7 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.billingui.includable.billcalculator.BillCalculatorForBDService;
 import org.openmrs.module.hospitalcore.BillingService;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
@@ -15,8 +16,10 @@ import org.openmrs.module.hospitalcore.model.*;
 import org.openmrs.module.hospitalcore.util.HospitalCoreUtils;
 import org.openmrs.module.hospitalcore.util.Money;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
+import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +35,15 @@ import java.util.Map;
  */
 public class ProcedureInvestigationOrderPageController {
 
-    public void get(PageModel model, @RequestParam("patientId") Integer patientId,
+    public void get(PageModel model,
+                    UiSessionContext sessionContext,
+                    PageRequest pageRequest,
+                    UiUtils ui,
+                    @RequestParam("patientId") Integer patientId,
                     @RequestParam("encounterId") Integer encounterId,
                     @RequestParam(value = "date", required = false) String dateStr) {
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
+        sessionContext.requireAuthentication();
         BillingService billingService = Context.getService(BillingService.class);
         List<BillableService> serviceOrderList = billingService.listOfServiceOrder(patientId, encounterId);
         model.addAttribute("serviceOrderList", serviceOrderList);

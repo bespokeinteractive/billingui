@@ -12,6 +12,7 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.billingui.includable.billcalculator.BillCalculatorForBDService;
 import org.openmrs.module.hospitalcore.BillingService;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
@@ -20,8 +21,10 @@ import org.openmrs.module.hospitalcore.model.*;
 import org.openmrs.module.hospitalcore.util.HospitalCoreUtils;
 import org.openmrs.module.hospitalcore.util.Money;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
+import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -39,13 +42,18 @@ import java.util.Map;
 public class BillableServiceBillAddPageController {
     private Log logger = LogFactory.getLog(getClass());
 
-    public void get(PageModel pageModel, @RequestParam("patientId") Integer patientId,
+    public void get(PageModel pageModel,
+                    UiSessionContext sessionContext,
+                    PageRequest pageRequest,
+                    UiUtils ui,
+                    @RequestParam("patientId") Integer patientId,
                     @RequestParam(value = "comment", required = false) String comment,
                     @RequestParam(value = "billType", required = false) String billType,
                     @RequestParam(value = "encounterId", required = false) Integer encounterId,
                     @RequestParam(value = "typeOfPatient", required = false) String typeOfPatient,
-                    @RequestParam(value = "lastBillId", required = false) String lastBillId,
-                    UiUtils uiUtils) {
+                    @RequestParam(value = "lastBillId", required = false) String lastBillId) {
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
+        sessionContext.requireAuthentication();
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
         BillingService billingService = Context.getService(BillingService.class);
@@ -89,7 +97,10 @@ public class BillableServiceBillAddPageController {
 
     }
 
-    public String post(HttpServletRequest request, PageModel model, Object command, BindingResult bindingResult,
+    public String post(HttpServletRequest request,
+                       PageModel model,
+                       Object command,
+                       BindingResult bindingResult,
                        @RequestParam("patientId") Integer patientId, @RequestParam(value = "paymentMode", required = false) String paymentMode,
                        @RequestParam(value = "billType", required = false) String billType, UiUtils uiUtils,
                        @RequestParam(value = "encounterId", required = false) Integer encounterId) {

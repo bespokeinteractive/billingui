@@ -26,11 +26,15 @@ import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.BillingService;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.model.OpdTestOrder;
 import org.openmrs.module.hospitalcore.model.PatientSearch;
+import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
+import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
@@ -40,8 +44,14 @@ import java.util.List;
 
 public class ListOfOrderPageController {
 
-    public void get(PageModel model, @RequestParam("patientId") Integer patientId,
+    public void get(PageModel model,
+                    UiSessionContext sessionContext,
+                    PageRequest pageRequest,
+                    UiUtils ui,
+                    @RequestParam("patientId") Integer patientId,
                     @RequestParam(value = "date", required = false) String dateStr) {
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
+        sessionContext.requireAuthentication();
         BillingService billingService = Context
                 .getService(BillingService.class);
         PatientService patientService = Context.getPatientService();

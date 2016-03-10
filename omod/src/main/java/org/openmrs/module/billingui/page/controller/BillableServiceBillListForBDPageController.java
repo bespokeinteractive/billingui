@@ -6,6 +6,7 @@ import org.openmrs.*;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.billingui.includable.billcalculator.BillCalculatorForBDService;
 import org.openmrs.module.hospitalcore.BillingConstants;
 import org.openmrs.module.hospitalcore.BillingService;
@@ -13,8 +14,10 @@ import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.IpdService;
 import org.openmrs.module.hospitalcore.model.*;
 import org.openmrs.module.hospitalcore.util.*;
+import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +31,11 @@ import java.util.*;
  */
 public class BillableServiceBillListForBDPageController {
 
-    public void get(PageModel model, @RequestParam("patientId") Integer patientId,
+    public void get(  PageModel model,
+                      UiSessionContext sessionContext,
+                      PageRequest pageRequest,
+                      UiUtils ui,
+                      @RequestParam("patientId") Integer patientId,
                       @RequestParam(value = "billId", required = false) Integer billId,
                       @RequestParam(value = "pageSize", required = false) Integer pageSize,
                       @RequestParam(value = "currentPage", required = false) Integer currentPage,
@@ -39,7 +46,10 @@ public class BillableServiceBillListForBDPageController {
                       @RequestParam(value = "itemID", required = false) Integer itemID,
                       @RequestParam(value = "voidStatus", required = false) Boolean voidStatus,
                       @RequestParam(value = "selectedCategory", required = false) Integer selectedCategory,
-                      HttpServletRequest request, UiUtils uiUtils) {
+                      HttpServletRequest request) {
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
+        sessionContext.requireAuthentication();
+
         long admitMili = 0;
         BillingService billingService = Context.getService(BillingService.class);
 
