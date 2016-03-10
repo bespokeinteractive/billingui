@@ -76,7 +76,12 @@
             // Operations
 
             self.removeBillItem = function (item) {
-                self.billItems.remove(item);
+                if(self.billItems().length > 1){
+                    self.billItems.remove(item);
+                }else{
+                    jq().toastmessage('showNoticeToast', "A Bill Must have at least one item");
+                }
+
 
             }
             self.cancelBillAddition = function () {
