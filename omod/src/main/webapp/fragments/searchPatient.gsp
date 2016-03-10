@@ -51,7 +51,8 @@
         searchPatient: function (currentPage, pageSize) {
             this.beforeSearch();
             var phrase = jQuery("#searchPhrase").val();
-            if (phrase.length >= 1 {
+
+            if (phrase.length >= 1) {
                 jQuery("#ajaxLoader").show();
                 getPatientQueue(1);
             }
