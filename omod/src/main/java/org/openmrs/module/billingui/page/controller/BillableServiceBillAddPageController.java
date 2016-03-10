@@ -165,6 +165,7 @@ public class BillableServiceBillAddPageController {
             Patient patient = patientService.getPatient(patientId);
             Map<String, String> attributes = PatientUtils.getAttributes(patient);
             BillCalculatorForBDService calculator = new BillCalculatorForBDService();
+
             PatientServiceBill bill = new PatientServiceBill();
             bill.setCreatedDate(new Date());
             bill.setPatient(patient);

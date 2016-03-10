@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openmrs.Concept;
 import org.openmrs.Order;
 import org.openmrs.Patient;
@@ -17,6 +19,7 @@ import org.openmrs.module.hospitalcore.util.HospitalCoreUtils;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.util.Money;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
+import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.validation.BindingResult;
@@ -24,10 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Stanslaus Odhiambo
@@ -37,7 +37,8 @@ import java.util.Map;
 public class EditPatientServiceBillForBDPageController {
     private Log logger = LogFactory.getLog(getClass());
 
-    public void get(PageModel model, @RequestParam("billId") Integer billId, @RequestParam("patientId") Integer patientId) {
+    public void get(PageModel model, @RequestParam("billId") Integer billId, @RequestParam("patientId") Integer patientId,
+                    UiUtils uiUtils) {
 
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
@@ -56,9 +57,17 @@ public class EditPatientServiceBillForBDPageController {
         model.addAttribute("serviceMap", mapServices);
         model.addAttribute("tabs", billingService.traversTab(concept, mapServices, 1));
         model.addAttribute("patientId", patientId);
-        model.addAttribute("previousVisit",hcs.getLastVisitTime(patient));
+        model.addAttribute("previousVisit", hcs.getLastVisitTime(patient));
 
         PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
+        Set<PatientServiceBillItem> billItems = bill.getBillItems();
+        List<SimpleObject> simpleObjects = SimpleObject.fromCollection(billItems, uiUtils, "patientServiceBillItemId",
+                "service.conceptId", "service.name", "quantity", "amount", "unitPrice");
+
+
+        String billingItems = SimpleObject.create("billingItems", simpleObjects).toJson();
+        model.addAttribute("billingItems", billingItems);
+
         model.addAttribute("freeBill", bill.getFreeBill());
         model.addAttribute("waiverAm", bill.getWaiverAmount());
         model.addAttribute("bill", bill);
@@ -67,13 +76,11 @@ public class EditPatientServiceBillForBDPageController {
         model.addAttribute("category", patient.getAttribute(14));
         model.addAttribute("age", patient.getAge());
 
-        if (patient.getAttribute(43) == null){
+        if (patient.getAttribute(43) == null) {
             model.addAttribute("fileNumber", "");
-        }
-        else if (StringUtils.isNotBlank(patient.getAttribute(43).getValue())){
-            model.addAttribute("fileNumber", "(File: "+patient.getAttribute(43)+")");
-        }
-        else {
+        } else if (StringUtils.isNotBlank(patient.getAttribute(43).getValue())) {
+            model.addAttribute("fileNumber", "(File: " + patient.getAttribute(43) + ")");
+        } else {
             model.addAttribute("fileNumber", "");
         }
 
@@ -89,20 +96,16 @@ public class EditPatientServiceBillForBDPageController {
 
 
     public String post(PageModel pageModel, Object command, BindingResult bindingResult, HttpServletRequest request,
-                       @RequestParam("cons") Integer[] cons, @RequestParam("patientId") Integer patientId,
+                       @RequestParam("patientId") Integer patientId,
                        @RequestParam("billId") Integer billId, @RequestParam("action") String action,
-                       @RequestParam(value = "description", required = false) String description,
-                       @RequestParam(value = "waiverAmountEdit", required = false) BigDecimal waiverAmount,
-                       @RequestParam(value = "waiverNumber", required = false) String waiverNumber,
                        UiUtils uiUtils) {
+        String bills = request.getParameter("bill");
+        JSONObject obj = new JSONObject(bills);
+        JSONArray billItems = obj.getJSONArray("billItems");
+        pageModel.addAttribute("patientId", patientId);
 
-        validate(cons, bindingResult, request);
-        /*if (bindingResult.hasErrors()) {
-            pageModel.addAttribute("errors", bindingResult.getAllErrors());
-            return "editPatientServiceBillForBD.page";
-        }*/
+
         BillingService billingService = Context.getService(BillingService.class);
-
         PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
         // Get the BillCalculator to calculate the rate of bill item the patient
         // has to pay
@@ -111,12 +114,12 @@ public class EditPatientServiceBillForBDPageController {
 
         BillCalculatorForBDService calculator = new BillCalculatorForBDService();
 
-        if (!"".equals(description)){
-            bill.setDescription(description);
+        if (StringUtils.isNotBlank(obj.getString("comment"))) {
+            bill.setDescription(obj.getString("comment"));
         }
 
-        if(StringUtils.isNotBlank(action)){
-            if(action.equalsIgnoreCase("void")){
+        if (StringUtils.isNotBlank(action)) {
+            if (action.equalsIgnoreCase("void")) {
                 bill.setVoided(true);
                 bill.setVoidedDate(new Date());
                 for (PatientServiceBillItem item : bill.getBillItems()) {
@@ -133,9 +136,9 @@ public class EditPatientServiceBillForBDPageController {
                 }
                 billingService.savePatientServiceBill(bill);
                 //ghanshyam 7-sept-2012 Support #343 [Billing][3.2.7-SNAPSHOT]No Queue to be generated from Old bill
-                Map<String, Object> redirectParams=new HashMap<String, Object>();
-                redirectParams.put("patientId",patientId);
-                redirectParams.put("billId",billId);
+                Map<String, Object> redirectParams = new HashMap<String, Object>();
+                redirectParams.put("patientId", patientId);
+                redirectParams.put("billId", billId);
                 return "redirect:" + uiUtils.pageLink("billingui", "billableServiceBillListForBD", redirectParams);
             }
         }
@@ -148,7 +151,7 @@ public class EditPatientServiceBillForBDPageController {
             //ghanshyam-kesav 16-08-2012 Bug #323 [BILLING] When a bill with a lab\radiology order is edited the order is re-sent
             Order ord = item.getOrder();
             /*ghanshyam 18-08-2012 [Billing - Bug #337] [3.2.7 snap shot][billing(DDU,DDU SDMX,Tanda,mohali)]error in edit bill.
-			  the problem was while we are editing the bill of other than lab and radiology.
+              the problem was while we are editing the bill of other than lab and radiology.
 			*/
             if (ord != null) {
                 ord.setVoided(true);
@@ -170,18 +173,19 @@ public class EditPatientServiceBillForBDPageController {
         String name;
         BillableService service;
 
-        for (int conceptId : cons) {
-            unitPrice = NumberUtils.createBigDecimal(request.getParameter(conceptId + "_unitPrice"));
-            quantity = NumberUtils.createInteger(request.getParameter(conceptId + "_qty"));
-            name = request.getParameter(conceptId + "_name");
-            service = billingService.getServiceByConceptId(conceptId);
 
+        //loop over the incoming items
+        for (int i = 0; i < billItems.length(); i++) {
+            JSONObject incomingItem = billItems.getJSONObject(i);
+            System.out.println(incomingItem);
+            unitPrice = NumberUtils.createBigDecimal(Integer.toString(incomingItem.getInt("price")));
+            quantity = NumberUtils.createInteger(Integer.toString(incomingItem.getInt("quantity")));
+            name = incomingItem.getJSONObject("initialBill").getJSONObject("service").getString("name");
+            service = billingService.getServiceByConceptId(incomingItem.getJSONObject("initialBill").getJSONObject("service").getInt("conceptId"));
             mUnitPrice = new Money(unitPrice);
             itemAmount = mUnitPrice.times(quantity);
             totalAmount = totalAmount.plus(itemAmount);
-
-            String sItemId = request.getParameter(conceptId + "_itemId");
-
+            Integer sItemId = incomingItem.getJSONObject("initialBill").getInt("patientServiceBillItemId");
             if (sItemId == null) {
                 item = new PatientServiceBillItem();
 
@@ -221,9 +225,7 @@ public class EditPatientServiceBillForBDPageController {
                 item.setUnitPrice(unitPrice);
                 bill.addBillItem(item);
             } else {
-
-                item = mapOldItems.get(Integer.parseInt(sItemId));
-
+                item = mapOldItems.get(sItemId);
                 // Get the ratio for each bill item
                 Map<String, Object> parameters = HospitalCoreUtils.buildParameters("patient", patient, "attributes",
                         attributes, "billItem", item);
@@ -280,16 +282,19 @@ public class EditPatientServiceBillForBDPageController {
 
                 totalActualAmount = totalActualAmount.add(item.getActualAmount());
             }
+
         }
+
         bill.setAmount(totalAmount.getAmount());
         bill.setActualAmount(totalActualAmount);
-		/*added waiver amount */
-        if (waiverAmount != null) {
-            bill.setWaiverAmount(waiverAmount);
+        /*added waiver amount */
+        if (obj.getInt("waiverAmount") != 0) {
+            bill.setWaiverAmount(NumberUtils.createBigDecimal(obj.getString("waiverAmount")));
         } else {
             BigDecimal wavAmt = new BigDecimal(0);
             bill.setWaiverAmount(wavAmt);
         }
+        String waiverNumber = obj.getString("waiverNumber");
 
         if (waiverNumber != null && waiverNumber != "") {
             bill.setPatientCategory("Waiver Number - " + waiverNumber);
@@ -315,22 +320,12 @@ public class EditPatientServiceBillForBDPageController {
 
         bill = billingService.savePatientServiceBill(bill);
         //ghanshyam 7-sept-2012 Support #343 [Billing][3.2.7-SNAPSHOT]No Queue to be generated from Old bill
-        Map<String, Object> redirectParams=new HashMap<String, Object>();
-        redirectParams.put("patientId",patientId);
-        redirectParams.put("billId",billId);
+        Map<String, Object> redirectParams = new HashMap<String, Object>();
+        redirectParams.put("patientId", patientId);
+        redirectParams.put("billId", billId);
 
-        return "redirect:" + uiUtils.pageLink("billingui","billableServiceBillListForBD",redirectParams);
+        return "redirect:" + uiUtils.pageLink("billingui", "billableServiceBillListForBD", redirectParams);
     }
 
-    private void validate(Integer[] ids, BindingResult binding, HttpServletRequest request) {
-        for (int id : ids) {
-            try {
-                Integer.parseInt(request.getParameter(id + "_qty"));
-            } catch (Exception e) {
-                binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
-                return;
-            }
-        }
-    }
 
 }

@@ -51,12 +51,12 @@
         searchPatient: function (currentPage, pageSize) {
             this.beforeSearch();
             var phrase = jQuery("#searchPhrase").val();
-            if (phrase.length <= 3) {
+            if (phrase.length >= 1) {
                 jQuery("#ajaxLoader").show();
                 getPatientQueue(1);
             }
             else{
-                jq().toastmessage('showNoticeToast', "Specify atleast three characters to Search");
+                jq().toastmessage('showNoticeToast', "Specify atleast one character to Search");
             }
         },
         // start searching patient
