@@ -51,11 +51,8 @@
         searchPatient: function (currentPage, pageSize) {
             this.beforeSearch();
             var phrase = jQuery("#searchPhrase").val();
-<<<<<<< cb748de10ec05df071fcd0eeaf5d7cbceba762ad
-            if (phrase.length >= 1 {
-=======
+
             if (phrase.length >= 1) {
->>>>>>> finish work on remove bill item from previous bill during bill edit(remove item,change quantities,specify waiver amount and waiver number, insert comment, disallow removal of all items from list - bill should have atleast one item - or be voided
                 jQuery("#ajaxLoader").show();
                 getPatientQueue(1);
             }

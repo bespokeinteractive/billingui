@@ -445,6 +445,7 @@ table th, table td {
 		</div>
 
 
+
         <form method="post" id="billsForm" style="padding-top: 10px">
             <input id="patientId" type="hidden" value="${patientId}">
             <textarea name="bill" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
