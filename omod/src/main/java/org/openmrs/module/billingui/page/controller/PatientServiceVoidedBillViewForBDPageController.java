@@ -3,6 +3,7 @@ package org.openmrs.module.billingui.page.controller;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.billingui.includable.billcalculator.BillCalculatorForBDService;
 import org.openmrs.module.hospitalcore.BillingConstants;
 import org.openmrs.module.hospitalcore.BillingService;
@@ -10,8 +11,10 @@ import org.openmrs.module.hospitalcore.model.PatientServiceBill;
 import org.openmrs.module.hospitalcore.util.PagingUtil;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
 import org.openmrs.module.hospitalcore.util.RequestUtil;
+import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,12 +35,17 @@ public class PatientServiceVoidedBillViewForBDPageController {
 
     }
 
-    public String get(PageModel pageModel, @RequestParam("patientId") Integer patientId,
+    public String get(PageModel pageModel,
+                      UiSessionContext sessionContext,
+                      PageRequest pageRequest,
+                      UiUtils ui,
+                      @RequestParam("patientId") Integer patientId,
                       @RequestParam(value = "billId", required = false) Integer billId,
                       @RequestParam(value = "pageSize", required = false) Integer pageSize,
                       @RequestParam(value = "currentPage", required = false) Integer currentPage,
                       HttpServletRequest request, UiUtils uiUtils) {
-
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
+        sessionContext.requireAuthentication();
         BillingService billingService = Context.getService(BillingService.class);
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
