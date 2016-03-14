@@ -79,6 +79,11 @@
         // delay before search
         delay: function () {
             this.searchPatient(0, this.pageSize);
+        },
+        visitAddPatientBill: function(patientId){
+            window.location.href = emr.pageLink("billingui", "billableServiceBillListForBD", {
+                "patientId": patientId
+            });
         }
     };
 
@@ -118,7 +123,6 @@
             }),
             success: function (data) {
                 jQuery("#ajaxLoader").hide();
-                console.log(data);
                 pData = data;
                 updateSystemQueueTable(data);
             },
@@ -147,13 +151,10 @@
             var row = '<tr>';
             <% props.each {
                if(it == props.last()){
-                  def pageLinkRevisit = ui.pageLink("", "");
-                  def pageLinkEdit = ui.pageLink("", "");
+                  def pageLinkRevisit = ui.pageLink("billingui", "billingQueue");
                    %>
             row += '<td> ' +
-                    '<a><i class="icon-user-md small" ></i></a>' +
-                    '<a><i class="icon-edit small" ></i></a>' +
-
+                    '<a title="View/Add Bill" onclick="ADVSEARCH.visitAddPatientBill('+item.patientId +');"><i class="icon-arrow-right small" ></i></a>'+
                     '</td>';
             <% } else {%>
             row += '<td>' + item.${ it} + '</td>';
