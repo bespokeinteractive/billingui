@@ -51,6 +51,8 @@ public class BillableServiceBillListForBDPageController {
         sessionContext.requireAuthentication();
 
         long admitMili = 0;
+        model.addAttribute("bill", null);
+        model.addAttribute("initialtotal",0);
         BillingService billingService = Context.getService(BillingService.class);
 
         Patient patient = Context.getPatientService().getPatient(patientId);
