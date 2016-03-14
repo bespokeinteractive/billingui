@@ -20,11 +20,8 @@ import org.openmrs.module.hospitalcore.util.HospitalCoreUtils;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.util.Money;
 import org.openmrs.module.hospitalcore.util.PatientUtils;
-<<<<<<< Updated upstream
 import org.openmrs.ui.framework.SimpleObject;
-=======
 import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
->>>>>>> Stashed changes
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.openmrs.ui.framework.page.PageRequest;
@@ -43,20 +40,14 @@ import java.util.*;
 public class EditPatientServiceBillForBDPageController {
     private Log logger = LogFactory.getLog(getClass());
 
-<<<<<<< Updated upstream
-    public void get(PageModel model, @RequestParam("billId") Integer billId, @RequestParam("patientId") Integer patientId,
-                    UiUtils uiUtils) {
-
-=======
     public void get( PageModel model,
                      UiSessionContext sessionContext,
                      PageRequest pageRequest,
-                     UiUtils ui,
+                     UiUtils uiUtils,
                      @RequestParam("billId") Integer billId,
                      @RequestParam("patientId") Integer patientId) {
-        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,uiUtils.thisUrl());
         sessionContext.requireAuthentication();
->>>>>>> Stashed changes
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
 
