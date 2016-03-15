@@ -48,7 +48,7 @@
 							row += '<td>Male</td>';
 						}
 						else {
-							row += '<tdFemale</td>';
+							row += '<td>Female</td>';
 						}
 					<%}else if (it == "age"){ %>
 						row += '<td>' + item.${ it } + ' years </td>';
@@ -384,10 +384,9 @@
 									</tr>
 									</thead>
 									<tbody>
-
-									<tr align="center">
-										<td colspan="5">No patient found</td>
-									</tr>
+										<tr align="center">
+											<td colspan="5">No patient found</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
