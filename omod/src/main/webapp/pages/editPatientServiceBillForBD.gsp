@@ -5,7 +5,7 @@
 %>
 <script>
     var pData;
-    jQuery(function () {
+    jq(function () {
         jq("#waiverCommentDiv").hide();
         jq('#waiverAmount').on('change keyup paste', function () {
             var numb = jq('#waiverAmount').val();
@@ -78,6 +78,7 @@
             self.removeBillItem = function (item) {
                 if(self.billItems().length > 1){
                     self.billItems.remove(item);
+					numberDataTables();
                 }else{
                     jq().toastmessage('showNoticeToast', "A Bill Must have at least one item");
                 }
@@ -113,11 +114,28 @@
         }
 
         ko.applyBindings(bill, jq("#example")[0]);
-
+		numberDataTables();
 
     });//end of document ready
 
+	function formatDataTables() {
+        if (('#datafield tr').length == 0) {
+            jq('#datafield').hide();
+        }
+        else {
+            jq('#datafield').show();
+        }
+        numberDataTables();
+    }
 
+    function numberDataTables() {
+        var i = 0;
+
+        jq('#datafield  > tr').each(function () {
+            jq('#datafield tr').find("span.nombre").eq(i).text(i + 1);
+            i++;
+        });
+    }
 
 </script>
 
@@ -265,61 +283,61 @@ td a:hover {
         </div>
         <table>
             <thead>
-            <tr>
-                <th style="width: 40px; text-align: center;">#</th>
-                <th>Service Name</th>
-                <th style="width: 90px">Quantity</th>
-                <th style="width:120px; text-align:right;">Unit Price</th>
-                <th style="width:120px; text-align:right;">Item Total</th>
-                <th style="width:20px; text-align:center;">&nbsp;</th>
-            </tr>
+				<tr>
+					<th style="width: 40px; text-align: center;">#</th>
+					<th>Service Name</th>
+					<th style="width: 90px">Quantity</th>
+					<th style="width:120px; text-align:right;">Unit Price</th>
+					<th style="width:120px; text-align:right;">Item Total</th>
+					<th style="width:20px; text-align:center;">&nbsp;</th>
+				</tr>
             </thead>
 
             <tbody id="datafield" data-bind="foreach: billItems, visible: billItems().length > 0">
-            <tr>
-                <td style="text-align: center;"><span class="nombre"></span></td>
-                <td data-bind="text: initialBill().service.name"></td>
+				<tr>
+					<td style="text-align: center;"><span class="nombre"></span></td>
+					<td data-bind="text: initialBill().service.name"></td>
 
-                <td>
-                    <input data-bind="value: quantity">
-                </td>
+					<td>
+						<input data-bind="value: quantity">
+					</td>
 
-                <td style="text-align: right;">
-                    <span data-bind="text: formattedPrice"></span>
-                </td>
+					<td style="text-align: right;">
+						<span data-bind="text: formattedPrice"></span>
+					</td>
 
-                <td style="text-align: right;">
-                    <span data-bind="text: itemTotal().toFixed(2)"></span>
-                </td>
+					<td style="text-align: right;">
+						<span data-bind="text: itemTotal().toFixed(2)"></span>
+					</td>
 
-                <td style="text-align: center;">
-                    <a class="remover" href="#" data-bind="click: \$root.removeBillItem">
-                        <i class="icon-remove small" style="color:red"></i>
-                    </a>
-                </td>
-            </tr>
+					<td style="text-align: center;">
+						<a class="remover" href="#" data-bind="click: \$root.removeBillItem">
+							<i class="icon-remove small" style="color:red"></i>
+						</a>
+					</td>
+				</tr>
             </tbody>
 
             <tbody>
-            <tr style="border: 1px solid #ddd;">
-                <td style="text-align: center;"></td>
-                <td colspan="3"><b>Total Charge: Kshs</b></td>
+				<tr style="border: 1px solid #ddd;">
+					<td style="text-align: center;"></td>
+					<td colspan="3"><b>Total Charge: Kshs</b></td>
 
-                <td style="text-align: right;">
-                    <span data-bind="text: totalSurcharge().toFixed(2)"></span>
-                </td>
-                <td style="text-align: right;"></td>
-            </tr>
+					<td style="text-align: right;">
+						<span data-bind="text: totalSurcharge().toFixed(2)"></span>
+					</td>
+					<td style="text-align: right;"></td>
+				</tr>
 
-            <tr style="border: 1px solid #ddd;">
-                <td style="text-align: center;"></td>
-                <td colspan="3"><b>Waiver Amount: Kshs</b></td>
+				<tr style="border: 1px solid #ddd;">
+					<td style="text-align: center;"></td>
+					<td colspan="3"><b>Waiver Amount: Kshs</b></td>
 
-                <td style="text-align: right;">
-                    <input id="waiverAmount" data-bind="value: waiverAmount"/>
-                </td>
-                <td style="text-align: right;"></td>
-            </tr>
+					<td style="text-align: right;">
+						<input id="waiverAmount" data-bind="value: waiverAmount"/>
+					</td>
+					<td style="text-align: right;"></td>
+				</tr>
             </tbody>
         </table>
 

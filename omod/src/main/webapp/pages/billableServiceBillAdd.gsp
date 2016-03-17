@@ -391,50 +391,50 @@ table th, table td {
             </thead>
 
             <tbody id="datafield" data-bind="foreach: billItems, visible: billItems().length > 0">
-            <tr>
-                <td style="text-align: center;"><span class="nombre"></span></td>
-                <td data-bind="text: initialBill().name"></td>
+				<tr>
+					<td style="text-align: center;"><span class="nombre"></span></td>
+					<td data-bind="text: initialBill().name"></td>
 
-                <td>
-                    <input data-bind="value: quantity">
-                </td>
+					<td>
+						<input data-bind="value: quantity">
+					</td>
 
-                <td style="text-align: right;">
-                    <span data-bind="text: formattedPrice"></span>
-                </td>
+					<td style="text-align: right;">
+						<span data-bind="text: formattedPrice"></span>
+					</td>
 
-                <td style="text-align: right;">
-                    <span data-bind="text: itemTotal().toFixed(2)"></span>
-                </td>
+					<td style="text-align: right;">
+						<span data-bind="text: itemTotal().toFixed(2)"></span>
+					</td>
 
-                <td style="text-align: center;">
-                    <a class="remover" href="#" data-bind="click: \$root.removeBillItem">
-                        <i class="icon-remove small" style="color:red"></i>
-                    </a>
-                </td>
-            </tr>
+					<td style="text-align: center;">
+						<a class="remover" href="#" data-bind="click: \$root.removeBillItem">
+							<i class="icon-remove small" style="color:red"></i>
+						</a>
+					</td>
+				</tr>
             </tbody>
 
             <tbody>
-            <tr style="border: 1px solid #ddd;">
-                <td style="text-align: center;"></td>
-                <td colspan="3"><b>Total surcharge: Kshs</b></td>
+				<tr style="border: 1px solid #ddd;">
+					<td style="text-align: center;"></td>
+					<td colspan="3"><b>Total surcharge: Kshs</b></td>
 
-                <td style="text-align: right;">
-                    <span data-bind="text: totalSurcharge().toFixed(2)"></span>
-                </td>
-                <td style="text-align: right;"></td>
-            </tr>
+					<td style="text-align: right;">
+						<span data-bind="text: totalSurcharge().toFixed(2)"></span>
+					</td>
+					<td style="text-align: right;"></td>
+				</tr>
 
-            <tr style="border: 1px solid #ddd;">
-                <td style="text-align: center;"></td>
-                <td colspan="3"><b>Waiver Amount: Kshs</b></td>
+				<tr style="border: 1px solid #ddd;">
+					<td style="text-align: center;"></td>
+					<td colspan="3"><b>Waiver Amount: Kshs</b></td>
 
-                <td style="text-align: right;">
-                    <input id="waiverAmount" data-bind="value: waiverAmount"/>
-                </td>
-                <td style="text-align: right;"></td>
-            </tr>
+					<td style="text-align: right;">
+						<input id="waiverAmount" data-bind="value: waiverAmount"/>
+					</td>
+					<td style="text-align: right;"></td>
+				</tr>
             </tbody>
 
         </table>
