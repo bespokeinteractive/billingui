@@ -80,7 +80,7 @@
                     self.billItems.remove(item);
 					numberDataTables();
                 }else{
-                    jq().toastmessage('showNoticeToast', "A Bill Must have at least one item");
+                    jq().toastmessage('showErrorToast', "A Bill Must have at least one item");
                 }
 
 
@@ -92,11 +92,11 @@
                 jQuery("#action").val("submit");
                 var waiverComment = jQuery("#waiverComment").val();
                 if (self.totalSurcharge() < self.waiverAmount()) {
-                    jq().toastmessage('showNoticeToast', "Please enter correct Waiver Amount");
+                    jq().toastmessage('showErrorToast', "Please enter correct Waiver Amount");
                 } else if (isNaN(self.waiverAmount()) || self.waiverAmount() < 0) {
-                    jq().toastmessage('showNoticeToast', "Please enter correct Waiver Amount");
+                    jq().toastmessage('showErrorToast', "Please enter correct Waiver Amount");
                 } else if (waiverComment == '' || waiverComment == null) {
-                    jq().toastmessage('showNoticeToast', "Please enter Comments/Waiver Number");
+                    jq().toastmessage('showErrorToast', "Please enter Comments/Waiver Number");
 
                 } else {
                     //submit the details to the server
@@ -112,6 +112,40 @@
                 return 0;
             }
         }
+		
+		jq('#waiverAmount').on('change keyup paste', function () {
+			var numb = jq('#waiverAmount').val();
+			
+			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
+				jq("#waiverCommentDiv").show();
+			}
+			else {
+				jq("#waiverCommentDiv").hide();
+			}
+        });
+
+        jq('#waiverAmount').on('focus', function () {
+            var numb = jq('#waiverAmount').val();
+            if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb > 0) {
+                jq('#waiverAmount').val(parseFloat(jq('#waiverAmount').val()))
+            }
+            else {
+                jq("#waiverAmount").val('');
+            }
+        });
+
+        jq('#waiverAmount').on('blur', function () {
+            var numb = jq('#waiverAmount').val();
+            if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb > 0) {
+                jq('#waiverAmount').val(formatAccounting(numb));
+            }
+            else {
+                jq("#waiverAmount").val('0.00');
+            }
+        });
+		
+		jq("#waiverCommentDiv").hide();
+		jq("#waiverAmount").val(formatAccounting(jq("#waiverAmount").val()));
 
         ko.applyBindings(bill, jq("#example")[0]);
 		numberDataTables();
@@ -140,71 +174,116 @@
 </script>
 
 <style>
-#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
-    text-decoration: none;
-}
+	.toast-item {
+        background-color: #222;
+    }
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
 
-.new-patient-header .demographics .gender-age {
-    font-size: 14px;
-    margin-left: -55px;
-    margin-top: 12px;
-}
+	.new-patient-header .demographics .gender-age {
+		font-size: 14px;
+		margin-left: -55px;
+		margin-top: 12px;
+	}
 
-.new-patient-header .demographics .gender-age span {
-    border-bottom: 1px none #ddd;
-}
+	.new-patient-header .demographics .gender-age span {
+		border-bottom: 1px none #ddd;
+	}
 
-.new-patient-header .identifiers {
-    margin-top: 5px;
-}
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
 
-.tag {
-    padding: 2px 10px;
-}
+	.tag {
+		padding: 2px 10px;
+	}
 
-.tad {
-    background: #666 none repeat scroll 0 0;
-    border-radius: 1px;
-    color: white;
-    display: inline;
-    font-size: 0.8em;
-    margin-left: 4px;
-    padding: 2px 10px;
-}
+	.tad {
+		background: #666 none repeat scroll 0 0;
+		border-radius: 1px;
+		color: white;
+		display: inline;
+		font-size: 0.8em;
+		margin-left: 4px;
+		padding: 2px 10px;
+	}
 
-.status-container {
-    padding: 5px 10px 5px 5px;
-}
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
 
-.catg {
-    color: #363463;
-    margin: 35px 10px 0 0;
-}
+	.catg {
+		color: #363463;
+		margin: 35px 10px 0 0;
+	}
 
-form input[type="text"] {
-    background: transparent none repeat scroll 0 0;
-}
+	form input[type="text"] {
+		background: transparent none repeat scroll 0 0;
+	}
 
-form input[type="text"]:focus {
-    outline: 1px none #ddd;
-}
+	form input[type="text"]:focus {
+		outline: 1px none #ddd;
+	}
 
-td a,
-td a:hover {
-    cursor: pointer;
-    text-decoration: none;
-}
+	td a,
+	td a:hover {
+		cursor: pointer;
+		text-decoration: none;
+	}
 
-.align-left {
-    width: 200px;
-    display: inline-block;
-}
+	td input {
+		background: transparent none repeat scroll 0 0;
+		border: 1px solid #aaa;
+		padding-right: 10px;
+		text-align: right;
+		width: 80px;
+	}
 
-.align-right {
-    float: right;
-    width: 720px;
-    display: inline-block;
-}
+	table th, table td {
+		border: 1px solid #ddd;
+		padding: 5px 20px;
+	}
+
+	.align-left {
+		width: 200px;
+		display: inline-block;
+	}
+
+	.align-right {
+		float: right;
+		width: 720px;
+		display: inline-block;
+	}
+	
+	#waiverCommentDiv label{
+		display: inline-block;
+		margin-left: 10px;
+		width: 150px;
+	}
+	.formfactor {
+		background: #f3f3f3 none repeat scroll 0 0;
+		border: 1px solid #ddd;
+		margin-bottom: 5px;
+		margin-top: 5px;
+		min-height: 38px;
+		padding: 5px 10px;
+		text-align: left;
+		width: auto;
+	}
+	.formfactor h1 {
+		color: #f26522;
+		display: inline-block;
+		font-size: 1.3em;
+		margin: 5px;
+	}
+	.formfactor h2 {
+		display: inline-block;
+		float: right;
+		margin-top: 5px;
+		padding-right: 10px;
+	}
+
 </style>
 
 <div class="clear"></div>
@@ -279,16 +358,19 @@ td a:hover {
 
     <div id="example">
         <div class="formfactor">
-            <h2>Bill Items (<span data-bind="text: billItems().length"></span>)</h2>
+			<h1>
+				<i class="icon-pencil small"></i>Edit Bill
+			</h1>
+            <h2>Items (<span data-bind="text: billItems().length"></span>)</h2>
         </div>
         <table>
             <thead>
 				<tr>
-					<th style="width: 40px; text-align: center;">#</th>
+					<th style="width:40px; text-align: center;">#</th>
 					<th>Service Name</th>
-					<th style="width: 90px">Quantity</th>
-					<th style="width:120px; text-align:right;">Unit Price</th>
-					<th style="width:120px; text-align:right;">Item Total</th>
+					<th style="width:90px">Quantity</th>
+					<th style="width:90px; text-align:right;">Unit Price</th>
+					<th style="width:90px; text-align:right;">Item Total</th>
 					<th style="width:20px; text-align:center;">&nbsp;</th>
 				</tr>
             </thead>
@@ -334,7 +416,7 @@ td a:hover {
 					<td colspan="3"><b>Waiver Amount: Kshs</b></td>
 
 					<td style="text-align: right;">
-						<input id="waiverAmount" data-bind="value: waiverAmount"/>
+						<input id="waiverAmount" data-bind="value: waiverAmount" style="margin-right: -10px"/>
 					</td>
 					<td style="text-align: right;"></td>
 				</tr>
@@ -343,20 +425,24 @@ td a:hover {
 
         <div id="waiverCommentDiv" style="padding-top: 10px;">
             <label for="waiverNumber" style="color: rgb(54, 52, 99);">Waiver Number</label>
-            <input type="text" size="20&quot;" data-bind="value: waiverNumber" name="waiverNumber" id="waiverNumber"/>
-
-        </div>
-        <label for="waiverComment" style="color: rgb(54, 52, 99);">Comment</label>
-        <textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder"
-                  style="width: 99.4%; height: 60px;"
+            <input type="text" size="20" data-bind="value: waiverNumber" name="waiverNumber" id="waiverNumber" style="width: 808px;"/>
+			<br/>
+			
+			<label for="waiverComment" style="color: rgb(54, 52, 99);">Comment</label>
+			<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder"
+                  style="height: 60px; width: 808px; margin-top: 2px;"
                   data-bind="value: comment"></textarea>
 
+        </div>
+       
+
         <form method="post" id="billsForm" style="padding-top: 10px">
-            <input id="patientId" type="hidden" value="${patientId}">
-            <input id="action" name="action" type="hidden">
+            <input type="hidden" id="patientId" value="${patientId}">
+            <input type="hidden" id="action" name="action">
             <textarea name="bill" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
-            <button data-bind="click: submitBill, enable: billItems().length > 0 " class="confirm">Save Bill</button>
-            <button id="billVoid" data-bind="click: voidBill" class="cancel">Void Bill</button>
+			
+            <button data-bind="click: submitBill, enable: billItems().length > 0 " class="confirm" style="float: right; margin-right: 2px;">Save Bill</button>
+            <button id="billVoid" data-bind="click: voidBill" class="cancel" style="margin-left: 2px">Void Bill</button>
             <button data-bind="click: cancelBillAddition" class="cancel">Cancel</button>
 
         </form>
