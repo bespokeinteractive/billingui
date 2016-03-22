@@ -83,7 +83,6 @@
                     jq().toastmessage('showErrorToast', "A Bill Must have at least one item");
                }
 
-
             }
             self.cancelBillAddition = function () {
                 window.location.replace("billableServiceBillListForBD.page?patientId=${patientId}&billId=${billId}")
