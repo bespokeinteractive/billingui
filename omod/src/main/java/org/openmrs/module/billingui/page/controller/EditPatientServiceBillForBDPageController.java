@@ -68,7 +68,15 @@ public class EditPatientServiceBillForBDPageController {
         model.addAttribute("previousVisit", hcs.getLastVisitTime(patient));
 
         PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
-        Set<PatientServiceBillItem> billItems = bill.getBillItems();
+        Set<PatientServiceBillItem> billItemsRaw = bill.getBillItems();
+        Set<PatientServiceBillItem> billItems = new HashSet<PatientServiceBillItem>();
+        for(PatientServiceBillItem patientServiceBill: billItemsRaw){
+            if(!patientServiceBill.getVoided()){
+                billItems.add(patientServiceBill);
+            }
+        }
+
+
         List<SimpleObject> simpleObjects = SimpleObject.fromCollection(billItems, uiUtils, "patientServiceBillItemId",
                 "service.conceptId", "service.name", "quantity", "amount", "unitPrice");
 
