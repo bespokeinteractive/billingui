@@ -76,9 +76,9 @@
             // Operations
 
             self.removeBillItem = function (item) {
-                if(self.billItems().length > 1){
+                if (self.billItems().length > 1) {
                     self.billItems.remove(item);
-                }else{
+                } else {
                     jq().toastmessage('showNoticeToast', "A Bill Must have at least one item");
                 }
 
@@ -105,10 +105,18 @@
             }
 
             self.voidBill = function () {
-                //set action to void
-                jQuery("#action").val("void");
-                jQuery("#billVoid").attr("class", "disabled");
-                return 0;
+                var waiverComment = jQuery("#waiverComment").val();
+                if (waiverComment == '' || waiverComment == null) {
+                    jq().toastmessage('showNoticeToast', "Please enter Comment");
+                    return false;
+                }
+                if (confirm("Are you sure about this?")) {
+                    jQuery("#action").val("void");
+                    jQuery('#billsForm').submit();
+                } else {
+                    return false;
+                }
+
             }
         }
 
