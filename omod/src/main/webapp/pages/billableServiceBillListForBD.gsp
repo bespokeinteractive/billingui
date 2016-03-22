@@ -105,6 +105,7 @@
 
 .retired {
     text-decoration: line-through;
+    color: darkgrey;
 }
 
 #breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
@@ -252,7 +253,7 @@
         <div class="close"></div>
     </div>
 
-    <!-- start here -->
+
     <% if (bill != null) { %>
 
     <table width="100%" border="1" cellpadding="5" cellspacing="0" id="myTable" class="tablesorter thickbox"
@@ -608,10 +609,10 @@
                         ${bill?.patientServiceBillId}
                         <% } %>
                     </td>
-                    <td>
+                    <td class='<% if (bill?.voided) { %>retired <% } %>'>
                         ${bill?.createdDate}
                     </td>
-                    <td>
+                    <td class='<% if (bill?.voided) { %>retired <% } %>'>
                         <% if (bill?.description != null) { %>
                         ${bill?.description}
                         <% } else { %>
@@ -620,7 +621,7 @@
                     </td>
                     <td class='<% if (bill?.voided) { %>retired <% } %>' style="text-align: center; ">
                         <% if (bill?.voided) { %>
-                        <input type="button" value="View" class="task"
+                        <input type="button" value="View" class="task retired"
                                onclick="javascript:window.location.href = 'patientServiceVoidedBillViewForBD.page?patientId=${patient.patientId}&billId=${bill?.patientServiceBillId}'"/>
                         <% } else { %>
                         <input type="button" value="View" class="task"
