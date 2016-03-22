@@ -434,13 +434,11 @@
             <label for="waiverNumber" style="color: rgb(54, 52, 99);">Waiver Number</label>
             <input type="text" size="20" data-bind="value: waiverNumber" name="waiverNumber" id="waiverNumber" style="width: 808px;"/>
 			<br/>
-			
-			<label for="waiverComment" style="color: rgb(54, 52, 99);">Comment</label>
-			<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder"
+        </div>
+        <label for="waiverComment" style="color: rgb(54, 52, 99);">Comment</label>
+        <textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder"
                   style="height: 60px; width: 808px; margin-top: 2px;"
                   data-bind="value: comment"></textarea>
-
-        </div>
        
 
         <form method="post" id="billsForm" style="padding-top: 10px">
