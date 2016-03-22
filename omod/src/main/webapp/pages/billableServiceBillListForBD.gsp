@@ -252,7 +252,7 @@
         <div class="close"></div>
     </div>
 
-    <!-- start here -->
+
     <% if (bill != null) { %>
 
     <table width="100%" border="1" cellpadding="5" cellspacing="0" id="myTable" class="tablesorter thickbox"
