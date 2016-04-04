@@ -3623,3 +3623,11 @@ function stringReplace(word) {
     res=res.replace("]","");
     return res;
 }
+
+String.prototype.replaceAt=function(index, character) {
+	return this.substr(0, index) + character + this.substr(index+character.length);
+}
+
+String.prototype.insertAt = function(idx, rem, str) {
+	return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+};
