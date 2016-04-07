@@ -75,6 +75,10 @@
         <file>messages_es.properties</file>
     </messages>
     <!-- /Internationalization -->
+    <privilege>
+        <name>App: billingapp</name>
+        <description>Able to access the cashier app</description>
+    </privilege>
 
 </module>
 
