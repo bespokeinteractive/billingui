@@ -3624,8 +3624,8 @@ function stringReplace(word) {
     return res;
 }
 
-String.prototype.replaceString = function(word) {
-	var res = word.replace("[", "");
+String.prototype.replaceString = function() {
+	var res = this.replace("[", "");
     res=res.replace("]","");
     return res;
 }
