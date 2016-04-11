@@ -170,6 +170,15 @@
     }
 </script>
 
+<style>
+	.dashboard .info-header #rcptFrom .add-on i {
+		font-size: 10px!important;
+	}
+	#rcptFrom i{
+		
+	}
+</style>
+
 <form onsubmit="return false" id="patientSystemSearchForm" method="get">
     <input autocomplete="off" placeholder="Search by ID,Name or BillId" id="searchPhrase"
            style="float:left; width:70%; padding:6px 10px -1px;" onkeyup="ADVSEARCH.startSearch(event);">
