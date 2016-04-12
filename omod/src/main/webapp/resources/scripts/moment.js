@@ -3637,3 +3637,23 @@ String.prototype.replaceAt = function(index, character) {
 String.prototype.insertAt = function(idx, rem, str) {
 	return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
 };
+
+String.prototype.formatToAccounting = function(deci) {
+	if (typeof deci === 'undefined'){
+		deci = 2;
+	}
+	
+	var dataFields = this;
+	
+	dataFields = parseFloat(dataFields).toFixed(deci);
+	dataFields += '';
+	
+	x = dataFields.split('.');
+	x1 = x[0];
+	x2 = x.length > 1 ? '.' + x[1] : '';
+	var rgx = /(\\d+)(\\d{3})/;
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '\$1' + ',' + '\$2');
+	}
+	return x1 + x2;
+};
