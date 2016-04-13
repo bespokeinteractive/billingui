@@ -431,7 +431,7 @@
         </table>
 
         <div id="waiverCommentDiv" style="padding-top: 10px;">
-            <label for="waiverNumber" style="color: rgb(54, 52, 99);">Waiver Number</label>
+            <label for="waiverNumber" style="color: rgb(54, 52, 99); width: 150px; padding-left: 10px; display: inline-block;">Waiver Number</label>
             <input type="text" size="20" data-bind="value: waiverNumber" name="waiverNumber" id="waiverNumber" style="width: 808px;"/>
 			<br/>
         </div>
