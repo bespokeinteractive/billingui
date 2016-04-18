@@ -19,7 +19,11 @@
             });
 
             self.availableOrders(mappedOrders);
+//observable waiver
+            self.waiverAmount = ko.observable(0.00);
 
+            //observable comment
+            self.comment = ko.observable("");
 
             // Computed data
             self.totalSurcharge = ko.computed(function () {
@@ -30,25 +34,34 @@
                 return total;
             });
 
-            //observable waiver
-            self.waiverAmount = ko.observable(0.00);
+            self.runningTotal = ko.computed(function () {
+                var rTotal = self.totalSurcharge() - self.waiverAmount();
+                console.log(rTotal);
+                return rTotal;
+            });
 
-            //observable comment
-            self.comment = ko.observable("");
 
             //submit bill
-            self.submitBill=function(){
-                console.log(${receiptid}+','+${flag });
-                var f=${flag };
-                if(f===0){
+            self.submitBill = function () {
+                console.log(${receiptid}+',' +${flag });
+                var flag =${flag };
+                var rId = ${receiptid};
+                if (flag === 0) {
                     //process the drug , it hasn't been processed yet
-                    jq().toastmessage('showErrorToast', "Process Functionality not yet implemented!");
+                    jq("#drugBillsForm").submit();
 
-                }else{
+                } else {
                     //drug has been processed, we just do a reprint
                     jq().toastmessage('showErrorToast', "Drug Processed Already- Do a reprint!");
+                    var printDiv = jQuery("#printDiv").html();
+                    var printWindow = window.open('', '', 'height=400,width=800');
+                    printWindow.document.write('<html><head><title>Print Drug Order :-Support by KenyaEHRS</title>');
+                    printWindow.document.write('</head>');
+                    printWindow.document.write(printDiv);
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.print();
                 }
-
             }
         }
 
@@ -117,7 +130,7 @@
                 Order Date : ${date}
             </div>
 
-            <div class="tag">Receipt Id: ${receiptid} </div>
+            <div class="tag">Receipt Id: ${receiptid}</div>
         </div>
 
         <div class="identifiers">
@@ -171,27 +184,73 @@
             </tbody>
 
         </table>
-        <br />
-        <div>
-            <div style="float:right;">Total : <span data-bind="text: totalSurcharge"></span></div>
-            Waiver Amount: <input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
-            Waiver Comment:<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder" style="width: 99.4%; height: 60px;" data-bind="value: comment"></textarea><br/>
+        <br/>
 
+        <div>
+            <div style="float:right;">Total : <span data-bind="text: totalSurcharge"></span></div><br/>
+
+            <div style="float:right;">Amount To Pay : <span data-bind="text: runningTotal"></span></div>
+
+
+            Waiver Amount: <input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
+
+            <div data-bind="visible: waiverAmount() > 0">
+                Waiver Comment:<textarea type="text" id="waiverComment" name="waiverComment"
+                                         size="7" class="hasborder" style="width: 99.4%; height: 60px;"
+                                         data-bind="value: comment"></textarea><br/>
+            </div>
 
         </div>
 
-        <form method="post" id="billsForm" style="padding-top: 10px">
+        <form method="post" id="drugBillsForm" style="padding-top: 10px">
             <input id="patientId" type="hidden" value="${identifier}">
-            <textarea name="bill" data-bind="value: ko.toJSON(\$root)" style="display:none;" ></textarea>
+            <textarea name="drugOrder" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
             <input type="button" class="button cancel"
                    onclick="javascript:window.location.href = 'billingQueue.page?'"
                    value="Cancel">
 
+
+            <% if (flag == 1) { %>
+            <input type="submit" id="savebill" name="savebill" style="float:right;" class="button confirm"
+                   value="Reprint" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+            <% } else { %>
             <input type="submit" id="savebill" name="savebill" style="float:right;" class="button confirm"
                    value="Finish" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+            <% } %>
 
         </form>
 
     </div>
+    <!-- PRINT DIV -->
+    <div id="printDiv" style="display: none;">
+        <div style="margin: 10px auto; width: 981px; font-size: 1.0em;font-family:'Dot Matrix Normal',Arial,Helvetica,sans-serif;">
+            <br/>
+            <br/>
+            <center style="float:center;font-size: 2.2em">Process Drug</center>
+            <br/>
+            <br/>
+            <span style="float:right;font-size: 1.7em">Date: ${date}</span>
+            <br/>
+            <br/>
+            <table border="1">
+                <tr align="center">
+                    <th>S.No</th>
+                    <th>Category</th>
+                    <th>Drug Name</th>
+                    <th>Formulation</th>
+                    <th>Quantity</th>
+                    <th>Transfer Quantity</th>
+                </tr>
+
+            </table>
+
+            <br/><br/><br/><br/><br/><br/>
+            <span style="float:left;font-size: 1.5em">Signature of sub-store/ Stamp</span><span
+                style="float:right;font-size: 1.5em">Signature of inventory clerk/ Stamp</span>
+            <br/><br/><br/><br/><br/><br/>
+            <span style="margin-left: 13em;font-size: 1.5em">Signature of Medical Superintendent/ Stamp</span>
+        </div>
+    </div>
+    <!-- END PRINT DIV -->
 
 </div>

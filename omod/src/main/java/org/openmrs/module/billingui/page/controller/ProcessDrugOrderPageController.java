@@ -14,6 +14,7 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -187,9 +188,15 @@ public class ProcessDrugOrderPageController {
         }
     }
 
-    public String post(){
+    public String post(
+            @RequestParam(value = "issueName", required = false) String issueName,
+            @RequestParam(value = "fromDate", required = false) String fromDate,
+            @RequestParam(value = "toDate", required = false) String toDate,
+            @RequestParam(value = "receiptId", required = false) Integer receiptId,
+            HttpServletRequest request, UiUtils uiUtils) {
 
-
+        String drugOrder = request.getParameter("drugOrder");
+        System.out.println(drugOrder);
         throw new NotYetImplementedException("To Be Implemented!!!");
     }
 }
