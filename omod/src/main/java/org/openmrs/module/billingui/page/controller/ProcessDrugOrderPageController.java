@@ -1,7 +1,6 @@
 package org.openmrs.module.billingui.page.controller;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
@@ -188,15 +187,35 @@ public class ProcessDrugOrderPageController {
         }
     }
 
-    public String post(
-            @RequestParam(value = "issueName", required = false) String issueName,
-            @RequestParam(value = "fromDate", required = false) String fromDate,
-            @RequestParam(value = "toDate", required = false) String toDate,
-            @RequestParam(value = "receiptId", required = false) Integer receiptId,
-            HttpServletRequest request, UiUtils uiUtils) {
-
+    public String post(@RequestParam(value = "receiptid", required = false) Integer receiptid, HttpServletRequest request,
+                       @RequestParam(value = "flag", required = false) Integer flag, PageModel pageModel, UiUtils uiUtils) {
         String drugOrder = request.getParameter("drugOrder");
-        System.out.println(drugOrder);
-        throw new NotYetImplementedException("To Be Implemented!!!");
+
+        InventoryService inventoryService = (InventoryService) Context
+                .getService(InventoryService.class);
+        //InventoryStore store =  inventoryService.getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
+
+        InventoryStoreRoleRelation srl = null;
+        Role rl = null;
+        for (Role r : role) {
+            if (inventoryService.getStoreRoleByName(r.toString()) != null) {
+                srl = inventoryService.getStoreRoleByName(r.toString());
+                rl = r;
+            }
+        }
+        InventoryStore store = null;
+        if (srl != null) {
+            store = inventoryService.getStoreById(srl.getStoreid());
+
+        }
+        List<InventoryStoreDrugPatientDetail> listDrugIssue = inventoryService
+                .listStoreDrugPatientDetail(receiptid);
+        InventoryStoreDrugPatient inventoryStoreDrugPatient = new InventoryStoreDrugPatient();
+
+
+
+
+        return "";
     }
 }

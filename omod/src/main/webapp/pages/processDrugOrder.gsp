@@ -178,11 +178,8 @@
                 <td data-bind="text: initialBill().quantity"></td>
                 <td data-bind="text: initialBill().transactionDetail.costToPatient"></td>
                 <td data-bind="text: orderTotal"></td>
-
             </tr>
-
             </tbody>
-
         </table>
         <br/>
 
@@ -191,19 +188,20 @@
 
             <div style="float:right;">Amount To Pay : <span data-bind="text: runningTotal"></span></div>
 
-
-            Waiver Amount: <input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
-
             <div data-bind="visible: waiverAmount() > 0">
+                Waiver Amount: <input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
                 Waiver Comment:<textarea type="text" id="waiverComment" name="waiverComment"
                                          size="7" class="hasborder" style="width: 99.4%; height: 60px;"
-                                         data-bind="value: comment"></textarea><br/>
+                                         data-bind="value: comment"></textarea> <br/>
             </div>
 
         </div>
 
         <form method="post" id="drugBillsForm" style="padding-top: 10px">
-            <input id="patientId" type="hidden" value="${identifier}">
+            <input id="patientId" name="patientId" type="hidden" value="${identifier}">
+            <input id="receiptid" name="receiptid" type="hidden" value="${receiptid}">
+            <input id="flag" name="flag" type="hidden" value="${flag}">
+
             <textarea name="drugOrder" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
             <input type="button" class="button cancel"
                    onclick="javascript:window.location.href = 'billingQueue.page?'"
