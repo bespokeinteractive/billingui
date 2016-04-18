@@ -1,7 +1,27 @@
 <script>
+    var toReturn;
     jq(function () {
-        jq(".date-pick").datepicker();
         var receiptsData = getOrderList();
+        jQuery('.date-pick').datepicker({minDate: '-100y', dateFormat: 'dd/mm/yy'});
+        jq(".searchFieldChange").on("change", function () {
+            issueList();
+        });
+
+        jq(".searchFieldBlur").on("blur", function () {
+            issueList();
+        });
+
+        function issueList() {
+            var receiptId = jq("#receiptId").val();
+            var issueName = jq("#issueName").val();
+            var fromDate = jq("#fromDate").val();
+            var toDate = jq("#toDate").val();
+            toReturn= getOrderList(issueName, fromDate, toDate, receiptId);
+            list.drugList(toReturn);
+
+        }
+
+
 
         function IssueDrugViewModel() {
             var self = this;
@@ -13,13 +33,12 @@
 
             self.viewDetails = function (item) {
                 window.location.replace("detailedReceiptOfDrug.page?receiptId=" + item.id);
-            }
+            };
             self.drugList(mappedDrugItems);
-            self.processDrugOrder = function(item){
-                console.log(item);
+            self.processDrugOrder = function (item) {
                 //redirect to processing page
-                var url='${ui.pageLink("billingui","processDrugOrder")}';
-                window.location.href =url + '?orderId='+item.id+'&patientId='+item.patient.patientId;
+                var url = '${ui.pageLink("billingui","processDrugOrder")}';
+                window.location.href = url + '?orderId=' + item.id + '&patientId=' + item.patient.patientId;
             }
         }
 
@@ -28,7 +47,6 @@
     });
 
     function getOrderList(issueName, fromDate, toDate, receiptId) {
-        var toReturn;
         jQuery.ajax({
             type: "GET",
             url: '${ui.actionLink("billingui", "subStoreIssueDrugList", "getOrderList")}',
@@ -52,6 +70,8 @@
 
 
 
+
+
 </script>
 
 <div class="dashboard clear">
@@ -67,14 +87,16 @@
 <form method="get" id="form">
     <table>
         <tr>
-            <td>
-                <input type="text" name="issueName" id="issueName" placeholder="Patient Name/ID"/>
+            <td><input type="text" name="issueName" id="issueName" class=" searchFieldBlur" placeholder="Patient Name"/>
             </td>
-            <td><input type="text" id="fromDate" class="date-pick left" readonly="readonly" name="fromDate"
+            <td><input type="text" id="fromDate" class="date-pick left searchFieldChange searchFieldBlur "
+                       readonly="readonly" name="fromDate"
                        title="Double Click to Clear" ondblclick="this.value = '';" placeholder="From Date:"/></td>
-            <td><input type="text" id="toDate" class="date-pick left" readonly="readonly" name="toDate"
+            <td><input type="text" id="toDate" class="date-pick left searchFieldChange searchFieldBlur"
+                       readonly="readonly" name="toDate"
                        title="Double Click to Clear" ondblclick="this.value = '';" placeholder="To Date:"/></td>
-            <td><input type="text" name="receiptId" id="receiptId" placeholder="Receipt No."/></td>
+            <td><input type="text" name="receiptId" class="searchFieldChange" id="receiptId" placeholder="Receipt No."/>
+            </td>
         </tr>
     </table>
     <br/>
@@ -102,8 +124,9 @@
                 </td>
                 <td data-bind="text: createdOn"></td>
                 <td>
-                    <a class="remover" href="#" data-bind="click: \$root.processDrugOrder" title="Detail issue drug to this patient">
-                        <i class="icon-signin  small" >View/Print</i>
+                    <a class="remover" href="#" data-bind="click: \$root.processDrugOrder"
+                       title="Detail issue drug to this patient">
+                        <i class="icon-signin  small">View/Print</i>
                     </a>
                 </td>
             </tr>
