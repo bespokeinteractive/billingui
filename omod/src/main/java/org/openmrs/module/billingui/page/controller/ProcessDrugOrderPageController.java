@@ -1,7 +1,6 @@
 package org.openmrs.module.billingui.page.controller;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
@@ -14,6 +13,7 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -187,9 +187,35 @@ public class ProcessDrugOrderPageController {
         }
     }
 
-    public String post(){
+    public String post(@RequestParam(value = "receiptid", required = false) Integer receiptid, HttpServletRequest request,
+                       @RequestParam(value = "flag", required = false) Integer flag, PageModel pageModel, UiUtils uiUtils) {
+        String drugOrder = request.getParameter("drugOrder");
+
+        InventoryService inventoryService = (InventoryService) Context
+                .getService(InventoryService.class);
+        //InventoryStore store =  inventoryService.getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
+        List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
+
+        InventoryStoreRoleRelation srl = null;
+        Role rl = null;
+        for (Role r : role) {
+            if (inventoryService.getStoreRoleByName(r.toString()) != null) {
+                srl = inventoryService.getStoreRoleByName(r.toString());
+                rl = r;
+            }
+        }
+        InventoryStore store = null;
+        if (srl != null) {
+            store = inventoryService.getStoreById(srl.getStoreid());
+
+        }
+        List<InventoryStoreDrugPatientDetail> listDrugIssue = inventoryService
+                .listStoreDrugPatientDetail(receiptid);
+        InventoryStoreDrugPatient inventoryStoreDrugPatient = new InventoryStoreDrugPatient();
 
 
-        throw new NotYetImplementedException("To Be Implemented!!!");
+
+
+        return "";
     }
 }

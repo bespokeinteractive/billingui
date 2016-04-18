@@ -37,7 +37,7 @@
             async: false,
             data: {
                 issueName: issueName,
-                fromDate: "16/04/2016",
+                fromDate: fromDate,
                 toDate: toDate,
                 receiptId: receiptId
             },
