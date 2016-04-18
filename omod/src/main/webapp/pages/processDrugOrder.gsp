@@ -38,7 +38,17 @@
 
             //submit bill
             self.submitBill=function(){
-                jq().toastmessage('showErrorToast', "Save Functionality yet to be implemented!");
+                console.log(${receiptid}+','+${flag });
+                var f=${flag };
+                if(f===0){
+                    //process the drug , it hasn't been processed yet
+                    jq().toastmessage('showErrorToast', "Process Functionality not yet implemented!");
+
+                }else{
+                    //drug has been processed, we just do a reprint
+                    jq().toastmessage('showErrorToast', "Drug Processed Already- Do a reprint!");
+                }
+
             }
         }
 
@@ -107,7 +117,7 @@
                 Order Date : ${date}
             </div>
 
-            <div class="tag">Outpatient</div>
+            <div class="tag">Receipt Id: ${receiptid} </div>
         </div>
 
         <div class="identifiers">
