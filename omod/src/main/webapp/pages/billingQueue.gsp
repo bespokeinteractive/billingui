@@ -345,10 +345,11 @@
 				<ul id="inline-tabs">
 					<li><a href="#tabs-1">OPD Queue</a></li>
 					<li><a href="#tabs-2">IPD Queue</a></li>
-					<li><a href="#tabs-3">Billing Ambulance</a></li>
-					<li><a href="#tabs-4">Billing Tender</a></li>
-					<li><a href="#tabs-5">Billing Misc Service</a></li>
-					<li><a href="#tabs-6">Search Patient</a></li>
+                    <li><a href="#tabs-6">Pharmacy</a></li>
+					<li><a href="#tabs-3">Ambulance</a></li>
+					<li><a href="#tabs-4">Tender</a></li>
+					<li><a href="#tabs-5">Misc Service</a></li>
+					<li><a href="#tabs-7">Search Patient</a></li>
 				</ul>
 
 				<div id="tabs-1">
@@ -360,7 +361,7 @@
 					
 					<div class="formfactor onerow">
 						<div class="first-col">
-							<label for="datetime-display"> Date </label><br/>
+							<label> Date </label><br/>
 							${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'datetime', id: 'datetime', label: 'Date', useTime: false, defaultToday: true])}
 						</div>
 						
@@ -455,6 +456,9 @@
 						</div>
 					</section>
 				</div>
+                <div id="tabs-6">
+                    ${ui.includeFragment("billingui", "subStoreIssueDrugList")}
+                </div>
 
 				<div id="tabs-3">
 					<h2>Ambulance Billing</h2>
@@ -558,7 +562,7 @@
 					
 					<section>
 						<div>
-							<table cellpadding="5" cellspacing="0" width="100%" id="queueList4">
+							<table cellpadding="5" cellspacing="0" width="100%" id="queueList45">
 								<thead>
 									<tr align="center">
 										<th>Service Name</th>
@@ -580,9 +584,11 @@
 					</section>
 				</div>
 				
-				<div id="tabs-6">
-					${ui.includeFragment("billingui", "searchPatient")}
-				</div>
+
+
+                <div id="tabs-7">
+                    ${ui.includeFragment("billingui", "searchPatient")}
+                </div>
 			</div>			
 		</div>
 	</div>

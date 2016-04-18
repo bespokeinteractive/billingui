@@ -123,7 +123,6 @@
             }
         }
 
-
         ko.applyBindings(bill, jq("#example")[0]);
 
         jq("#service").autocomplete({
