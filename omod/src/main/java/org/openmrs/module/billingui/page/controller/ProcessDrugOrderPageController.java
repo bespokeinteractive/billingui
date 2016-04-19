@@ -188,7 +188,7 @@ public class ProcessDrugOrderPageController {
     public void post(HttpServletRequest request, PageModel pageModel, UiUtils uiUtils) {
         String drugOrder = request.getParameter("drugOrder");
         int receiptid = Integer.parseInt(request.getParameter("receiptid"));
-        pageModel.addAttribute("receiptid",receiptid);
+        pageModel.addAttribute("receiptid", receiptid);
 
         InventoryService inventoryService = (InventoryService) Context
                 .getService(InventoryService.class);
@@ -348,9 +348,12 @@ public class ProcessDrugOrderPageController {
                         .getStoreDrugPatient().getPatient().getGivenName());
                 pageModel.addAttribute("familyName", listDrugIssue.get(0)
                         .getStoreDrugPatient().getPatient().getFamilyName());
+
                 if (listDrugIssue.get(0).getStoreDrugPatient().getPatient().getMiddleName() != null) {
                     pageModel.addAttribute("middleName", listDrugIssue.get(0)
                             .getStoreDrugPatient().getPatient().getMiddleName());
+                } else {
+                    pageModel.addAttribute("middleName", " ");
                 }
 
 
