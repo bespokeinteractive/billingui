@@ -14,11 +14,17 @@
         function DrugOrderViewModel() {
             var self = this;
             self.availableOrders = ko.observableArray([]);
+            self.nonDispensed = ko.observableArray([]);
             var mappedOrders = jQuery.map(listOfDrugToIssue, function (item) {
                 return new DrugOrder(item);
             });
+            var mappedNonDispensed = jQuery.map(listNonDispensed, function (item) {
+                return new NonDrugOrder(item);
+            });
 
             self.availableOrders(mappedOrders);
+            self.nonDispensed(mappedNonDispensed);
+
             //observable waiver
             self.waiverAmount = ko.observable(0.00);
 
@@ -39,14 +45,12 @@
 
             self.runningTotal = ko.computed(function () {
                 var rTotal = self.totalSurcharge() - self.waiverAmount();
-                console.log(rTotal);
                 return rTotal;
             });
 
 
             //submit bill
             self.submitBill = function () {
-                console.log(${receiptid}+',' +${flag });
                 var flag =${flag };
                 if (flag === 0) {
                     //process the drug , it hasn't been processed yet
@@ -68,7 +72,6 @@
         }
 
         function DrugOrder(item) {
-            console.log(item);
             var self = this;
             self.initialBill = ko.observable(item);
             self.orderTotal = ko.computed(function () {
@@ -76,6 +79,11 @@
                 var price = self.initialBill().transactionDetail.costToPatient;
                 return quantity * price;
             });
+        }
+        function NonDrugOrder(item) {
+            console.log(item);
+            var self = this;
+            self.initialNonBill = ko.observable(item);
         }
 
         var orders = new DrugOrderViewModel();
@@ -183,6 +191,41 @@
             </tr>
             </tbody>
         </table>
+        <br/>
+
+
+        <div id="nonDispensedDrugs" data-bind="visible: nonDispensed().length > 0">
+            <center><h3>Drugs Not Issued</h3> </center>
+            <table width="100%" id="nonDispensedDrugsTable" class="tablesorter thickbox">
+                <thead>
+                <tr align="center">
+                    <th>S.No</th>
+                    <th>Drug</th>
+                    <th>Formulation</th>
+                    <th>Frequency</th>
+                    <th>Days</th>
+                    <th>Comments</th>
+                </tr>
+                </thead>
+
+                <tbody data-bind="foreach: nonDispensed">
+                <tr>
+                    <td data-bind="text: \$index()+1"></td>
+                    <td data-bind="text: initialNonBill().inventoryDrug.name"></td>
+                    <td>
+                        <span data-bind="text: initialNonBill().inventoryDrugFormulation.name"></span> -
+                        <span data-bind="text: initialNonBill().inventoryDrugFormulation.dozage"></span> -
+                    </td>
+                    <td data-bind="text: initialNonBill().frequency.name"></td>
+                    <td data-bind="text: initialNonBill().noOfDays"></td>
+                    <td data-bind="text: initialNonBill().comments"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+
         <br/>
 
         <div>

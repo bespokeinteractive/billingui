@@ -188,6 +188,7 @@ public class ProcessDrugOrderPageController {
     public void post(HttpServletRequest request, PageModel pageModel, UiUtils uiUtils) {
         String drugOrder = request.getParameter("drugOrder");
         int receiptid = Integer.parseInt(request.getParameter("receiptid"));
+        pageModel.addAttribute("receiptid",receiptid);
 
         InventoryService inventoryService = (InventoryService) Context
                 .getService(InventoryService.class);
