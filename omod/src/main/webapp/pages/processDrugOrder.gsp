@@ -19,11 +19,14 @@
             });
 
             self.availableOrders(mappedOrders);
-//observable waiver
+            //observable waiver
             self.waiverAmount = ko.observable(0.00);
 
             //observable comment
             self.comment = ko.observable("");
+
+            //observable drug
+            self.flag = ko.observable(${flag});
 
             // Computed data
             self.totalSurcharge = ko.computed(function () {
@@ -45,7 +48,6 @@
             self.submitBill = function () {
                 console.log(${receiptid}+',' +${flag });
                 var flag =${flag };
-                var rId = ${receiptid};
                 if (flag === 0) {
                     //process the drug , it hasn't been processed yet
                     jq("#drugBillsForm").submit();
@@ -188,11 +190,14 @@
 
             <div style="float:right;">Amount To Pay : <span data-bind="text: runningTotal"></span></div>
 
-            <div data-bind="visible: waiverAmount() > 0">
+            <div data-bind="visible: flag() == 0">
                 Waiver Amount: <input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
-                Waiver Comment:<textarea type="text" id="waiverComment" name="waiverComment"
-                                         size="7" class="hasborder" style="width: 99.4%; height: 60px;"
-                                         data-bind="value: comment"></textarea> <br/>
+
+                <div data-bind="visible: waiverAmount() > 0">
+                    Waiver Comment:<textarea type="text" id="waiverComment" name="waiverComment"
+                                             size="7" class="hasborder" style="width: 99.4%; height: 60px;"
+                                             data-bind="value: comment"></textarea> <br/>
+                </div>
             </div>
 
         </div>
