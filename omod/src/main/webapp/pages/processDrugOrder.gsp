@@ -1,7 +1,12 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [title: "Cashier : Drug Order"])
 %>
-
+<style>
+.retired {
+    text-decoration: line-through;
+    color: darkgrey;
+}
+</style>
 <script>
     jq(function () {
         var listOfDrugToIssue =
@@ -69,6 +74,19 @@
                     printWindow.print();
                 }
             }
+
+            self.isNonPaying = ko.computed(function () {
+                var cat = "${paymentSubCategory}";
+                var catArray = ["GENERAL", "EXPECTANT MOTHER", "TB PATIENT", "CCC PATIENT"];
+                var exists = jq.inArray(cat, catArray);
+                if (exists >= 0) {
+                    console.log("false");
+                    return false;
+                } else {
+                    console.log("true");
+                    return strue;
+                }
+            });
         }
 
         function DrugOrder(item) {
@@ -80,8 +98,8 @@
                 return quantity * price;
             });
         }
+
         function NonDrugOrder(item) {
-            console.log(item);
             var self = this;
             self.initialNonBill = ko.observable(item);
         }
@@ -195,7 +213,7 @@
 
 
         <div id="nonDispensedDrugs" data-bind="visible: nonDispensed().length > 0">
-            <center><h3>Drugs Not Issued</h3> </center>
+            <center><h3>Drugs Not Issued</h3></center>
             <table width="100%" id="nonDispensedDrugsTable" class="tablesorter thickbox">
                 <thead>
                 <tr align="center">
@@ -229,9 +247,15 @@
         <br/>
 
         <div>
-            <div style="float:right;">Total : <span data-bind="text: totalSurcharge"></span></div><br/>
+            <div style="float:right;">Total :
+                <span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span>
+                <span data-bind="visible: isNonPaying()">0.00</span>
+            </div><br/>
 
-            <div style="float:right;">Amount To Pay : <span data-bind="text: runningTotal"></span></div>
+            <div style="float:right;">Amount To Pay :
+                <span data-bind="text: runningTotal,css:{'retired': isNonPaying()}"></span>
+                <span data-bind="visible: isNonPaying()">0.00</span>
+            </div>
 
             <div data-bind="visible: flag() == 0">
                 Waiver Amount: <input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
@@ -279,6 +303,7 @@
             <br/>
             <br/>
             <table border="1">
+                <thead>
                 <tr align="center">
                     <th>S.No</th>
                     <th>Category</th>
@@ -287,6 +312,7 @@
                     <th>Quantity</th>
                     <th>Transfer Quantity</th>
                 </tr>
+                </thead>
 
             </table>
 
