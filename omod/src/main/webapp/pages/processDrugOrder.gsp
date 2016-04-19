@@ -45,12 +45,12 @@
                 for (var i = 0; i < self.availableOrders().length; i++) {
                     total += self.availableOrders()[i].orderTotal();
                 }
-                return total;
+                return total.toFixed(2);
             });
 
             self.runningTotal = ko.computed(function () {
                 var rTotal = self.totalSurcharge() - self.waiverAmount();
-                return rTotal;
+                return rTotal.toFixed(2);
             });
 
 
@@ -204,8 +204,8 @@
                 <td data-bind="text: initialBill().transactionDetail.comments"></td>
                 <td data-bind="text: initialBill().transactionDetail.dateExpiry"></td>
                 <td data-bind="text: initialBill().quantity"></td>
-                <td data-bind="text: initialBill().transactionDetail.costToPatient"></td>
-                <td data-bind="text: orderTotal"></td>
+                <td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
+                <td data-bind="text: orderTotal().toFixed(2)"></td>
             </tr>
             </tbody>
         </table>
@@ -269,6 +269,9 @@
 
         </div>
 
+        <div>
+            Attending Cashier: ${cashier} &nbsp;&nbsp;Attending Pharmacist: ${pharmacist}
+        </div>
         <form method="post" id="drugBillsForm" style="padding-top: 10px">
             <input id="patientId" name="patientId" type="hidden" value="${identifier}">
             <input id="receiptid" name="receiptid" type="hidden" value="${receiptid}">
@@ -290,39 +293,150 @@
 
         </form>
 
-    </div>
-    <!-- PRINT DIV -->
-    <div id="printDiv" style="display: none;">
-        <div style="margin: 10px auto; width: 981px; font-size: 1.0em;font-family:'Dot Matrix Normal',Arial,Helvetica,sans-serif;">
-            <br/>
-            <br/>
-            <center style="float:center;font-size: 2.2em">Process Drug</center>
-            <br/>
-            <br/>
-            <span style="float:right;font-size: 1.7em">Date: ${date}</span>
-            <br/>
-            <br/>
-            <table border="1">
-                <thead>
-                <tr align="center">
-                    <th>S.No</th>
-                    <th>Category</th>
-                    <th>Drug Name</th>
-                    <th>Formulation</th>
-                    <th>Quantity</th>
-                    <th>Transfer Quantity</th>
+        <!-- PRINT DIV -->
+        <div id="printDiv" style="display: none;">
+            <div style="margin: 10px auto; width: 981px; font-size: 1.0em;font-family:'Dot Matrix Normal',Arial,Helvetica,sans-serif;">
+
+                <table class="spacer" style="margin-left: 60px;">
+                    <tr>
+                        <h3>
+                            <center><b><u>${userLocation}</u> </b></center>
+                        </h3>
+                    </tr>
+                    <tr>
+                        <h5><b>
+                            <center>CASH RECEIPT</center>
+                        </b></h5>
+                    </tr>
+                </table>
+                <br/>
+                <br/>
+
+                    <table class="spacer" style="margin-left: 60px;">
+                        <tr>
+                            <td>Date/Time:</td>
+                            <td>:${date}</td>
                 </tr>
-                </thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>
+                            :${givenName}&nbsp;${familyName}&nbsp;${middleName} </td>
+                    </tr>
+                    <tr>
+                        <td>Patient ID</td>
+                        <td>:${identifier }</td>
+                    </tr>
+                    <tr>
+                    <tr>
+                        <td>Age</td>
+                        <td>:
+                         ${age}
+                        </td>
+                    </tr>
+                    </tr>
+                    <tr>
+                        <td>Gender</td>
+                        <td>:${gender}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Category</td>
+                        <td>:${paymentSubCategory}</td>
+                    </tr>
+
 
             </table>
+                <table width="100%"  class="tablesorter thickbox">
+                    <thead>
+                    <tr align="center">
+                        <th>S.No</th>
+                        <th>Drug</th>
+                        <th>Formulation</th>
+                        <th>Frequency</th>
+                        <th>Days</th>
+                        <th>Comments</th>
+                        <th>Expiry</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Item Total</th>
+                    </tr>
+                    </thead>
 
-            <br/><br/><br/><br/><br/><br/>
-            <span style="float:left;font-size: 1.5em">Signature of sub-store/ Stamp</span><span
-                style="float:right;font-size: 1.5em">Signature of inventory clerk/ Stamp</span>
-            <br/><br/><br/><br/><br/><br/>
-            <span style="margin-left: 13em;font-size: 1.5em">Signature of Medical Superintendent/ Stamp</span>
+                    <tbody data-bind="foreach: availableOrders, visible: availableOrders().length > 0">
+                    <tr>
+                        <td data-bind="text: \$index()+1"></td>
+                        <td data-bind="text: initialBill().transactionDetail.drug.name"></td>
+                        <td>
+                            <span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
+                            <span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
+                        </td>
+                        <td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
+                        <td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
+                        <td data-bind="text: initialBill().transactionDetail.comments"></td>
+                        <td data-bind="text: initialBill().transactionDetail.dateExpiry"></td>
+                        <td data-bind="text: initialBill().quantity"></td>
+                        <td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
+                        <td data-bind="text: orderTotal().toFixed(2)"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br/>
+
+
+                <div data-bind="visible: nonDispensed().length > 0">
+                    <center><h3>Drugs Not Issued</h3></center>
+                    <table width="100%"  class="tablesorter thickbox">
+                        <thead>
+                        <tr align="center">
+                            <th>S.No</th>
+                            <th>Drug</th>
+                            <th>Formulation</th>
+                            <th>Frequency</th>
+                            <th>Days</th>
+                            <th>Comments</th>
+                        </tr>
+                        </thead>
+
+                        <tbody data-bind="foreach: nonDispensed">
+                        <tr>
+                            <td data-bind="text: \$index()+1"></td>
+                            <td data-bind="text: initialNonBill().inventoryDrug.name"></td>
+                            <td>
+                                <span data-bind="text: initialNonBill().inventoryDrugFormulation.name"></span> -
+                                <span data-bind="text: initialNonBill().inventoryDrugFormulation.dozage"></span> -
+                            </td>
+                            <td data-bind="text: initialNonBill().frequency.name"></td>
+                            <td data-bind="text: initialNonBill().noOfDays"></td>
+                            <td data-bind="text: initialNonBill().comments"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+                <br/>
+
+                <div>
+                    <div style="float:right;">Total :
+                        <span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span>
+                        <span data-bind="visible: isNonPaying()">0.00</span>
+                    </div><br/>
+
+                    <div style="float:right;">Amount To Pay :
+                        <span data-bind="text: runningTotal,css:{'retired': isNonPaying()}"></span>
+                        <span data-bind="visible: isNonPaying()">0.00</span>
+                    </div>
+                </div>
+
+                <br/><br/><br/><br/><br/><br/>
+                <span style="float:left;font-size: 1.5em">Attending Cashier: ${cashier}</span><span
+                    style="float:right;font-size: 1.5em">Attending Pharmacist: ${pharmacist}</span>
+                <br/><br/><br/><br/><br/><br/>
+                <span style="margin-left: 13em;font-size: 1.5em">Signature of Inventory Clerk/ Stamp</span>
+            </div>
         </div>
+        <!-- END PRINT DIV -->
+
     </div>
-    <!-- END PRINT DIV -->
 
 </div>

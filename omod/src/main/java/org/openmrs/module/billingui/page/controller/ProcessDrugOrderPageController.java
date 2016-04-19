@@ -25,6 +25,7 @@ public class ProcessDrugOrderPageController {
     public void get(PageModel model,
                     @RequestParam("orderId") Integer orderId, PageModel pageModel,
                     UiUtils uiUtils) {
+        pageModel.addAttribute("userLocation",Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         InventoryService inventoryService = Context.getService(InventoryService.class);
         List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
 
@@ -163,7 +164,7 @@ public class ProcessDrugOrderPageController {
                 model.addAttribute("gender", "Female");
             }
 
-            model.addAttribute("processor", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
+            model.addAttribute("pharmacist", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
             model.addAttribute("cashier", Context.getAuthenticatedUser().getPersonName());
 
             HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
@@ -365,9 +366,8 @@ public class ProcessDrugOrderPageController {
                         .getStoreDrugPatient().getPatient().getGender().equals("F")) {
                     pageModel.addAttribute("gender", "Female");
                 }
-
-                pageModel.addAttribute("cashier", listDrugIssue.get(0)
-                        .getStoreDrugPatient().getCreatedBy());
+                pageModel.addAttribute("pharmacist", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
+                pageModel.addAttribute("cashier", Context.getAuthenticatedUser().getPersonName());
 
                 HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
                 List<PersonAttribute> pas = hcs.getPersonAttributes(listDrugIssue.get(0)
