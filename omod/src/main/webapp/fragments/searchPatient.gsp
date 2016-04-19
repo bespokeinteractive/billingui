@@ -4,16 +4,18 @@
 
 <script>
 
-    jQuery(document).ready(function () {
+    jq(document).ready(function () {
         jq('.col4 select').bind('change keyup', function() {
             ADVSEARCH.delay();
         });
-        jq('input').keydown(function (e) {
+
+        jq('#tabs-7 input').keydown(function (e) {
             var key = e.keyCode || e.which;
             if ((key == 9 || key == 13) && jq(this).attr('id') != 'searchPhrase') {
                 ADVSEARCH.delay();
             }
         });
+
         jq('#lastDayOfVisit-display').on("change", function (dateText) {
             ADVSEARCH.delay();
         });
