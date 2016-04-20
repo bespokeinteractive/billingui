@@ -80,11 +80,9 @@
                 var catArray = ["GENERAL", "EXPECTANT MOTHER", "TB PATIENT", "CCC PATIENT"];
                 var exists = jq.inArray(cat, catArray);
                 if (exists >= 0) {
-                    console.log("false");
                     return false;
                 } else {
-                    console.log("true");
-                    return strue;
+                    return true;
                 }
             });
         }
