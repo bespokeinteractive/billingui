@@ -187,6 +187,7 @@ public class ProcessDrugOrderPageController {
     }
 
     public void post(HttpServletRequest request, PageModel pageModel, UiUtils uiUtils) {
+        pageModel.addAttribute("userLocation",Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         String drugOrder = request.getParameter("drugOrder");
         int receiptid = Integer.parseInt(request.getParameter("receiptid"));
         pageModel.addAttribute("receiptid", receiptid);
