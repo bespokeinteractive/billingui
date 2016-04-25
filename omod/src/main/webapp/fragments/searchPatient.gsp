@@ -129,7 +129,7 @@
                 updateSystemQueueTable(data);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr);
+                jq().toastmessage('showNoticeToast', "Bill ID Does Not Exist");
                 jQuery("#ajaxLoader").hide();
             }
         });
@@ -182,7 +182,7 @@
 </style>
 
 <form onsubmit="return false" id="patientSystemSearchForm" method="get">
-    <input autocomplete="off" placeholder="Search by ID,Name or BillId" id="searchPhrase"
+    <input autocomplete="off" placeholder="Search by Patient ID,Name or Bill Id" id="searchPhrase"
            style="float:left; width:70%; padding:6px 10px -1px;" onkeyup="ADVSEARCH.startSearch(event);">
     <img id="ajaxLoader" style="display:none; float:left; margin: 3px -4%;"
          src="${ui.resourceLink("billingui", "images/ajax-loader.gif")}"/>
