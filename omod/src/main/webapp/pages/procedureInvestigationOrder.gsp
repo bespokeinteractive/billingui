@@ -250,7 +250,6 @@
 	form input:focus, form select:focus, form textarea:focus {
 		outline: 1px none #ddd!important;
 	}
-	.ar
 </style>
 
 <div class="clear"></div>
