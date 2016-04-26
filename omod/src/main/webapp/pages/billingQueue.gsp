@@ -349,7 +349,7 @@
 					<li><a href="#tabs-3">Ambulance</a></li>
 					<li><a href="#tabs-4">Tender</a></li>
 					<li><a href="#tabs-5">Misc Service</a></li>
-					<li><a href="#tabs-7">Search Patient</a></li>
+					<li><a href="#tabs-7">Search Patient Bill</a></li>
 				</ul>
 
 				<div id="tabs-1">
