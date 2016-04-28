@@ -303,7 +303,7 @@
                     </tr>
                     <tr>
                         <h5><b>
-                            <center>CASH RECEIPT</center>
+                            <center>CASH RECEIPT : PHARM-${receiptid}</center>
                         </b></h5>
                     </tr>
                 </table>
