@@ -186,7 +186,7 @@ public class ProcessDrugOrderPageController {
         }
     }
 
-    public void post(HttpServletRequest request, PageModel pageModel, UiUtils uiUtils) {
+    public String post(HttpServletRequest request, PageModel pageModel, UiUtils uiUtils) {
         pageModel.addAttribute("userLocation",Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         String drugOrder = request.getParameter("drugOrder");
         int receiptid = Integer.parseInt(request.getParameter("receiptid"));
@@ -388,5 +388,6 @@ public class ProcessDrugOrderPageController {
                 }
             }
         }
+        return "redirect:" + uiUtils.pageLink("billingui","billingQueue");
     }
 }
