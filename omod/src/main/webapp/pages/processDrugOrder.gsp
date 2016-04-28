@@ -283,7 +283,7 @@
 
             <% if (flag == 1) { %>
             <input type="submit" id="savebill" name="savebill" style="float:right;" class="button confirm"
-                   value="Reprint" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+                   value="Print" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
             <% } else { %>
             <input type="submit" id="savebill" name="savebill" style="float:right;" class="button confirm"
                    value="Finish" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
