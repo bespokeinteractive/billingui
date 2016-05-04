@@ -3,26 +3,24 @@
     jq(function () {
         var receiptsData = getOrderList();
         jQuery('.date-pick').datepicker({minDate: '-100y', dateFormat: 'dd/mm/yy'});
-        jq(".searchFieldChange").on("change", function () {
+        jq("#issueName, #receiptId").on("keyup", function () {
             issueList();
         });
 
-        jq(".searchFieldBlur").on("blur", function () {
+        jq("#fromDate-display, #toDate-display").change(function () {
             issueList();
         });
 
         function issueList() {
-            var receiptId = jq("#receiptId").val();
-            var issueName = jq("#issueName").val();
-            var fromDate = jq("#fromDate").val();
-            var toDate = jq("#toDate").val();
-            toReturn= getOrderList(issueName, fromDate, toDate, receiptId);
+            var receiptId 	= jq("#receiptId").val();
+            var issueName 	= jq("#issueName").val();
+            var fromDate 	= moment(jq("#fromDate-field").val()).format('DD/MM/YYYY');
+            var toDate 		= moment(jq("#toDate-field").val()).format('DD/MM/YYYY');
+            toReturn		= getOrderList(issueName, fromDate, toDate, receiptId);
+			
             list.drugList(toReturn);
-
         }
-
-
-
+		
         function IssueDrugViewModel() {
             var self = this;
             // Editable data
@@ -65,53 +63,84 @@
         });
         return toReturn;
     }
-
-
-
-
-
-
-
 </script>
 
-<div class="dashboard clear">
-    <div class="info-section">
-        <div class="info-header">
-            <i class="icon-calendar"></i>
+<style>
+	.formfactor .zero-col{
+		display: inline-block;
+		margin-top: 5px;
+		overflow: hidden;
+		width: 35%;
+	}
+	.formfactor .other-col{
+		display: inline-block;
+		margin-top: 5px;
+		overflow: hidden;
+		width: 21%;
+	}
+	.formfactor .zero-col input,
+	.formfactor .other-col input{
+		padding: 0 10px;
+		width: 98%;
+	}
+	#fromDate label,
+	#toDate label{
+		display: none;
+	}
+	#fromDate .add-on,
+	#toDate .add-on {
+		margin-top: 5px;
+	}	
+	.formfactor .zero-col label,
+	.formfactor .other-col label {
+		color: #363463;
+		cursor: pointer;
+		padding-left: 5px;
+		margin-bottom: 5px;
+	}
+</style>
 
-            <h3>Manage Issue Drug</h3>
-        </div>
-    </div>
+<h2><b>Manage Issue Drug</b></h2>
+					
+<span class="button confirm right" style="float: right; margin: 8px 5px 0 0;">
+	<i class="icon-refresh small"></i>
+	Get Patients
+</span>
+
+<div class="formfactor onerow">
+	<div class="zero-col">
+		<label for="issueName">Patient Name</label><br/>
+		<input type="text" name="issueName" id="issueName" class=" searchFieldBlur" placeholder="Patient Name"/>
+	</div>
+	
+	<div class="other-col">
+		<label for="fromDate-display">From Date:</label><br/>
+		${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'fromDate', id: 'fromDate', label: 'From Date', useTime: false, defaultToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+	</div>
+	
+	<div class="other-col">
+		<label for="toDate-display">To Date:</label><br/>
+		${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'toDate', id: 'toDate', label: 'To Date', useTime: false, defaultToday: true, class: ['searchFieldChange', 'date-pick', 'searchFieldBlur']])}
+	</div>
+	
+	<div class="other-col">
+		<label for="receiptId">From Date:</label><br/>
+		<input type="text" name="receiptId" class="searchFieldChange" id="receiptId" placeholder="Receipt No."/>
+	</div>	
 </div>
 
 <form method="get" id="form">
-    <table>
-        <tr>
-            <td><input type="text" name="issueName" id="issueName" class=" searchFieldBlur" placeholder="Patient Name"/>
-            </td>
-            <td><input type="text" id="fromDate" class="date-pick left searchFieldChange searchFieldBlur "
-                       readonly="readonly" name="fromDate"
-                       title="Double Click to Clear" ondblclick="this.value = '';" placeholder="From Date:"/></td>
-            <td><input type="text" id="toDate" class="date-pick left searchFieldChange searchFieldBlur"
-                       readonly="readonly" name="toDate"
-                       title="Double Click to Clear" ondblclick="this.value = '';" placeholder="To Date:"/></td>
-            <td><input type="text" name="receiptId" class="searchFieldChange" id="receiptId" placeholder="Receipt No."/>
-            </td>
-        </tr>
-    </table>
-    <br/>
-
     <div id="orderList">
-        <table width="100%" cellpadding="5" cellspacing="0">
+        <table width="100%">
             <thead>
-            <tr>
-                <th>S.No</th>
-                <th>Receipt No.</th>
-                <th>Patient ID</th>
-                <th>Name</th>
-                <th>Issue Date:</th>
-                <th>Action</th>
-            </tr>
+				<tr>
+					<th>#</th>
+					<th>RECEIPT</th>
+					<th>IDENTIFIER</th>
+					<th>NAMES</th>
+					<th>DATE</th>
+					<th>ACTION</th>
+				</tr>
             </thead>
             <tbody data-bind="foreach: drugList">
             <tr>
@@ -122,11 +151,11 @@
                     <span data-bind="text: patient.givenName"></span>&nbsp;
                     <span data-bind="text: patient.familyName"></span>
                 </td>
-                <td data-bind="text: createdOn"></td>
+                <td data-bind="text: createdOn.substring(0, 11)"></td>
                 <td>
                     <a class="remover" href="#" data-bind="click: \$root.processDrugOrder"
                        title="Detail issue drug to this patient">
-                        <i class="icon-signin  small">View/Print</i>
+                        <i class="icon-bar-chart small"></i> PROCESS
                     </a>
                 </td>
             </tr>

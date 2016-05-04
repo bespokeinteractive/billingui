@@ -164,12 +164,15 @@ public class ProcessDrugOrderPageController {
                 model.addAttribute("gender", "Female");
             }
 
-            model.addAttribute("pharmacist", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
-            model.addAttribute("cashier", Context.getAuthenticatedUser().getPersonName());
 
             HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
             List<PersonAttribute> pas = hcs.getPersonAttributes(listDrugIssue.get(0)
                     .getStoreDrugPatient().getPatient().getId());
+
+            model.addAttribute("pharmacist", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
+            model.addAttribute("cashier", Context.getAuthenticatedUser().getPersonName());
+            model.addAttribute("lastVisit",hcs.getLastVisitTime(listDrugIssue.get(0).getStoreDrugPatient().getPatient()));
+
             for (PersonAttribute pa : pas) {
                 PersonAttributeType attributeType = pa.getAttributeType();
                 PersonAttributeType personAttributePCT = hcs.getPersonAttributeTypeByName("Paying Category Type");
@@ -177,10 +180,13 @@ public class ProcessDrugOrderPageController {
                 PersonAttributeType personAttributeSSCT = hcs.getPersonAttributeTypeByName("Special Scheme Category Type");
                 if (attributeType.getPersonAttributeTypeId() == personAttributePCT.getPersonAttributeTypeId()) {
                     model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategory", 1);
                 } else if (attributeType.getPersonAttributeTypeId() == personAttributeNPCT.getPersonAttributeTypeId()) {
                     model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategory", 2);
                 } else if (attributeType.getPersonAttributeTypeId() == personAttributeSSCT.getPersonAttributeTypeId()) {
                     model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategory", 3);
                 }
             }
         }

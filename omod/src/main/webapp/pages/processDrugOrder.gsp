@@ -15,6 +15,15 @@
         var listNonDispensed =
         ${listOfNotDispensedOrder}.
         listOfNotDispensedOrder;
+		
+		jq('#waiverAmount').on('keyup', function(){
+			if (jq(this).val() > 0){
+				jq('#waivComment').show();
+			}
+			else{
+				jq('#waivComment').hide();
+			}
+		});
 
         function DrugOrderViewModel() {
             var self = this;
@@ -56,33 +65,30 @@
 
             //submit bill
             self.submitBill = function () {
-                var flag =${flag };
-                if (flag === 0) {
-                    //process the drug , it hasn't been processed yet
+                var flag = ${flag};                
+				
+				var printDiv = jQuery("#printDiv").html();
+				var printWindow = window.open('', '', 'height=400,width=800');
+				
+				printWindow.document.write('<html><head><title>Print Drug Order :-Support by KenyaEHRS</title>');
+				printWindow.document.write('</head>');
+				printWindow.document.write(printDiv);
+				printWindow.document.write('</body></html>');
+				printWindow.document.close();
+				printWindow.print();
+				
+				if (flag === 0) {
                     jq("#drugBillsForm").submit();
-
-                } else {
-                    //drug has been processed, we just do a reprint
-                    jq().toastmessage('showErrorToast', "Drug Processed Already- Do a reprint!");
-                    var printDiv = jQuery("#printDiv").html();
-                    var printWindow = window.open('', '', 'height=400,width=800');
-                    printWindow.document.write('<html><head><title>Print Drug Order :-Support by KenyaEHRS</title>');
-                    printWindow.document.write('</head>');
-                    printWindow.document.write(printDiv);
-                    printWindow.document.write('</body></html>');
-                    printWindow.document.close();
-                    printWindow.print();
+					window.location.href = emr.pageLink("pharmacyapp", "container");
                 }
             }
 
             self.isNonPaying = ko.computed(function () {
-                var cat = "${paymentSubCategory}";
-                var catArray = ["GENERAL", "EXPECTANT MOTHER", "TB PATIENT", "CCC PATIENT"];
-                var exists = jq.inArray(cat, catArray);
-                if (exists >= 0) {
-                    return false;
-                } else {
+                var cat = "${paymentCategory}";
+                if (cat == 2) {
                     return true;
+                } else {
+                    return false;
                 }
             });
         }
@@ -107,6 +113,97 @@
 
     });//end of document ready
 </script>
+
+<style>
+	.name {
+		color: #f26522;
+	}
+
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
+
+	.new-patient-header .demographics .gender-age {
+		font-size: 14px;
+		margin-left: -55px;
+		margin-top: 12px;
+	}
+
+	.new-patient-header .demographics .gender-age span {
+		border-bottom: 1px none #ddd;
+	}
+
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
+
+	.tag {
+		padding: 2px 10px;
+	}
+
+	.tad {
+		background: #666 none repeat scroll 0 0;
+		border-radius: 1px;
+		color: white;
+		display: inline;
+		font-size: 0.8em;
+		padding: 2px 10px;
+	}
+
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
+
+	.catg {
+		color: #363463;
+		margin: 35px 10px 0 0;
+	}
+
+	.title {
+		border: 1px solid #eee;
+		margin: 3px 0;
+		padding: 5px;
+	}
+
+	.title i {
+		font-size: 1.5em;
+		padding: 0;
+	}
+
+	.title span {
+		font-size: 20px;
+	}
+
+	.title em {
+		border-bottom: 1px solid #ddd;
+		color: #888;
+		display: inline-block;
+		font-size: 0.5em;
+		margin-right: 10px;
+		text-transform: lowercase;
+		width: 200px;
+	}	
+	table {
+		font-size: 14px;
+	}
+	th:first-child{
+		width: 5px;
+	}
+	#orderBillingTable th:nth-child(3){
+		min-width: 105px;
+	}
+	#orderBillingTable th:nth-child(4){
+		min-width: 85px;
+	}
+	#orderBillingTable th:nth-child(5){
+		width: 50px;
+	}
+	#waivers label{
+		display: inline-block;
+		padding-left: 10px;
+		width: 140px;
+	}
+</style>
 
 <div class="container">
     <div class="example">
@@ -137,7 +234,7 @@
         <div class="demographics">
             <h1 class="name">
                 <span id="surname">${familyName},<em>surname</em></span>
-                <span id="othname">${givenName} ${middleName}  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em>
+                <span id="othname">${givenName} ${middleName} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<em>other names</em>
                 </span>
 
                 <span class="gender-age">
@@ -153,10 +250,11 @@
 
             <div id="stacont" class="status-container">
                 <span class="status active"></span>
-                Order Date : ${date}
+                Visit Status
             </div>
 
-            <div class="tag">Receipt Id: ${receiptid}</div>
+            <div class="tag">Outpatient</div>
+            <div class="tad">Last Visit: ${ui.formatDatePretty(lastVisit)}</div>
         </div>
 
         <div class="identifiers">
@@ -165,62 +263,111 @@
             <br>
 
             <div class="catg">
-                <i class="icon-tags small" style="font-size: 16px"></i><small>Category:</small>${paymentSubCategory}
+                <i class="icon-tags small" style="font-size: 16px"></i><small>Category: </small>${paymentSubCategory}
             </div>
         </div>
 
         <div class="close"></div>
     </div>
+	
+
+	<div class="title">
+		<i class="icon-time"></i>
+		<span>
+			${ui.formatDatePretty(date)}
+			<em style="width: 70px;">&nbsp; order date</em>
+		</span>
+		
+		<i class="icon-quote-left"></i>
+		<span>
+			00${receiptid}
+			<em>&nbsp; receipt number</em>
+		</span>
+	</div>
 
     <div class="dashboard clear" id="dispensedDrugs">
         <table width="100%" id="orderBillingTable" class="tablesorter thickbox">
             <thead>
-            <tr align="center">
-                <th>S.No</th>
-                <th>Drug</th>
-                <th>Formulation</th>
-                <th>Frequency</th>
-                <th>Days</th>
-                <th>Comments</th>
-                <th>Expiry</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Item Total</th>
-            </tr>
+				<tr align="center">
+					<th>#</th>
+					<th>DRUG</th>
+					<th>FORMULATION</th>
+					<th>FREQUENCY</th>
+					<th>#DAYS</th>
+					<th>COMMENTS</th>
+					<th>EXPIRY</th>
+					<th>QNTY</th>
+					<th>PRICE</th>
+					<th>TOTAL</th>
+				</tr>
             </thead>
 
             <tbody data-bind="foreach: availableOrders, visible: availableOrders().length > 0">
-            <tr>
-                <td data-bind="text: \$index()+1"></td>
-                <td data-bind="text: initialBill().transactionDetail.drug.name"></td>
-                <td>
-                    <span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
-                    <span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
-                </td>
-                <td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
-                <td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
-                <td data-bind="text: initialBill().transactionDetail.comments"></td>
-                <td data-bind="text: initialBill().transactionDetail.dateExpiry"></td>
-                <td data-bind="text: initialBill().quantity"></td>
-                <td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
-                <td data-bind="text: orderTotal().toFixed(2)"></td>
-            </tr>
-            </tbody>
+				<tr>
+					<td data-bind="text: \$index()+1"></td>
+					<td data-bind="text: initialBill().transactionDetail.drug.name"></td>
+					<td>
+						<span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
+						<span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
+					</td>
+					<td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
+					<td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
+					<td data-bind="text: initialBill().transactionDetail.comments"></td>
+					<td data-bind="text: initialBill().transactionDetail.dateExpiry.substring(0, 11)"></td>
+					<td data-bind="text: initialBill().quantity"></td>
+					<td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
+					<td data-bind="text: orderTotal().toFixed(2)"></td>
+				</tr>
+            </tbody>		
+					
+			<tbody>
+				<tr>
+					<td></td>
+					
+					<td colspan="8">
+						<b>TOTAL AMOUNT</b>
+					</td>
+					
+					<td>
+						<span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span>
+						<span data-bind="visible: isNonPaying()">0.00</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<td></td>
+					
+					<td colspan="8">
+						<span data-bind="visible: flag() == 0"><b>TOTAL PAYABLE</b></span>
+						<span data-bind="visible: flag() == 1"><b>TOTAL TENDERED</b></span>					
+					</td>
+					
+					<td>
+						<span data-bind="text: runningTotal,css:{'retired': isNonPaying()}"></span>
+						<span data-bind="visible: isNonPaying()">0.00</span>
+					</td>
+				</tr>
+			</tbody>
         </table>
-        <br/>
 
-
-        <div id="nonDispensedDrugs" data-bind="visible: nonDispensed().length > 0">
-            <center><h3>Drugs Not Issued</h3></center>
+        <div id="nonDispensedDrugs" data-bind="visible: nonDispensed().length > 0" style="display: none;">
+			<div class="title" style="margin-top: 10px;">
+				<i class="icon-remove-sign" style="color: #f00"></i>
+				<span>
+					DRUGS NOT ISSUED
+					<em>&nbsp; from pharmacy</em>
+				</span>
+			</div>
+			            
             <table width="100%" id="nonDispensedDrugsTable" class="tablesorter thickbox">
                 <thead>
                 <tr align="center">
-                    <th>S.No</th>
-                    <th>Drug</th>
-                    <th>Formulation</th>
-                    <th>Frequency</th>
-                    <th>Days</th>
-                    <th>Comments</th>
+                    <th>#</th>
+                    <th>DRUG</th>
+                    <th>FORMULATION</th>
+                    <th>FREQUENCY</th>
+                    <th>#DAYS</th>
+                    <th>COMMENTS</th>
                 </tr>
                 </thead>
 
@@ -238,38 +385,28 @@
                 </tr>
                 </tbody>
             </table>
+        </div>        
 
+		<div id='waivers' data-bind="visible: flag() == 0" style="margin-top: 10px">
+			<label for="waiverAmount">Waiver Amount:</label> 
+			<input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
+
+			<div id="waivComment" style="margin-top: 2px; display: none;">
+				<label for="waiverComment">Waiver Comment:</label>
+				<textarea type="text" id="waiverComment" name="waiverComment"
+										 size="7" class="hasborder" style="height: 60px; width: 83.4%; resize: none;"
+										 data-bind="value: comment"></textarea> <br/>
+			</div>
+		</div>
+
+        <div style="margin: 10px">
+            <i class="icon-user small"></i>
+			<label style="font-size: 90%; color: rgb(85, 85, 85); display: inline-block; width: 115px;">Cashier: </label>${cashier}<br/>
+			
+			<i class="icon-user small"></i>
+			<label style="font-size: 90%; color: rgb(85, 85, 85); display: inline-block; width: 115px;">Pharmacist: </label>${pharmacist}<br/>
         </div>
-
-
-        <br/>
-
-        <div>
-            <div style="float:right;">Total :
-                <span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span>
-                <span data-bind="visible: isNonPaying()">0.00</span>
-            </div><br/>
-
-            <div style="float:right;">Amount To Pay :
-                <span data-bind="text: runningTotal,css:{'retired': isNonPaying()}"></span>
-                <span data-bind="visible: isNonPaying()">0.00</span>
-            </div>
-
-            <div data-bind="visible: flag() == 0">
-                Waiver Amount: <input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
-
-                <div data-bind="visible: waiverAmount() > 0">
-                    Waiver Comment:<textarea type="text" id="waiverComment" name="waiverComment"
-                                             size="7" class="hasborder" style="width: 99.4%; height: 60px;"
-                                             data-bind="value: comment"></textarea> <br/>
-                </div>
-            </div>
-
-        </div>
-
-        <div>
-            Attending Cashier: ${cashier} &nbsp;&nbsp;Attending Pharmacist: ${pharmacist}
-        </div>
+		
         <form method="post" id="drugBillsForm" style="padding-top: 10px">
             <input id="patientId" name="patientId" type="hidden" value="${identifier}">
             <input id="receiptid" name="receiptid" type="hidden" value="${receiptid}">
@@ -282,11 +419,15 @@
 
 
             <% if (flag == 1) { %>
-            <input type="submit" id="savebill" name="savebill" style="float:right;" class="button confirm"
-                   value="Print" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+				<span type="submit" id="savebill" class="button task right" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+					<i class="icon-print small"></i>
+					Reprint
+				</span>
             <% } else { %>
-            <input type="submit" id="savebill" name="savebill" style="float:right;" class="button confirm"
-                   value="Finish" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+				<span id="savebill" class="button task right" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+					<i class="icon-save small"></i>
+					Finish   
+				</span>
             <% } %>
 
         </form>
@@ -360,24 +501,24 @@
                     </thead>
 
                     <tbody data-bind="foreach: availableOrders, visible: availableOrders().length > 0">
-                    <tr>
-                        <td data-bind="text: \$index()+1"></td>
-                        <td data-bind="text: initialBill().transactionDetail.drug.name"></td>
-                        <td>
-                            <span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
-                            <span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
-                        </td>
-                        <td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
-                        <td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
-                        <td data-bind="text: initialBill().transactionDetail.comments"></td>
-                        <td data-bind="text: initialBill().transactionDetail.dateExpiry"></td>
-                        <td data-bind="text: initialBill().quantity"></td>
-                        <td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
-                        <td data-bind="text: orderTotal().toFixed(2)"></td>
-                    </tr>
+						<tr>
+							<td data-bind="text: \$index()+1"></td>
+							<td data-bind="text: initialBill().transactionDetail.drug.name"></td>
+							<td>
+								<span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
+								<span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
+							</td>
+							<td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
+							<td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
+							<td data-bind="text: initialBill().transactionDetail.comments"></td>
+							<td data-bind="text: initialBill().transactionDetail.dateExpiry"></td>
+							<td data-bind="text: initialBill().quantity"></td>
+							<td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
+							<td data-bind="text: orderTotal().toFixed(2)"></td>
+						</tr>
                     </tbody>
                 </table>
-                <br/>
+                
 
 
                 <div data-bind="visible: nonDispensed().length > 0">
@@ -412,7 +553,7 @@
                 </div>
 
 
-                <br/>
+                
 
                 <div>
                     <div style="float:right;">Total :
