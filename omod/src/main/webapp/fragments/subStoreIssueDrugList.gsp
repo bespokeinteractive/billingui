@@ -10,6 +10,10 @@
         jq("#fromDate-display, #toDate-display").change(function () {
             issueList();
         });
+		
+		jq('#searchProcessed').change(function(){
+			//console.log(jq('#searchProcessed:checked').length);
+		});
 
         function issueList() {
             var receiptId 	= jq("#receiptId").val();
@@ -98,6 +102,31 @@
 		padding-left: 5px;
 		margin-bottom: 5px;
 	}
+	#orderList th:first-child{
+		width: 5px;
+	}	
+	#orderList th:nth-child(2){
+		width: 70px;
+	}
+	#orderList th:nth-child(3){
+		width: 220px;
+	}
+	#orderList th:nth-child(5){
+		width: 100px;
+	}
+	#orderList th:last-child{
+		width: 110px;
+	}
+	#divSeachProcessed{
+		margin-right: 20px;
+		margin-top: 25px;
+	}
+	#divSeachProcessed label{
+		cursor: pointer;
+	}
+	#divSeachProcessed input{
+		cursor: pointer;
+	}
 </style>
 
 <h2><b>Manage Issue Drug</b></h2>
@@ -106,6 +135,13 @@
 	<i class="icon-refresh small"></i>
 	Get Patients
 </span>
+
+<div id="divSeachProcessed" class="right">
+	<label>
+		<input type="checkbox" id="searchProcessed" name="searchProcessed">
+		Include Processed
+	</label>
+</div>
 
 <div class="formfactor onerow">
 	<div class="zero-col">
@@ -143,22 +179,22 @@
 				</tr>
             </thead>
             <tbody data-bind="foreach: drugList">
-            <tr>
-                <td data-bind="text: \$index() + 1"></td>
-                <td data-bind="text: id"></td>
-                <td data-bind="text: identifier"></td>
-                <td>
-                    <span data-bind="text: patient.givenName"></span>&nbsp;
-                    <span data-bind="text: patient.familyName"></span>
-                </td>
-                <td data-bind="text: createdOn.substring(0, 11)"></td>
-                <td>
-                    <a class="remover" href="#" data-bind="click: \$root.processDrugOrder"
-                       title="Detail issue drug to this patient">
-                        <i class="icon-bar-chart small"></i> PROCESS
-                    </a>
-                </td>
-            </tr>
+				<tr>
+					<td data-bind="text: \$index() + 1"></td>
+					<td data-bind="text: id"></td>
+					<td data-bind="text: identifier"></td>
+					<td>
+						<span data-bind="text: patient.givenName"></span>&nbsp;
+						<span data-bind="text: patient.familyName"></span>
+					</td>
+					<td data-bind="text: createdOn.substring(0, 11)"></td>
+					<td>
+						<a class="remover" href="#" data-bind="click: \$root.processDrugOrder"
+						   title="Detail issue drug to this patient">
+							<i class="icon-bar-chart small"></i> PROCESS
+						</a>
+					</td>
+				</tr>
             </tbody>
         </table>
     </div>

@@ -79,7 +79,7 @@
 				
 				if (flag === 0) {
                     jq("#drugBillsForm").submit();
-					window.location.href = emr.pageLink("pharmacyapp", "container");
+					window.location.href = emr.pageLink("billingui", "billingQueue");
                 }
             }
 

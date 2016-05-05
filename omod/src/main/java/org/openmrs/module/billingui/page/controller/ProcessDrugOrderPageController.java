@@ -361,7 +361,7 @@ public class ProcessDrugOrderPageController {
                     pageModel.addAttribute("middleName", listDrugIssue.get(0)
                             .getStoreDrugPatient().getPatient().getMiddleName());
                 } else {
-                    pageModel.addAttribute("middleName", " ");
+                    pageModel.addAttribute("middleName", "");
                 }
 
 
