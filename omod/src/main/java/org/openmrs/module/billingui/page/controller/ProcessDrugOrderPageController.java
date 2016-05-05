@@ -78,7 +78,15 @@ public class ProcessDrugOrderPageController {
 
                 inventoryStoreDrugTransactionDetail.setCurrentQuantity(drugTransactionDetail.getCurrentQuantity());
                 Integer flags = pDetail.getTransactionDetail().getFlag();
-                model.addAttribute("flag", flags);
+
+                if (flags == null){
+                    model.addAttribute("flag", 0);
+                }
+                else{
+                    model.addAttribute("flag", flags);
+                }
+
+
                 inventoryService.saveStoreDrugTransactionDetail(inventoryStoreDrugTransactionDetail);
                 // save transactiondetail first
                 InventoryStoreDrugTransactionDetail transDetail = new InventoryStoreDrugTransactionDetail();

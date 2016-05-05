@@ -2,17 +2,18 @@
     var toReturn;
     jq(function () {
         var receiptsData = getOrderList();
+		
         jQuery('.date-pick').datepicker({minDate: '-100y', dateFormat: 'dd/mm/yy'});
         jq("#issueName, #receiptId").on("keyup", function () {
             issueList();
         });
 
-        jq("#fromDate-display, #toDate-display").change(function () {
+        jq("#fromDate-display, #toDate-display, #searchProcessed").change(function () {
             issueList();
         });
 		
-		jq('#searchProcessed').change(function(){
-			//console.log(jq('#searchProcessed:checked').length);
+		jq('#getPharmPatients').click(function(){
+			issueList();
 		});
 
         function issueList() {
@@ -20,7 +21,10 @@
             var issueName 	= jq("#issueName").val();
             var fromDate 	= moment(jq("#fromDate-field").val()).format('DD/MM/YYYY');
             var toDate 		= moment(jq("#toDate-field").val()).format('DD/MM/YYYY');
-            toReturn		= getOrderList(issueName, fromDate, toDate, receiptId);
+            var processed	= jq('#searchProcessed:checked').length;
+			
+			
+            toReturn		= getOrderList(issueName, fromDate, toDate, receiptId, processed);
 			
             list.drugList(toReturn);
         }
@@ -32,7 +36,7 @@
             var mappedDrugItems = jQuery.map(receiptsData, function (item) {
                 return item;
             });
-
+			
             self.viewDetails = function (item) {
                 window.location.replace("detailedReceiptOfDrug.page?receiptId=" + item.id);
             };
@@ -40,7 +44,7 @@
             self.processDrugOrder = function (item) {
                 //redirect to processing page
                 var url = '${ui.pageLink("billingui","processDrugOrder")}';
-                window.location.href = url + '?orderId=' + item.id + '&patientId=' + item.patient.patientId;
+                window.location.href = url + '?orderId=' + item.id + '&patientId=' + item.patientId;
             }
         }
 
@@ -48,7 +52,11 @@
         ko.applyBindings(list, jq("#orderList")[0]);
     });
 
-    function getOrderList(issueName, fromDate, toDate, receiptId) {
+    function getOrderList(issueName, fromDate, toDate, receiptId, processed) {
+		if (typeof processed == 'undefined'){
+			processed = jq('#searchProcessed:checked').length;
+		}
+	
         jQuery.ajax({
             type: "GET",
             url: '${ui.actionLink("billingui", "subStoreIssueDrugList", "getOrderList")}',
@@ -59,7 +67,8 @@
                 issueName: issueName,
                 fromDate: fromDate,
                 toDate: toDate,
-                receiptId: receiptId
+                receiptId: receiptId,
+                processed: processed
             },
             success: function (data) {
                 toReturn = data;
@@ -115,7 +124,7 @@
 		width: 100px;
 	}
 	#orderList th:last-child{
-		width: 110px;
+		width: 100px;
 	}
 	#divSeachProcessed{
 		margin-right: 20px;
@@ -127,11 +136,24 @@
 	#divSeachProcessed input{
 		cursor: pointer;
 	}
+	.process-lozenge {
+		border: 1px solid #f00;
+		border-radius: 4px;
+		color: #f00;
+		display: inline-block;
+		font-size: 0.7em;
+		padding: 1px 2px;
+		vertical-align: text-bottom;
+	}
+	.process-seen {
+		background: #fff799 none repeat scroll 0 0 !important;
+		color: #000 !important;
+	}
 </style>
 
 <h2><b>Manage Issue Drug</b></h2>
 					
-<span class="button confirm right" style="float: right; margin: 8px 5px 0 0;">
+<span id="getPharmPatients" class="button confirm right" style="float: right; margin: 8px 5px 0 0;">
 	<i class="icon-refresh small"></i>
 	Get Patients
 </span>
@@ -179,19 +201,27 @@
 				</tr>
             </thead>
             <tbody data-bind="foreach: drugList">
-				<tr>
+				<tr data-bind="css: {'process-seen': flag == 1}">
 					<td data-bind="text: \$index() + 1"></td>
 					<td data-bind="text: id"></td>
 					<td data-bind="text: identifier"></td>
 					<td>
-						<span data-bind="text: patient.givenName"></span>&nbsp;
-						<span data-bind="text: patient.familyName"></span>
+						<span data-bind="text: givenName"></span>&nbsp;
+						<span data-bind="text: familyName"></span>
+						<span data-bind="visible: flag == 1" class="process-lozenge">Processed</span>
 					</td>
-					<td data-bind="text: createdOn.substring(0, 11)"></td>
+					<td data-bind="text: moment(new Date(createdOn)).format('DD/MM/YYYY')"></td>
 					<td>
 						<a class="remover" href="#" data-bind="click: \$root.processDrugOrder"
 						   title="Detail issue drug to this patient">
-							<i class="icon-bar-chart small"></i> PROCESS
+							<span data-bind="visible: flag == 0">
+								<i class="icon-cogs small"></i>PROCESS							
+							</span>
+							
+							<span data-bind="visible: flag == 1">
+								<i class="icon-eye-open small"></i> VIEW							
+							</span>
+							
 						</a>
 					</td>
 				</tr>

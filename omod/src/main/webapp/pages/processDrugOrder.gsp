@@ -79,7 +79,7 @@
 				
 				if (flag === 0) {
                     jq("#drugBillsForm").submit();
-					window.location.href = emr.pageLink("billingui", "billingQueue");
+					//window.location.href = emr.pageLink("billingui", "billingQueue");
                 }
             }
 
@@ -418,7 +418,7 @@
 
 
             <% if (flag == 1) { %>
-				<span type="submit" id="savebill" class="button task right" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+				<span id="savebill" class="button task right" data-bind="click: submitBill, enable: availableOrders().length > 0 ">
 					<i class="icon-print small"></i>
 					Reprint
 				</span>
