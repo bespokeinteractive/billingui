@@ -349,6 +349,18 @@
 				</tr>
 			</tbody>
         </table>
+		
+		<div id='waivers' data-bind="visible: flag() == 0" style="margin-top: 10px">
+			<label for="waiverAmount">Waiver Amount:</label> 
+			<input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
+
+			<div id="waivComment" style="margin-top: 2px; display: none;">
+				<label for="waiverComment">Waiver Comment:</label>
+				<textarea type="text" id="waiverComment" name="waiverComment"
+										 size="7" class="hasborder" style="height: 60px; width: 83.4%; resize: none;"
+										 data-bind="value: comment"></textarea> <br/>
+			</div>
+		</div>
 
         <div id="nonDispensedDrugs" data-bind="visible: nonDispensed().length > 0" style="display: none;">
 			<div class="title" style="margin-top: 10px;">
@@ -385,19 +397,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>        
-
-		<div id='waivers' data-bind="visible: flag() == 0" style="margin-top: 10px">
-			<label for="waiverAmount">Waiver Amount:</label> 
-			<input id="waiverAmount" data-bind="value: waiverAmount"/><br/>
-
-			<div id="waivComment" style="margin-top: 2px; display: none;">
-				<label for="waiverComment">Waiver Comment:</label>
-				<textarea type="text" id="waiverComment" name="waiverComment"
-										 size="7" class="hasborder" style="height: 60px; width: 83.4%; resize: none;"
-										 data-bind="value: comment"></textarea> <br/>
-			</div>
-		</div>
+        </div>		
 
         <div style="margin: 10px">
             <i class="icon-user small"></i>
@@ -413,9 +413,8 @@
             <input id="flag" name="flag" type="hidden" value="${flag}">
 
             <textarea name="drugOrder" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
-            <input type="button" class="button cancel"
-                   onclick="javascript:window.location.href = 'billingQueue.page?'"
-                   value="Cancel">
+			
+            <span class="button cancel" onclick="javascript:window.location.href = 'billingQueue.page?'">Cancel</span>
 
 
             <% if (flag == 1) { %>
@@ -429,7 +428,6 @@
 					Finish   
 				</span>
             <% } %>
-
         </form>
 
         <!-- PRINT DIV -->
