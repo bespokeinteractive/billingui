@@ -67,8 +67,8 @@
                 issueName: issueName,
                 fromDate: fromDate,
                 toDate: toDate,
-                receiptId: receiptId,
-                processed: processed
+                processed: processed,
+                receiptId: receiptId
             },
             success: function (data) {
                 toReturn = data;
@@ -151,7 +151,7 @@
 	}
 </style>
 
-<h2><b>Manage Issue Drug</b></h2>
+<h2>Pharmacy Patient Queue</h2>
 					
 <span id="getPharmPatients" class="button confirm right" style="float: right; margin: 8px 5px 0 0;">
 	<i class="icon-refresh small"></i>
@@ -219,7 +219,7 @@
 							</span>
 							
 							<span data-bind="visible: flag == 1">
-								<i class="icon-eye-open small"></i> VIEW							
+								<i class="icon-folder-open small"></i> VIEW							
 							</span>
 							
 						</a>

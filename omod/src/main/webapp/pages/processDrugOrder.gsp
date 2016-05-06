@@ -212,16 +212,11 @@
                 <a href="${ui.pageLink('referenceapplication', 'home')}">
                     <i class="icon-home small"></i></a>
             </li>
+			
             <li>
                 <i class="icon-chevron-right link"></i>
                 <a href="${ui.pageLink('billingui', 'billingQueue')}">Billing</a>
             </li>
-
-            <li>
-                <i class="icon-chevron-right link"></i>
-                <a href="${ui.pageLink('billingui', 'listOfOrder')}?patientId=${patient.patientId}">Drug Orders</a>
-            </li>
-
 
             <li>
                 <i class="icon-chevron-right link"></i>
