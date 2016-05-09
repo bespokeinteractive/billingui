@@ -112,12 +112,13 @@ public class SubStoreIssueDrugListFragmentController {
             inventoryStoreDrugPatient = inventoryService.saveStoreDrugPatient(inventoryStoreDrugPatient);
             List<InventoryStoreDrugPatientDetail> inventoryStoreDrugPatientDetails = inventoryService.listStoreDrugPatientDetail(inventoryStoreDrugPatient.getId());
 
-            Integer flags = inventoryStoreDrugPatientDetails.get(inventoryStoreDrugPatientDetails.size() - 1).getTransactionDetail().getFlag();
-
+            Integer flags=0;
+            if(inventoryStoreDrugPatientDetails.size() >0){
+                flags = inventoryStoreDrugPatientDetails.get(inventoryStoreDrugPatientDetails.size() - 1).getTransactionDetail().getFlag();
+            }
             if (flags == null){
                 flags = 0;
             }
-
             if (flags == 1 && processed == 0){
                 continue;
             }
@@ -137,8 +138,6 @@ public class SubStoreIssueDrugListFragmentController {
             orderItem.put("patient.age",inventoryStoreDrugPatient.getPatient().getAge());
             orderItem.put("gender", inventoryStoreDrugPatient.getPatient().getGender());
             orderItem.put("createdOn", inventoryStoreDrugPatient.getCreatedOn());
-
-
             orderItem.put("flag",flags);
             orderList.add(orderItem);
         }
