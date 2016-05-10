@@ -127,8 +127,8 @@
 		width: 100px;
 	}
 	#divSeachProcessed{
-		margin-right: 20px;
-		margin-top: 25px;
+		margin-right: 5px;
+		margin-top: 18px;
 	}
 	#divSeachProcessed label{
 		cursor: pointer;
@@ -159,9 +159,9 @@
 </span>
 
 <div id="divSeachProcessed" class="right">
-	<label>
+	<label style="padding: 3px 10px; background: rgb(255, 247, 153) none repeat scroll 0px 0px; border: 1px solid rgb(238, 238, 238);">
 		<input type="checkbox" id="searchProcessed" name="searchProcessed">
-		Include Processed
+		Include Paid Patients
 	</label>
 </div>
 

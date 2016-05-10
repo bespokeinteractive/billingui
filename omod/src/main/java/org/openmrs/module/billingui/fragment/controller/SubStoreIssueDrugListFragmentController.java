@@ -123,7 +123,6 @@ public class SubStoreIssueDrugListFragmentController {
                 continue;
             }
 
-
             String created = sdf.format(inventoryStoreDrugPatient.getCreatedOn());
             String changed = sdf.format(new Date());
             int value = changed.compareTo(created);
