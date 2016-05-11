@@ -119,7 +119,7 @@ public class SubStoreIssueDrugListFragmentController {
             if (flags == null){
                 flags = 0;
             }
-            if (flags == 1 && processed == 0){
+            if (flags >= 1 && processed == 0){
                 continue;
             }
 

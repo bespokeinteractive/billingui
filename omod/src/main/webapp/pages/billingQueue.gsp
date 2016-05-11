@@ -348,8 +348,8 @@
 				<ul id="inline-tabs">
 					<li><a href="#tabs-1">OPD Queue</a></li>
 					<li><a href="#tabs-2">IPD Queue</a></li>
-                    <li><a href="#tabs-6">Pharmacy</a></li>
-					<li><a href="#tabs-3">Ambulance</a></li>
+                    <li><a href="#pharmacyTab">Pharmacy</a></li>
+					<li><a href="#ambulanceTab">Ambulance</a></li>
 					<li><a href="#tabs-4">Tender</a></li>
 					<li><a href="#tabs-5">Misc Service</a></li>
 					<li><a href="#tabs-7">Search Patient Bill</a></li>
@@ -459,11 +459,11 @@
 						</div>
 					</section>
 				</div>
-                <div id="tabs-6">
+                <div id="pharmacyTab">
                     ${ui.includeFragment("billingui", "subStoreIssueDrugList")}
                 </div>
 
-				<div id="tabs-3">
+				<div id="ambulanceTab">
 					${ui.includeFragment("billingui", "ambulanceBilling")}
 				</div>
 

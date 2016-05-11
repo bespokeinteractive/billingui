@@ -21,8 +21,7 @@
             var issueName 	= jq("#issueName").val();
             var fromDate 	= moment(jq("#fromDate-field").val()).format('DD/MM/YYYY');
             var toDate 		= moment(jq("#toDate-field").val()).format('DD/MM/YYYY');
-            var processed	= jq('#searchProcessed:checked').length;
-			
+            var processed	= jq('#searchProcessed:checked').length;			
 			
             toReturn		= getOrderList(issueName, fromDate, toDate, receiptId, processed);
 			
@@ -201,14 +200,14 @@
 				</tr>
             </thead>
             <tbody data-bind="foreach: drugList">
-				<tr data-bind="css: {'process-seen': flag == 1}">
+				<tr data-bind="css: {'process-seen': flag > 0}">
 					<td data-bind="text: \$index() + 1"></td>
 					<td data-bind="text: id"></td>
 					<td data-bind="text: identifier"></td>
 					<td>
 						<span data-bind="text: givenName"></span>&nbsp;
 						<span data-bind="text: familyName"></span>
-						<span data-bind="visible: flag == 1" class="process-lozenge">Processed</span>
+						<span data-bind="visible: flag > 0" class="process-lozenge">Processed</span>
 					</td>
 					<td data-bind="text: moment(new Date(createdOn)).format('DD/MM/YYYY')"></td>
 					<td>
@@ -218,7 +217,7 @@
 								<i class="icon-cogs small"></i>PROCESS							
 							</span>
 							
-							<span data-bind="visible: flag == 1">
+							<span data-bind="visible: flag > 0">
 								<i class="icon-folder-open small"></i> VIEW							
 							</span>
 							

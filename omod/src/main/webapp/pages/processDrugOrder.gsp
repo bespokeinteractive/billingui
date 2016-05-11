@@ -74,13 +74,15 @@
 				printWindow.document.write('</head>');
 				printWindow.document.write(printDiv);
 				printWindow.document.write('</body></html>');
-				printWindow.document.close();
 				printWindow.print();
+				printWindow.close();
 				
 				if (flag === 0) {
                     jq("#drugBillsForm").submit();
-					//window.location.href = emr.pageLink("billingui", "billingQueue");
                 }
+				else{
+					window.location.href = emr.pageLink("billingui", "billingQueue");
+				}
             }
 
             self.isNonPaying = ko.computed(function () {

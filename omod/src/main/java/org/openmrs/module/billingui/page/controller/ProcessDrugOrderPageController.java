@@ -82,10 +82,12 @@ public class ProcessDrugOrderPageController {
                 if (flags == null){
                     model.addAttribute("flag", 0);
                 }
+                else if (flags >= 1){
+                    model.addAttribute("flag", 1);
+                }
                 else{
                     model.addAttribute("flag", flags);
                 }
-
 
                 inventoryService.saveStoreDrugTransactionDetail(inventoryStoreDrugTransactionDetail);
                 // save transactiondetail first
