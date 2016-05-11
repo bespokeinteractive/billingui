@@ -178,9 +178,16 @@ public class ProcessDrugOrderPageController {
             List<PersonAttribute> pas = hcs.getPersonAttributes(listDrugIssue.get(0)
                     .getStoreDrugPatient().getPatient().getId());
 
+            PersonName prescriber = null;
+
+            if (listDrugIssue.get(0).getStoreDrugPatient().getPrescriber() != null){
+                prescriber = listDrugIssue.get(0).getStoreDrugPatient().getPrescriber().getPersonName();
+            }
+
             model.addAttribute("pharmacist", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
             model.addAttribute("cashier", Context.getAuthenticatedUser().getPersonName());
-            model.addAttribute("lastVisit", hcs.getLastVisitTime(listDrugIssue.get(0).getStoreDrugPatient().getPatient()));
+            model.addAttribute("prescriber", prescriber);
+            model.addAttribute("lastVisit",hcs.getLastVisitTime(listDrugIssue.get(0).getStoreDrugPatient().getPatient()));
 
             for (PersonAttribute pa : pas) {
                 PersonAttributeType attributeType = pa.getAttributeType();

@@ -57,6 +57,7 @@
 
             //observable drug
             self.flag = ko.observable(${flag});
+            self.prescriber = ko.observable("${prescriber?:''}");
 
             // Computed data
             self.totalSurcharge = ko.computed(function () {
@@ -567,7 +568,7 @@ th:first-child {
 
                 <div>
                     <div style="float:right;">Total :
-                        <span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span>
+                        <span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span><br/>
                         <span data-bind="visible: isNonPaying()">0.00</span>
                     </div><br/>
 
@@ -578,8 +579,10 @@ th:first-child {
                 </div>
 
                 <br/><br/><br/><br/><br/><br/>
-                <span style="float:left;font-size: 1.5em">Attending Cashier: ${cashier}</span><span
-                    style="float:right;font-size: 1.5em">Attending Pharmacist: ${pharmacist}</span>
+				<span style="float:right;font-size: 1.5em">Attending Pharmacist: ${pharmacist}</span>
+                <span style="font-size: 1.5em">Attending Cashier: ${cashier}</span><br/>
+                <span style="font-size: 1.5em" data-bind="visible: prescriber() != ''">Prescribed By: ${prescriber}</span>			
+						
                 <br/><br/><br/><br/><br/><br/>
                 <span style="margin-left: 13em;font-size: 1.5em">Signature of Inventory Clerk/ Stamp</span>
             </div>
