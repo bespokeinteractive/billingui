@@ -1,6 +1,8 @@
 package org.openmrs.module.billingui.page.controller;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
@@ -25,7 +27,7 @@ public class ProcessDrugOrderPageController {
     public void get(PageModel model,
                     @RequestParam("orderId") Integer orderId, PageModel pageModel,
                     UiUtils uiUtils) {
-        pageModel.addAttribute("userLocation",Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
+        pageModel.addAttribute("userLocation", Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         InventoryService inventoryService = Context.getService(InventoryService.class);
         List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
 
@@ -44,10 +46,7 @@ public class ProcessDrugOrderPageController {
         }
         List<InventoryStoreDrugPatientDetail> listDrugIssue = inventoryService
                 .listStoreDrugPatientDetail(orderId);
-        InventoryStoreDrugPatient inventoryStoreDrugPatient = new InventoryStoreDrugPatient();
-        if (inventoryStoreDrugPatient != null && listDrugIssue != null && listDrugIssue.size() > 0) {
-
-
+        if (listDrugIssue != null && listDrugIssue.size() > 0) {
             InventoryStoreDrugTransaction transaction = new InventoryStoreDrugTransaction();
             transaction.setDescription("ISSUE DRUG TO PATIENT " + DateUtils.getDDMMYYYY());
             transaction.setStore(store);
@@ -79,7 +78,7 @@ public class ProcessDrugOrderPageController {
                 inventoryStoreDrugTransactionDetail.setCurrentQuantity(drugTransactionDetail.getCurrentQuantity());
                 Integer flags = pDetail.getTransactionDetail().getFlag();
 
-                if (flags == null){
+                if (flags == null) {
                     model.addAttribute("flag", 0);
                 }
                 else if (flags >= 1){
@@ -181,7 +180,7 @@ public class ProcessDrugOrderPageController {
 
             model.addAttribute("pharmacist", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
             model.addAttribute("cashier", Context.getAuthenticatedUser().getPersonName());
-            model.addAttribute("lastVisit",hcs.getLastVisitTime(listDrugIssue.get(0).getStoreDrugPatient().getPatient()));
+            model.addAttribute("lastVisit", hcs.getLastVisitTime(listDrugIssue.get(0).getStoreDrugPatient().getPatient()));
 
             for (PersonAttribute pa : pas) {
                 PersonAttributeType attributeType = pa.getAttributeType();
@@ -203,16 +202,28 @@ public class ProcessDrugOrderPageController {
     }
 
     public String post(HttpServletRequest request, PageModel pageModel, UiUtils uiUtils) {
-        pageModel.addAttribute("userLocation",Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
+        pageModel.addAttribute("userLocation", Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         String drugOrder = request.getParameter("drugOrder");
+        JSONObject jsonObject = new JSONObject(drugOrder);
+
+        String comment = jsonObject.getString("comment");
+        String waiverAmountString = jsonObject.getString("waiverAmount");
+
+        System.out.println(comment);
+        System.out.println(waiverAmountString);
+
+        BigDecimal waiverAmount = null;
+        if(StringUtils.isNotEmpty(waiverAmountString)){
+            waiverAmount = new BigDecimal(waiverAmountString);
+        }
+
+
+
         int receiptid = Integer.parseInt(request.getParameter("receiptid"));
         pageModel.addAttribute("receiptid", receiptid);
-
-        InventoryService inventoryService = (InventoryService) Context
-                .getService(InventoryService.class);
+        InventoryService inventoryService = (InventoryService) Context.getService(InventoryService.class);
         //InventoryStore store =  inventoryService.getStoreByCollectionRole(new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles()));
         List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
-
         InventoryStoreRoleRelation srl = null;
         Role rl = null;
         for (Role r : role) {
@@ -228,18 +239,14 @@ public class ProcessDrugOrderPageController {
         }
         List<InventoryStoreDrugPatientDetail> listDrugIssue = inventoryService
                 .listStoreDrugPatientDetail(receiptid);
-        InventoryStoreDrugPatient inventoryStoreDrugPatient = new InventoryStoreDrugPatient();
+        InventoryStoreDrugPatient inventoryStoreDrugPatient = null;
 
-        if (inventoryStoreDrugPatient != null && listDrugIssue != null && listDrugIssue.size() > 0) {
-
-
+        if (listDrugIssue != null && listDrugIssue.size() > 0) {
             InventoryStoreDrugTransaction transaction = new InventoryStoreDrugTransaction();
             transaction.setDescription("ISSUE DRUG TO PATIENT " + DateUtils.getDDMMYYYY());
             transaction.setStore(store);
             transaction.setTypeTransaction(ActionValue.TRANSACTION[1]);
-
             transaction.setCreatedBy(Context.getAuthenticatedUser().getGivenName());
-
             transaction = inventoryService.saveStoreDrugTransaction(transaction);
             for (InventoryStoreDrugPatientDetail pDetail : listDrugIssue) {
                 Date date1 = new Date();
@@ -258,11 +265,8 @@ public class ProcessDrugOrderPageController {
 
                 InventoryStoreDrugTransactionDetail inventoryStoreDrugTransactionDetail = inventoryService
                         .getStoreDrugTransactionDetailById(pDetail.getTransactionDetail().getParent().getId());
-
                 InventoryStoreDrugTransactionDetail drugTransactionDetail = inventoryService.getStoreDrugTransactionDetailById(inventoryStoreDrugTransactionDetail.getId());
-
                 inventoryStoreDrugTransactionDetail.setCurrentQuantity(drugTransactionDetail.getCurrentQuantity() - pDetail.getQuantity());
-
                 inventoryService.saveStoreDrugTransactionDetail(inventoryStoreDrugTransactionDetail);
 
                 // save transactiondetail first
@@ -304,8 +308,6 @@ public class ProcessDrugOrderPageController {
                 BigDecimal moneyUnitPrice = pDetail.getTransactionDetail().getCostToPatient().multiply(new BigDecimal(pDetail.getQuantity()));
 
                 transDetail.setTotalPrice(moneyUnitPrice);
-
-
                 transDetail.setParent(pDetail.getTransactionDetail());
                 transDetail = inventoryService
                         .saveStoreDrugTransactionDetail(transDetail);
@@ -316,17 +318,19 @@ public class ProcessDrugOrderPageController {
 
                 // save issue to patient detail
                 inventoryService.saveStoreDrugPatientDetail(pDetail);
-
+                inventoryStoreDrugPatient = inventoryService.getStoreDrugPatientById(pDetail.getStoreDrugPatient().getId());
                 if (transDetail.getFlag() == 1) {
-                    inventoryStoreDrugPatient = inventoryService.getStoreDrugPatientById(pDetail.getStoreDrugPatient().getId());
+
                     inventoryStoreDrugPatient.setStatuss(1);
 
                 }
                 Integer flags = pDetail.getTransactionDetail().getFlag();
                 pageModel.addAttribute("flag", flags);
-
-
             }
+            // update patient detail
+            inventoryStoreDrugPatient.setWaiverAmount(waiverAmount);
+            inventoryStoreDrugPatient.setComment(comment);
+            inventoryService.saveStoreDrugPatient(inventoryStoreDrugPatient);
 
             List<SimpleObject> dispensedDrugs = SimpleObject.fromCollection(listDrugIssue, uiUtils, "quantity", "transactionDetail.costToPatient", "transactionDetail.drug.name",
                     "transactionDetail.formulation.name", "transactionDetail.formulation.dozage", "transactionDetail.frequency.name", "transactionDetail.noOfDays",
@@ -404,6 +408,6 @@ public class ProcessDrugOrderPageController {
                 }
             }
         }
-        return "redirect:" + uiUtils.pageLink("billingui","billingQueue");
+        return "redirect:" + uiUtils.pageLink("billingui", "billingQueue");
     }
 }
