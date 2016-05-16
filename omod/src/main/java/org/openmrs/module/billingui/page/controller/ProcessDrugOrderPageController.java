@@ -8,6 +8,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.model.*;
 import org.openmrs.module.hospitalcore.util.ActionValue;
+import org.openmrs.module.hospitalcore.util.FlagStates;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.inventory.util.DateUtils;
 import org.openmrs.ui.framework.SimpleObject;
@@ -79,10 +80,10 @@ public class ProcessDrugOrderPageController {
                 Integer flags = pDetail.getTransactionDetail().getFlag();
 
                 if (flags == null) {
-                    model.addAttribute("flag", 0);
+                    model.addAttribute("flag", FlagStates.NOT_PROCESSED);
                 }
                 else if (flags >= 1){
-                    model.addAttribute("flag", 1);
+                    model.addAttribute("flag", FlagStates.PARTIALLY_PROCESSED);
                 }
                 else{
                     model.addAttribute("flag", flags);
@@ -113,7 +114,7 @@ public class ProcessDrugOrderPageController {
                 transDetail.setFrequency(pDetail.getTransactionDetail().getFrequency());
                 transDetail.setNoOfDays(pDetail.getTransactionDetail().getNoOfDays());
                 transDetail.setComments(pDetail.getTransactionDetail().getComments());
-                transDetail.setFlag(1);
+                transDetail.setFlag(FlagStates.PARTIALLY_PROCESSED);
 
                 BigDecimal moneyUnitPrice = pDetail.getTransactionDetail().getCostToPatient().multiply(new BigDecimal(pDetail.getQuantity()));
                 transDetail.setTotalPrice(moneyUnitPrice);
@@ -326,7 +327,7 @@ public class ProcessDrugOrderPageController {
                 // save issue to patient detail
                 inventoryService.saveStoreDrugPatientDetail(pDetail);
                 inventoryStoreDrugPatient = inventoryService.getStoreDrugPatientById(pDetail.getStoreDrugPatient().getId());
-                if (transDetail.getFlag() == 1) {
+                if (transDetail.getFlag() == FlagStates.PARTIALLY_PROCESSED) {
 
                     inventoryStoreDrugPatient.setStatuss(1);
 

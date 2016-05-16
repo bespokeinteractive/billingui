@@ -7,6 +7,7 @@ import org.openmrs.module.hospitalcore.model.InventoryStore;
 import org.openmrs.module.hospitalcore.model.InventoryStoreDrugPatient;
 import org.openmrs.module.hospitalcore.model.InventoryStoreDrugPatientDetail;
 import org.openmrs.module.hospitalcore.model.InventoryStoreRoleRelation;
+import org.openmrs.module.hospitalcore.util.FlagStates;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.inventory.util.PagingUtil;
 import org.openmrs.module.inventory.util.RequestUtil;
@@ -112,14 +113,14 @@ public class SubStoreIssueDrugListFragmentController {
             inventoryStoreDrugPatient = inventoryService.saveStoreDrugPatient(inventoryStoreDrugPatient);
             List<InventoryStoreDrugPatientDetail> inventoryStoreDrugPatientDetails = inventoryService.listStoreDrugPatientDetail(inventoryStoreDrugPatient.getId());
 
-            Integer flags=0;
+            Integer flags= FlagStates.NOT_PROCESSED;
             if(inventoryStoreDrugPatientDetails.size() >0){
                 flags = inventoryStoreDrugPatientDetails.get(inventoryStoreDrugPatientDetails.size() - 1).getTransactionDetail().getFlag();
             }
             if (flags == null){
-                flags = 0;
+                flags = FlagStates.NOT_PROCESSED;
             }
-            if (flags >= 1 && processed == 0){
+            if (flags >= FlagStates.PARTIALLY_PROCESSED && processed == FlagStates.NOT_PROCESSED){
                 continue;
             }
 
