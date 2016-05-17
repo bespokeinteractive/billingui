@@ -454,7 +454,7 @@
             </tr>
             <tr>
                 <td>Name</td>
-                <td colspan="3">:${patient.givenName}&nbsp;${patient.familyName}&nbsp;${(patient.middleName)?.replace(',', ' ')}&nbsp;&nbsp;
+                <td colspan="3">:${patient.givenName}&nbsp;${patient.familyName}&nbsp;${patient.middleName?patient.middleName:''}&nbsp;&nbsp;
                 </td>
             </tr>
             <tr>
