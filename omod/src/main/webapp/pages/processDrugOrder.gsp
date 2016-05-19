@@ -50,7 +50,7 @@
             self.nonDispensed(mappedNonDispensed);
 
             //observable waiver
-            self.waiverAmount = ko.observable(0.00);
+            self.waiverAmount = ko.observable("0");
 
             //observable comment
             self.comment = ko.observable("");
