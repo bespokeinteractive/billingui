@@ -1,6 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "Cashier : Drug Order"])
-	
+    ui.decorateWith("appui", "standardEmrPage", [title: "Cashier : Drug Order"])	
 	ui.includeJavascript("billingui", "jq.print.js")
 %>
 <style>
@@ -267,7 +266,6 @@
                         ${gender}
                     </span>
                     <span id="agename">${age} years</span>
-
                 </span>
             </h1>
 

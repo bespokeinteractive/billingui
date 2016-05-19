@@ -105,6 +105,26 @@ public class BillableServiceBillListForBDPageController {
 
             model.addAttribute("category", patient.getAttribute(14));
 
+            HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
+            List<PersonAttribute> pas = hcs.getPersonAttributes(patient.getId());
+
+            for (PersonAttribute pa : pas) {
+                PersonAttributeType attributeType = pa.getAttributeType();
+                PersonAttributeType personAttributePCT = hcs.getPersonAttributeTypeByName("Paying Category Type");
+                PersonAttributeType personAttributeNPCT = hcs.getPersonAttributeTypeByName("Non-Paying Category Type");
+                PersonAttributeType personAttributeSSCT = hcs.getPersonAttributeTypeByName("Special Scheme Category Type");
+                if (attributeType.getPersonAttributeTypeId() == personAttributePCT.getPersonAttributeTypeId()) {
+                    model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategoryName", "PAYING");
+                } else if (attributeType.getPersonAttributeTypeId() == personAttributeNPCT.getPersonAttributeTypeId()) {
+                    model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategoryName", "NON-PAYING");
+                } else if (attributeType.getPersonAttributeTypeId() == personAttributeSSCT.getPersonAttributeTypeId()) {
+                    model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategoryName", "SPECIAL SCHEMES");
+                }
+            }
+
             if (patient.getAttribute(43) == null){
                 model.addAttribute("fileNumber", "");
             }

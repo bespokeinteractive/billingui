@@ -42,7 +42,7 @@
 				   if(it == props.last()){
 						
 					  def pageLink = ui.pageLink("billingui", "listOfOrder") %>
-					row += '<td> <a href="${pageLink}?patientId=' + item.patientId + '&date=' + date + '"> <i class="icon-signin small"> GO</i></a> </td>';
+					row += '<td> <a href="${pageLink}?patientId=' + item.patientId + '&date=' + date + '"> <i class="icon-signin small"> </i>GO</a> </td>';
 					<% } else { if (it == "gender"){%>
 						if (item.${ it } == "M"){
 							row += '<td>Male</td>';
