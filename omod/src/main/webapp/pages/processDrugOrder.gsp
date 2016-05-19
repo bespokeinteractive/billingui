@@ -1,5 +1,7 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [title: "Cashier : Drug Order"])
+	
+	ui.includeJavascript("billingui", "jq.print.js")
 %>
 <style>
 .retired {
@@ -76,17 +78,23 @@
 
             //submit bill
             self.submitBill = function () {
-                var flag = ${flag};                
+                var flag = ${flag};
 				
-				var printDiv = jQuery("#printDiv").html();
-				var printWindow = window.open('', '', 'height=400,width=800');
+				jq("#printSection").print({
+					globalStyles: 	false,
+					mediaPrint: 	false,
+					stylesheet: 	'${ui.resourceLink("pharmacyapp", "styles/print-out.css")}',
+					iframe: 		false,
+					width: 			980,
+					height:			700
+				});		
 				
-				printWindow.document.write('<html><head><title>Print Drug Order :-Support by KenyaEHRS</title>');
+				/*printWindow.document.write('<html><head><title>Print Drug Order :-Support by KenyaEHRS</title>');
 				printWindow.document.write('</head>');
 				printWindow.document.write(printDiv);
 				printWindow.document.write('</body></html>');
 				printWindow.print();
-				printWindow.close();
+				printWindow.close();*/
 				
 				if (flag === 0) {
                     jq("#drugBillsForm").submit();
@@ -128,100 +136,103 @@
 </script>
 
 <style>
-.name {
-    color: #f26522;
-}
+	.name {
+		color: #f26522;
+	}
 
-#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
-    text-decoration: none;
-}
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
 
-.new-patient-header .demographics .gender-age {
-    font-size: 14px;
-    margin-left: -55px;
-    margin-top: 12px;
-}
+	.new-patient-header .demographics .gender-age {
+		font-size: 14px;
+		margin-left: -55px;
+		margin-top: 12px;
+	}
 
-.new-patient-header .demographics .gender-age span {
-    border-bottom: 1px none #ddd;
-}
+	.new-patient-header .demographics .gender-age span {
+		border-bottom: 1px none #ddd;
+	}
 
-.new-patient-header .identifiers {
-    margin-top: 5px;
-}
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
 
-.tag {
-    padding: 2px 10px;
-}
+	.tag {
+		padding: 2px 10px;
+	}
 
-.tad {
-    background: #666 none repeat scroll 0 0;
-    border-radius: 1px;
-    color: white;
-    display: inline;
-    font-size: 0.8em;
-    padding: 2px 10px;
-}
+	.tad {
+		background: #666 none repeat scroll 0 0;
+		border-radius: 1px;
+		color: white;
+		display: inline;
+		font-size: 0.8em;
+		padding: 2px 10px;
+	}
 
-.status-container {
-    padding: 5px 10px 5px 5px;
-}
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
 
-.catg {
-    color: #363463;
-    margin: 35px 10px 0 0;
-}
+	.catg {
+		color: #363463;
+		margin: 35px 10px 0 0;
+	}
 
-.title {
-    border: 1px solid #eee;
-    margin: 3px 0;
-    padding: 5px;
-}
+	.title {
+		border: 1px solid #eee;
+		margin: 3px 0;
+		padding: 5px;
+	}
 
-.title i {
-    font-size: 1.5em;
-    padding: 0;
-}
+	.title i {
+		font-size: 1.5em;
+		padding: 0;
+	}
 
-.title span {
-    font-size: 20px;
-}
+	.title span {
+		font-size: 20px;
+	}
 
-.title em {
-    border-bottom: 1px solid #ddd;
-    color: #888;
-    display: inline-block;
-    font-size: 0.5em;
-    margin-right: 10px;
-    text-transform: lowercase;
-    width: 200px;
-}
+	.title em {
+		border-bottom: 1px solid #ddd;
+		color: #888;
+		display: inline-block;
+		font-size: 0.5em;
+		margin-right: 10px;
+		text-transform: lowercase;
+		width: 200px;
+	}
 
-table {
-    font-size: 14px;
-}
+	table {
+		font-size: 14px;
+	}
 
-th:first-child {
-    width: 5px;
-}
+	th:first-child {
+		width: 5px;
+	}
 
-#orderBillingTable th:nth-child(3) {
-    min-width: 105px;
-}
+	#orderBillingTable th:nth-child(3) {
+		min-width: 105px;
+	}
 
-#orderBillingTable th:nth-child(4) {
-    min-width: 85px;
-}
+	#orderBillingTable th:nth-child(4) {
+		min-width: 85px;
+	}
 
-#orderBillingTable th:nth-child(5) {
-    width: 50px;
-}
+	#orderBillingTable th:nth-child(5) {
+		width: 50px;
+	}
 
-#waivers label {
-    display: inline-block;
-    padding-left: 10px;
-    width: 140px;
-}
+	#waivers label {
+		display: inline-block;
+		padding-left: 10px;
+		width: 140px;
+	}
+	.print-only{
+		display: none;
+	}
 </style>
 
 <div class="container">
@@ -301,69 +312,169 @@ th:first-child {
     </div>
 
     <div class="dashboard clear" id="dispensedDrugs">
-        <table width="100%" id="orderBillingTable" class="tablesorter thickbox">
-            <thead>
-            <tr align="center">
-                <th>#</th>
-                <th>DRUG</th>
-                <th>FORMULATION</th>
-                <th>FREQUENCY</th>
-                <th>#DAYS</th>
-                <th>COMMENTS</th>
-                <th>EXPIRY</th>
-                <th>QNTY</th>
-                <th>PRICE</th>
-                <th>TOTAL</th>
-            </tr>
-            </thead>
+		<div id="printSection">
+			<center class="print-only">		
+				<h2>
+					<img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS" src="${ui.resourceLink('billingui', 'images/kenya_logo.bmp')}"><br/>
+					<b>
+						<u>${userLocation}</u>
+					</b>
+				</h2>
+				
+				<h2>
+					CASH RECEIPT : PHARM-00${receiptid}
+				</h2>
+			</center>
+			
+			<div class="print-only">
+				<label>
+					<span class='status active'></span>
+					Identifier:
+				</label>
+				<span>${identifier}</span>
+				<br/>
+				
+				<label>
+					<span class='status active'></span>
+					Full Names:
+				</label>
+				<span>${givenName} ${familyName} ${middleName?middleName:''}</span>
+				<br/>
+				
+				<label>
+					<span class='status active'></span>
+					Age:
+				</label>
+				<span>${age} (${ui.formatDatePretty(birthdate)})</span>
+				<br/>
+				
+				<label>
+					<span class='status active'></span>
+					Gender:
+				</label>
+				<span>${gender}</span>
+				<br/>
+				
+				<label>
+					<span class='status active'></span>
+					Print Date:
+				</label>
+				<span>${date}</span>
+				<br/>
+				
+				<label>
+					<span class='status active'></span>
+					Payment Catg:
+				</label>
+				<span>${paymentCategoryName} / ${paymentSubCategory}</span>
+				<br/>
+				<br/>
+			</div>
+	
+			<table width="100%" id="orderBillingTable" class="tablesorter thickbox">
+				<thead>
+				<tr align="center">
+					<th>#</th>
+					<th>DRUG</th>
+					<th>FORMULATION</th>
+					<th>FREQUENCY</th>
+					<th>#DAYS</th>
+					<th>COMMENTS</th>
+					<th>EXPIRY</th>
+					<th>QNTY</th>
+					<th>PRICE</th>
+					<th>TOTAL</th>
+				</tr>
+				</thead>
 
-            <tbody data-bind="foreach: availableOrders, visible: availableOrders().length > 0">
-            <tr>
-                <td data-bind="text: \$index()+1"></td>
-                <td data-bind="text: initialBill().transactionDetail.drug.name"></td>
-                <td>
-                    <span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
-                    <span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
-                </td>
-                <td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
-                <td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
-                <td data-bind="text: initialBill().transactionDetail.comments"></td>
-                <td data-bind="text: initialBill().transactionDetail.dateExpiry.substring(0, 11)"></td>
-                <td data-bind="text: initialBill().quantity"></td>
-                <td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
-                <td data-bind="text: orderTotal().toFixed(2)"></td>
-            </tr>
-            </tbody>
+				<tbody data-bind="foreach: availableOrders, visible: availableOrders().length > 0">
+				<tr>
+					<td data-bind="text: \$index()+1"></td>
+					<td data-bind="text: initialBill().transactionDetail.drug.name"></td>
+					<td>
+						<span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
+						<span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
+					</td>
+					<td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
+					<td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
+					<td data-bind="text: initialBill().transactionDetail.comments"></td>
+					<td data-bind="text: initialBill().transactionDetail.dateExpiry.substring(0, 11)"></td>
+					<td data-bind="text: initialBill().quantity"></td>
+					<td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
+					<td data-bind="text: orderTotal().toFixed(2)"></td>
+				</tr>
+				</tbody>
 
-            <tbody>
-            <tr>
-                <td></td>
+				<tbody>
+				<tr>
+					<td></td>
 
-                <td colspan="8">
-                    <b>TOTAL AMOUNT</b>
-                </td>
+					<td colspan="8">
+						<b>TOTAL AMOUNT</b>
+					</td>
 
-                <td>
-                    <span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span>
-                    <span data-bind="visible: isNonPaying()">0.00</span>
-                </td>
-            </tr>
+					<td>
+						<span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span>
+						<span data-bind="visible: isNonPaying()">0.00</span>
+					</td>
+				</tr>
 
-            <tr>
-                <td></td>
+				<tr>
+					<td></td>
 
-                <td colspan="8">
-                    <span data-bind="visible: flag() == 0"><b>TOTAL PAYABLE</b></span>
-                    <span data-bind="visible: flag() == 1"><b>TOTAL TENDERED</b></span>
-                </td>
+					<td colspan="8">
+						<span data-bind="visible: flag() == 0"><b>TOTAL PAYABLE</b></span>
+						<span data-bind="visible: flag() == 1"><b>TOTAL TENDERED</b></span>
+					</td>
 
-                <td>
-                    <span data-bind="text: runningTotal,css:{'retired': isNonPaying()}"></span>
-                    <span data-bind="visible: isNonPaying()">0.00</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+					<td>
+						<span data-bind="text: runningTotal,css:{'retired': isNonPaying()}"></span>
+						<span data-bind="visible: isNonPaying()">0.00</span>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+			
+			<div data-bind="visible: nonDispensed().length > 0" class="print-only">
+				<h2>
+					DRUGS NOT ISSUED
+				</h2>
+
+				<table width="100%" id="nonDispensedDrugsTable" class="tablesorter thickbox">
+					<thead>
+					<tr align="center">
+						<th>#</th>
+						<th>DRUG</th>
+						<th>FORMULATION</th>
+						<th>FREQUENCY</th>
+						<th>#DAYS</th>
+						<th>COMMENTS</th>
+					</tr>
+					</thead>
+
+					<tbody data-bind="foreach: nonDispensed">
+						<tr>
+							<td data-bind="text: \$index()+1"></td>
+							<td data-bind="text: initialNonBill().inventoryDrug.name"></td>
+							<td>
+								<span data-bind="text: initialNonBill().inventoryDrugFormulation.name"></span> -
+								<span data-bind="text: initialNonBill().inventoryDrugFormulation.dozage"></span> -
+							</td>
+							<td data-bind="text: initialNonBill().frequency.name"></td>
+							<td data-bind="text: initialNonBill().noOfDays"></td>
+							<td data-bind="text: initialNonBill().comments"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+			<div class="print-only" style="margin: 20px 10px 0 10px">				
+				<span style="float:right;">Attending Pharmacist: <b>${pharmacist}</b></span>
+                <span>Attending Cashier: <b>${cashier}</b></span><br/>
+                <span data-bind="visible: prescriber() != ''">Prescribed By: <b>${prescriber}</b></span>	
+			</div>
+		</div>
 
         <div id='waivers' data-bind="visible: flag() == 0" style="margin-top: 10px">
             <label for="waiverAmount">Waiver Amount:</label>
@@ -446,149 +557,6 @@ th:first-child {
             </span>
             <% } %>
         </form>
-
-        <!-- PRINT DIV -->
-        <div id="printDiv" style="display: none;">
-            <div style="margin: 10px auto; width: 981px; font-size: 1.0em;font-family:'Dot Matrix Normal',Arial,Helvetica,sans-serif;">
-
-                <table class="spacer" style="margin-left: 60px;">
-                    <tr>
-                        <h3>
-                            <center><b><u>${userLocation}</u></b></center>
-                        </h3>
-                    </tr>
-                    <tr>
-                        <h5><b>
-                            <center>CASH RECEIPT : PHARM-${receiptid}</center>
-                        </b></h5>
-                    </tr>
-                </table>
-                <br/>
-                <br/>
-
-                <table class="spacer" style="margin-left: 60px;">
-                    <tr>
-                        <td>Date/Time:</td>
-                        <td>:${date}</td>
-                    </tr>
-                    <tr>
-                        <td>Name</td>
-                        <td>
-                            :${givenName}&nbsp;${familyName}&nbsp;${middleName}</td>
-                    </tr>
-                    <tr>
-                        <td>Patient ID</td>
-                        <td>:${identifier}</td>
-                    </tr>
-                    <tr>
-                    <tr>
-                        <td>Age</td>
-                        <td>:
-                        ${age}
-                        </td>
-                    </tr>
-                </tr>
-                    <tr>
-                        <td>Gender</td>
-                        <td>:${gender}</td>
-                    </tr>
-                    <tr>
-                        <td>Payment Category</td>
-                        <td>:${paymentSubCategory}</td>
-                    </tr>
-
-                </table>
-                <table width="100%" class="tablesorter thickbox">
-                    <thead>
-                    <tr align="center">
-                        <th>S.No</th>
-                        <th>Drug</th>
-                        <th>Formulation</th>
-                        <th>Frequency</th>
-                        <th>Days</th>
-                        <th>Comments</th>
-                        <th>Expiry</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Item Total</th>
-                    </tr>
-                    </thead>
-
-                    <tbody data-bind="foreach: availableOrders, visible: availableOrders().length > 0">
-                    <tr>
-                        <td data-bind="text: \$index()+1"></td>
-                        <td data-bind="text: initialBill().transactionDetail.drug.name"></td>
-                        <td>
-                            <span data-bind="text: initialBill().transactionDetail.formulation.name"></span> -
-                            <span data-bind="text: initialBill().transactionDetail.formulation.dozage"></span>
-                        </td>
-                        <td data-bind="text: initialBill().transactionDetail.frequency.name"></td>
-                        <td data-bind="text: initialBill().transactionDetail.noOfDays"></td>
-                        <td data-bind="text: initialBill().transactionDetail.comments"></td>
-                        <td data-bind="text: initialBill().transactionDetail.dateExpiry"></td>
-                        <td data-bind="text: initialBill().quantity"></td>
-                        <td data-bind="text: initialBill().transactionDetail.costToPatient.toFixed(2)"></td>
-                        <td data-bind="text: orderTotal().toFixed(2)"></td>
-                    </tr>
-                    </tbody>
-                </table>
-
-
-                <div data-bind="visible: nonDispensed().length > 0">
-                    <center><h3>Drugs Not Issued</h3></center>
-                    <table width="100%" class="tablesorter thickbox">
-                        <thead>
-                        <tr align="center">
-                            <th>S.No</th>
-                            <th>Drug</th>
-                            <th>Formulation</th>
-                            <th>Frequency</th>
-                            <th>Days</th>
-                            <th>Comments</th>
-                        </tr>
-                        </thead>
-
-                        <tbody data-bind="foreach: nonDispensed">
-                        <tr>
-                            <td data-bind="text: \$index()+1"></td>
-                            <td data-bind="text: initialNonBill().inventoryDrug.name"></td>
-                            <td>
-                                <span data-bind="text: initialNonBill().inventoryDrugFormulation.name"></span> -
-                                <span data-bind="text: initialNonBill().inventoryDrugFormulation.dozage"></span> -
-                            </td>
-                            <td data-bind="text: initialNonBill().frequency.name"></td>
-                            <td data-bind="text: initialNonBill().noOfDays"></td>
-                            <td data-bind="text: initialNonBill().comments"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-
-                <div>
-                    <div style="float:right;">Total :
-                        <span data-bind="text: totalSurcharge, css:{'retired': isNonPaying()}"></span><br/>
-                        <span data-bind="visible: isNonPaying()">0.00</span>
-                    </div><br/>
-
-                    <div style="float:right;">Amount To Pay :
-                        <span data-bind="text: runningTotal,css:{'retired': isNonPaying()}"></span>
-                        <span data-bind="visible: isNonPaying()">0.00</span>
-                    </div>
-                </div>
-
-                <br/><br/><br/><br/><br/><br/>
-				<span style="float:right;font-size: 1.5em">Attending Pharmacist: ${pharmacist}</span>
-                <span style="font-size: 1.5em">Attending Cashier: ${cashier}</span><br/>
-                <span style="font-size: 1.5em" data-bind="visible: prescriber() != ''">Prescribed By: ${prescriber}</span>			
-						
-                <br/><br/><br/><br/><br/><br/>
-                <span style="margin-left: 13em;font-size: 1.5em">Signature of Inventory Clerk/ Stamp</span>
-            </div>
-        </div>
-        <!-- END PRINT DIV -->
-
     </div>
 
 </div>

@@ -3,6 +3,7 @@ package org.openmrs.module.billingui.page.controller;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
+import org.omg.DynamicAny._DynAnyFactoryStub;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
@@ -148,13 +149,13 @@ public class ProcessDrugOrderPageController {
             List<OpdDrugOrder> listOfNotDispensedOrder = new ArrayList<OpdDrugOrder>();
             if (encounterId != null) {
                 listOfNotDispensedOrder = inventoryService.listOfNotDispensedOrder(patientId, issueDate, encounterId);
-
             }
+
             List<SimpleObject> notDispensed = SimpleObject.fromCollection(listOfNotDispensedOrder, uiUtils, "inventoryDrug.name",
                     "inventoryDrugFormulation.name", "inventoryDrugFormulation.dozage", "frequency.name", "noOfDays", "comments");
             model.addAttribute("listOfNotDispensedOrder", SimpleObject.create("listOfNotDispensedOrder", notDispensed).toJson());
             //TODO ends here
-
+            pageModel.addAttribute("birthdate", listDrugIssue.get(0).getStoreDrugPatient().getPatient().getBirthdate());
 
             model.addAttribute("identifier", listDrugIssue.get(0).getStoreDrugPatient().getPatient().getPatientIdentifier());
             model.addAttribute("givenName", listDrugIssue.get(0).getStoreDrugPatient().getPatient().getGivenName());
@@ -198,12 +199,15 @@ public class ProcessDrugOrderPageController {
                 if (attributeType.getPersonAttributeTypeId() == personAttributePCT.getPersonAttributeTypeId()) {
                     model.addAttribute("paymentSubCategory", pa.getValue());
                     model.addAttribute("paymentCategory", 1);
+                    model.addAttribute("paymentCategoryName", "PAYING");
                 } else if (attributeType.getPersonAttributeTypeId() == personAttributeNPCT.getPersonAttributeTypeId()) {
                     model.addAttribute("paymentSubCategory", pa.getValue());
                     model.addAttribute("paymentCategory", 2);
+                    model.addAttribute("paymentCategoryName", "NON-PAYING");
                 } else if (attributeType.getPersonAttributeTypeId() == personAttributeSSCT.getPersonAttributeTypeId()) {
                     model.addAttribute("paymentSubCategory", pa.getValue());
                     model.addAttribute("paymentCategory", 3);
+                    model.addAttribute("paymentCategoryName", "SPECIAL SCHEMES");
                 }
             }
         }
@@ -352,6 +356,7 @@ public class ProcessDrugOrderPageController {
                         .getStoreDrugPatient().getCreatedOn());
                 pageModel.addAttribute("age", listDrugIssue.get(0)
                         .getStoreDrugPatient().getPatient().getAge());
+
                 //TODO starts here
 
                 PatientIdentifier pi = listDrugIssue.get(0).getStoreDrugPatient().getPatient().getPatientIdentifier();
@@ -376,8 +381,8 @@ public class ProcessDrugOrderPageController {
                         .getStoreDrugPatient().getPatient().getPatientIdentifier());
                 pageModel.addAttribute("givenName", listDrugIssue.get(0)
                         .getStoreDrugPatient().getPatient().getGivenName());
-                pageModel.addAttribute("familyName", listDrugIssue.get(0)
-                        .getStoreDrugPatient().getPatient().getFamilyName());
+                pageModel.addAttribute("familyName", listDrugIssue.get(0).getStoreDrugPatient().getPatient().getFamilyName());
+
 
                 if (listDrugIssue.get(0).getStoreDrugPatient().getPatient().getMiddleName() != null) {
                     pageModel.addAttribute("middleName", listDrugIssue.get(0)
@@ -386,13 +391,10 @@ public class ProcessDrugOrderPageController {
                     pageModel.addAttribute("middleName", "");
                 }
 
-
-                if (listDrugIssue.get(0)
-                        .getStoreDrugPatient().getPatient().getGender().equals("M")) {
+                if (listDrugIssue.get(0).getStoreDrugPatient().getPatient().getGender().equals("M")) {
                     pageModel.addAttribute("gender", "Male");
                 }
-                if (listDrugIssue.get(0)
-                        .getStoreDrugPatient().getPatient().getGender().equals("F")) {
+                else {
                     pageModel.addAttribute("gender", "Female");
                 }
                 pageModel.addAttribute("pharmacist", listDrugIssue.get(0).getStoreDrugPatient().getCreatedBy());
