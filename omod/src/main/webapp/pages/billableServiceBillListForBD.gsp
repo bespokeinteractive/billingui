@@ -39,18 +39,17 @@
 
         jq('.confirm').on('click', function () {
             jq("#printSection").print({
-				globalStyles: 	false,
-				mediaPrint: 	false,
-				stylesheet: 	'${ui.resourceLink("pharmacyapp", "styles/print-out.css")}',
-				iframe: 		false,
-				width: 			600,
-				height:			700
-			});
-
-			jq("#billForm").submit();
+                globalStyles: false,
+                mediaPrint: false,
+                stylesheet: '${ui.resourceLink("pharmacyapp", "styles/print-out.css")}',
+                iframe: false,
+                width: 600,
+                height: 700
+            });
+            jq("#billForm").submit();
         });
-		
-		
+
+
     });
 
     function validate() {
@@ -73,97 +72,105 @@
 </script>
 
 <style>
-	.name {
-		color: #f26522;
-	}
-	.form-textbox {
-		height: 12px !important;
-		font-size: 12px !important;
-	}
-	.hidden {
-		display: none;
-	}
-	.retired {
-		text-decoration: line-through;
-		color: darkgrey;
-	}
-	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
-		text-decoration: none;
-	}
-	.new-patient-header .demographics .gender-age {
-		font-size: 14px;
-		margin-left: -55px;
-		margin-top: 12px;
-	}
-	.new-patient-header .demographics .gender-age span {
-		border-bottom: 1px none #ddd;
-	}
-	.new-patient-header .identifiers {
-		margin-top: 5px;
-	}
+.name {
+    color: #f26522;
+}
 
-	.tag {
-		padding: 2px 10px;
-	}
+.form-textbox {
+    height: 12px !important;
+    font-size: 12px !important;
+}
 
-	.tad {
-		background: #666 none repeat scroll 0 0;
-		border-radius: 1px;
-		color: white;
-		display: inline;
-		font-size: 0.8em;
-		margin-left: 4px;
-		padding: 2px 10px;
-	}
+.hidden {
+    display: none;
+}
 
-	.status-container {
-		padding: 5px 10px 5px 5px;
-	}
+.retired {
+    text-decoration: line-through;
+    color: darkgrey;
+}
 
-	.catg {
-		color: #363463;
-		margin: 35px 10px 0 0;
-	}
+#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+    text-decoration: none;
+}
 
-	@media print {
-		.donotprint {
-			display: none;
-		}
+.new-patient-header .demographics .gender-age {
+    font-size: 14px;
+    margin-left: -55px;
+    margin-top: 12px;
+}
 
-		.spacer {
-			margin-top: 70px;
-			font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-			font-style: normal;
-			font-size: 14px;
-		}
+.new-patient-header .demographics .gender-age span {
+    border-bottom: 1px none #ddd;
+}
 
-		.printfont {
-			font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-			font-style: normal;
-			font-size: 14px;
-		}
-	}
+.new-patient-header .identifiers {
+    margin-top: 5px;
+}
 
-	.formfactor {
-		background: #f3f3f3 none repeat scroll 0 0;
-		border: 1px solid #ddd;
-		margin-bottom: 5px;
-		margin-top: 5px;
-		min-height: 38px;
-		padding: 5px 10px;
-		text-align: left;
-		width: auto;
-	}
+.tag {
+    padding: 2px 10px;
+}
 
-	.dashboard .info-section {
-		margin: 0;
-		padding-bottom: 10px;
-		padding-top: 10px;
-		width: 100%;
-	}
-	.print-only{
-		display: none;
-	}
+.tad {
+    background: #666 none repeat scroll 0 0;
+    border-radius: 1px;
+    color: white;
+    display: inline;
+    font-size: 0.8em;
+    margin-left: 4px;
+    padding: 2px 10px;
+}
+
+.status-container {
+    padding: 5px 10px 5px 5px;
+}
+
+.catg {
+    color: #363463;
+    margin: 35px 10px 0 0;
+}
+
+@media print {
+    .donotprint {
+        display: none;
+    }
+
+    .spacer {
+        margin-top: 70px;
+        font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+        font-style: normal;
+        font-size: 14px;
+    }
+
+    .printfont {
+        font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+        font-style: normal;
+        font-size: 14px;
+    }
+}
+
+.formfactor {
+    background: #f3f3f3 none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    min-height: 38px;
+    padding: 5px 10px;
+    text-align: left;
+    width: auto;
+}
+
+.dashboard .info-section {
+    margin: 0;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 100%;
+}
+
+.print-only {
+    display: none;
+}
 </style>
 
 <div class="clear"></div>
@@ -196,7 +203,7 @@
 
                 <span class="gender-age">
                     <span>
-                       ${gender}
+                        ${gender}
                     </span>
                     <span id="agename">${patient.age} years (15.Oct.1996)</span>
 
@@ -230,211 +237,212 @@
 
 
     <% if (bill != null) { %>
-	
-	<div id="printSection">
-		<center class="print-only">		
-			<h2>
-				<img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS" src="${ui.resourceLink('billingui', 'images/kenya_logo.bmp')}"><br/>
-				<b>
-					<u>${userLocation}</u>
-				</b>
-			</h2>
-			
-			<h2>
-				RECEIPT #00${bill?.patientServiceBillId}
-			</h2>
-		</center>
-		
-		<div class="print-only">
-			<label>
-				<span class='status active'></span>
-				Identifier:
-			</label>
-			<span>${patient.getPatientIdentifier()}</span>
-			<br/>
-			
-			<label>
-				<span class='status active'></span>
-				Full Names:
-			</label>
-			<span>${patient.givenName} ${patient.familyName} ${patient.middleName?patient.middleName:''}</span>
-			<br/>
-			
-			<label>
-				<span class='status active'></span>
-				Age:
-			</label>
-			<span>${patient.age} (${ui.formatDatePretty(patient.birthdate)})</span>
-			<br/>
-			
-			<label>
-				<span class='status active'></span>
-				Gender:
-			</label>
-			<span>${gender}</span>
-			<br/>
-			
-			<label>
-				<span class='status active'></span>
-				Print Date:
-			</label>
-			<span>${dateTime}</span>
-			<br/>
-			
-			<label>
-				<span class='status active'></span>
-				Payment Catg:
-			</label>
-			<span>${paymentCategoryName} / ${paymentSubCategory}</span>
-			<br/>
-			
-			<% if (bill?.voided) { %>
-				<label>
-					<span class='status active'></span>
-					Bill Description:
-				</label>
-				<span>${bill?.description}</span>    
-				<br/>
-			<% } %>
-		</div>
-	
-		<table width="100%" border="1" cellpadding="5" cellspacing="0" id="myTable" class="tablesorter thickbox"
-			   style="margin-top: 5px">
-			<thead>
-			<tr>
-				<th>#</th>
-				<th align="center">Service Name</th>
-				<th style="text-align: right;">Price (KSh)</th>
-				<th style="text-align: right;">Quantity</th>
-				<th style="text-align: right;">Amount</th>
-			</tr>
-			</thead>
-			<tbody>
 
-			<% bill?.billItems.eachWithIndex { it, index -> %>
-			<% if (bill?.voidedDate == null) { %>
-			<% if (it.name != "INPATIENT DEPOSIT") { %>
-			<tr>
-				<td>${index+1}</td>
-				<td>${it.name}</td>
-				<td align="right">${it.unitPrice}</td>
-				<td align="right">${it.quantity}</td>
-				<td class="printfont" height="20" align="right" style="">
-					<% if (it?.actualAmount != null) { %>
-					<% if (it?.actualAmount == it.amount) { %>
-					<% if (it?.voidedDate != null) { %>
-					<span style="text-decoration: line-through;">${it.amount}</span>
-					<% } else { %>
-					${it.amount}
-					<% } %>
-					<% } else { %>
+    <div id="printSection">
+        <center class="print-only">
+            <h2>
+                <img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS"
+                     src="${ui.resourceLink('billingui', 'images/kenya_logo.bmp')}"><br/>
+                <b>
+                    <u>${userLocation}</u>
+                </b>
+            </h2>
 
-					<span style="text-decoration: line-through;">${it.amount}</span>
-					<b>${it?.actualAmount}</b>
-					<% } %>
-					<% } else { %>
-					${it?.amount}
-					<% } %>
-				</td>
-			</tr>
-			<% } %>
-			<% } %>
-			<% } %>
-			<% def initialtotal = 0 %>
-			<% bill?.billItems.each { %>
-			<% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) {
-				initialtotal += it.amount
-			}
-			%>
-			<% } %>
+            <h2>
+                RECEIPT #00${bill?.patientServiceBillId}
+            </h2>
+        </center>
 
-			<tr>
-				<td></td>
-				<td colspan="3"><b>SUB TOTAL</b></td>
-				<td align="right">
-					<% if (bill?.actualAmount != null) { %>
-					<% if (bill?.actualAmount == bill?.amount) { %>
-					<% if (bill?.voided) { %>
-					<span style="text-decoration: line-through;"><b>${bill?.amount - initialtotal}</b>
-					</span>
-					<% } else { %>
-					<b>${bill?.amount - initialtotal}</b>
-					<% } %>
-					<% } else { %>
-					<span style="text-decoration: line-through;">${bill?.amount - initialtotal}</span>
-					<% if (bill?.voided) { %>
-					<span style="text-decoration: line-through;"><b>${bill?.actualAmount - initialtotal}</b>
-					</span>
-					<% } else { %>
-					<b>${bill?.actualAmount - initialtotal}</b>
-					<% } %>
-					<% } %>
-					<% } else { %>
-					${bill?.amount - initialtotal}
-					<% } %>
-				</td>
-			</tr>
-			<% bill?.billItems.each { %>
-			<% if (it.voidedDate == null) { %>
-			<% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) { %>
-			<tr>
-				<td></td>
-				<td colspan="3">ADVANCE PAYMENT</td>
-				<td class="printfont" height="20" align="right" style="">
-					<% if (StringUtils.isNotBlank(it.actualAmount)) { %>
-					<% if (it.actualAmount == it.amount) { %>
-					${it.amount}
-					<% } else { %>
-					<span style="text-decoration: line-through;">${it.amount}</span>
-					<b>${it.actualAmount}</b>
-					<% } %>
+        <div class="print-only">
+            <label>
+                <span class='status active'></span>
+                Identifier:
+            </label>
+            <span>${patient.getPatientIdentifier()}</span>
+            <br/>
 
-					<% } else { %>
-					${it.amount}
-					<% } %>
-				</td>
-			</tr>
-			<% } %>
-			<% } %>
-			<% } %>
-			<tr>
-				<td></td>
-				<td colspan="3"><b>ADVANCE PAYMENT</b></td>
-				<td align="right" id="initialtotal">${initialtotal}</td>
-			</tr>
+            <label>
+                <span class='status active'></span>
+                Full Names:
+            </label>
+            <span>${patient.givenName} ${patient.familyName} ${patient.middleName ? patient.middleName : ''}</span>
+            <br/>
 
-			<tr>
-				<td></td>
-				<td colspan="3"><b>WAIVER AMOUNT</b></td>
-				<td align="right">${bill?.waiverAmount}</td>
-			</tr>
-			<% if (bill?.rebateAmount > 0) { %>
-			<tr>
-				<td></td>
-				<td colspan="3"><b>REBATE AMOUNT</b></td>
-				<td align="right">${bill?.rebateAmount}</td>
-			</tr>
-			<% } %>
+            <label>
+                <span class='status active'></span>
+                Age:
+            </label>
+            <span>${patient.age} (${ui.formatDatePretty(patient.birthdate)})</span>
+            <br/>
 
-			<tr>
-				<td></td>
-				<td colspan="3"><b>NET AMOUNT</b></td>
-				<td align="right"><b>${bill?.actualAmount - bill?.waiverAmount - initialtotal}</b></td>
-			</tr>
-			</tbody>
-		</table>
+            <label>
+                <span class='status active'></span>
+                Gender:
+            </label>
+            <span>${gender}</span>
+            <br/>
 
-		<div class="print-only" style="margin: 20px 10px 0 10px">				
-			<span>Attending Cashier: <b>${cashier}</b></span>
-		</div>
-		
-		<center class="print-only" style="margin-top: 30px">
-			<span>Signature of Billing Clerk/ Stamp</span>		
-		</center>
-	</div>
+            <label>
+                <span class='status active'></span>
+                Print Date:
+            </label>
+            <span>${dateTime}</span>
+            <br/>
+
+            <label>
+                <span class='status active'></span>
+                Payment Catg:
+            </label>
+            <span>${paymentCategoryName} / ${paymentSubCategory}</span>
+            <br/>
+
+            <% if (bill?.voided) { %>
+            <label>
+                <span class='status active'></span>
+                Bill Description:
+            </label>
+            <span>${bill?.description}</span>
+            <br/>
+            <% } %>
+        </div>
+
+        <table width="100%" border="1" cellpadding="5" cellspacing="0" id="myTable" class="tablesorter thickbox"
+               style="margin-top: 5px">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th align="center">Service Name</th>
+                <th style="text-align: right;">Price (KSh)</th>
+                <th style="text-align: right;">Quantity</th>
+                <th style="text-align: right;">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <% bill?.billItems.eachWithIndex { it, index -> %>
+            <% if (bill?.voidedDate == null) { %>
+            <% if (it.name != "INPATIENT DEPOSIT") { %>
+            <tr>
+                <td>${index + 1}</td>
+                <td>${it.name}</td>
+                <td align="right">${it.unitPrice}</td>
+                <td align="right">${it.quantity}</td>
+                <td class="printfont" height="20" align="right" style="">
+                    <% if (it?.actualAmount != null) { %>
+                    <% if (it?.actualAmount == it.amount) { %>
+                    <% if (it?.voidedDate != null) { %>
+                    <span style="text-decoration: line-through;">${it.amount}</span>
+                    <% } else { %>
+                    ${it.amount}
+                    <% } %>
+                    <% } else { %>
+
+                    <span style="text-decoration: line-through;">${it.amount}</span>
+                    <b>${it?.actualAmount}</b>
+                    <% } %>
+                    <% } else { %>
+                    ${it?.amount}
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% def initialtotal = 0 %>
+            <% bill?.billItems.each { %>
+            <% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) {
+                initialtotal += it.amount
+            }
+            %>
+            <% } %>
+
+            <tr>
+                <td></td>
+                <td colspan="3"><b>SUB TOTAL</b></td>
+                <td align="right">
+                    <% if (bill?.actualAmount != null) { %>
+                    <% if (bill?.actualAmount == bill?.amount) { %>
+                    <% if (bill?.voided) { %>
+                    <span style="text-decoration: line-through;"><b>${bill?.amount - initialtotal}</b>
+                    </span>
+                    <% } else { %>
+                    <b>${bill?.amount - initialtotal}</b>
+                    <% } %>
+                    <% } else { %>
+                    <span style="text-decoration: line-through;">${bill?.amount - initialtotal}</span>
+                    <% if (bill?.voided) { %>
+                    <span style="text-decoration: line-through;"><b>${bill?.actualAmount - initialtotal}</b>
+                    </span>
+                    <% } else { %>
+                    <b>${bill?.actualAmount - initialtotal}</b>
+                    <% } %>
+                    <% } %>
+                    <% } else { %>
+                    ${bill?.amount - initialtotal}
+                    <% } %>
+                </td>
+            </tr>
+            <% bill?.billItems.each { %>
+            <% if (it.voidedDate == null) { %>
+            <% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) { %>
+            <tr>
+                <td></td>
+                <td colspan="3">ADVANCE PAYMENT</td>
+                <td class="printfont" height="20" align="right" style="">
+                    <% if (StringUtils.isNotBlank(it.actualAmount)) { %>
+                    <% if (it.actualAmount == it.amount) { %>
+                    ${it.amount}
+                    <% } else { %>
+                    <span style="text-decoration: line-through;">${it.amount}</span>
+                    <b>${it.actualAmount}</b>
+                    <% } %>
+
+                    <% } else { %>
+                    ${it.amount}
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+            <% } %>
+            <% } %>
+            <tr>
+                <td></td>
+                <td colspan="3"><b>ADVANCE PAYMENT</b></td>
+                <td align="right" id="initialtotal">${initialtotal}</td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td colspan="3"><b>WAIVER AMOUNT</b></td>
+                <td align="right">${bill?.waiverAmount}</td>
+            </tr>
+            <% if (bill?.rebateAmount > 0) { %>
+            <tr>
+                <td></td>
+                <td colspan="3"><b>REBATE AMOUNT</b></td>
+                <td align="right">${bill?.rebateAmount}</td>
+            </tr>
+            <% } %>
+
+            <tr>
+                <td></td>
+                <td colspan="3"><b>NET AMOUNT</b></td>
+                <td align="right"><b>${bill?.actualAmount - bill?.waiverAmount - initialtotal}</b></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="print-only" style="margin: 20px 10px 0 10px">
+            <span>Attending Cashier: <b>${cashier}</b></span>
+        </div>
+
+        <center class="print-only" style="margin-top: 30px">
+            <span>Signature of Billing Clerk/ Stamp</span>
+        </center>
+    </div>
 
     <input type="hidden" id="total" value="${bill?.actualAmount - bill?.waiverAmount}">
-	
+
     <% } %>
 
 
@@ -450,9 +458,9 @@
             <% if (bill != null) { %>
 
             <span type="button" class="button confirm" style="float: right; margin-right: -5px;">
-				<i class="icon-print"></i>
-				Print Bill
-			</span>
+                <i class="icon-print"></i>
+                Print Bill
+            </span>
 
             <% } %>
 
