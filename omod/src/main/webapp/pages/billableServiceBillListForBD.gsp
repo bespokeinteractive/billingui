@@ -45,8 +45,12 @@
 				iframe: 		false,
 				width: 			600,
 				height:			700
-			});		
+			});
+
+			jq("#billForm").submit();
         });
+		
+		
     });
 
     function validate() {
