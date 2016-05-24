@@ -116,7 +116,6 @@ public class ProcessDrugOrderPageController {
                 transDetail.setNoOfDays(pDetail.getTransactionDetail().getNoOfDays());
                 transDetail.setComments(pDetail.getTransactionDetail().getComments());
                 transDetail.setFlag(FlagStates.PARTIALLY_PROCESSED);
-
                 BigDecimal moneyUnitPrice = pDetail.getTransactionDetail().getCostToPatient().multiply(new BigDecimal(pDetail.getQuantity()));
                 transDetail.setTotalPrice(moneyUnitPrice);
                 transDetail.setParent(pDetail.getTransactionDetail());
@@ -124,6 +123,10 @@ public class ProcessDrugOrderPageController {
 
             }
 
+        }
+        if (listDrugIssue.size() > 0) {
+            model.addAttribute("waiverAmount", listDrugIssue.get(0).getStoreDrugPatient().getWaiverAmount());
+            model.addAttribute("waiverComment", listDrugIssue.get(0).getStoreDrugPatient().getComment());
         }
 
         List<SimpleObject> dispensedDrugs = SimpleObject.fromCollection(listDrugIssue, uiUtils, "quantity", "transactionDetail.costToPatient", "transactionDetail.drug.name",

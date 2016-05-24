@@ -17,6 +17,9 @@
         ${listOfNotDispensedOrder}.
         listOfNotDispensedOrder;
 
+        var wAmount = ${waiverAmount};
+        var wComment = "${waiverComment}";
+
         jq('#waiverAmount').on('keyup', function () {
             if (jq(this).val() > 0) {
                 if (jq(this).val() > parseInt(orders.totalSurcharge())) {
@@ -51,7 +54,7 @@
             self.nonDispensed(mappedNonDispensed);
 
             //observable waiver
-            self.waiverAmount = ko.observable("0");
+            self.waiverAmount = ko.observable(wAmount);
 
             //observable comment
             self.comment = ko.observable("");
@@ -78,7 +81,6 @@
             //submit bill
             self.submitBill = function () {
                 var flag = ${flag};
-				
 				jq("#printSection").print({
 					globalStyles: 	false,
 					mediaPrint: 	false,
@@ -98,9 +100,9 @@
 				if (flag === 0) {
                     jq("#drugBillsForm").submit();
                 }
-				else{
-					window.location.href = emr.pageLink("billingui", "billingQueue");
-				}
+                else {
+                    window.location.href = emr.pageLink("billingui", "billingQueue");
+                }
             }
 
             self.isNonPaying = ko.computed(function () {
