@@ -236,210 +236,217 @@
     </div>
 
 
-    <% if (bill != null) { %>
+    <% if (bill != null) { %>	
+	<div id="printSection">
+		<center class="print-only">		
+			<h2>
+				<img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS" src="${ui.resourceLink('billingui', 'images/kenya_logo.bmp')}"><br/>
+				<b>
+					<u>${userLocation}</u>
+				</b>
+			</h2>
+			
+			<h2>
+				RECEIPT #00${bill?.patientServiceBillId}
+			</h2>
+		</center>
+		
+		<div class="print-only">
+			<label>
+				<span class='status active'></span>
+				Identifier:
+			</label>
+			<span>${patient.getPatientIdentifier()}</span>
+			<br/>
+			
+			<label>
+				<span class='status active'></span>
+				Full Names:
+			</label>
+			<span>${patient.givenName} ${patient.familyName} ${patient.middleName?patient.middleName:''}</span>
+			<br/>
+			
+			<label>
+				<span class='status active'></span>
+				Age:
+			</label>
+			<span>${patient.age} (${ui.formatDatePretty(patient.birthdate)})</span>
+			<br/>
+			
+			<label>
+				<span class='status active'></span>
+				Gender:
+			</label>
+			<span>${gender}</span>
+			<br/>
+			
+			<label>
+				<span class='status active'></span>
+				Print Date:
+			</label>
+			<span>${dateTime}</span>
+			<br/>
+			
+			<label>
+				<span class='status active'></span>
+				Payment Catg:
+			</label>
+			<span>${paymentCategoryName} / ${paymentSubCategory}</span>
+			<br/>
+			
+			<% if (bill?.voided) { %>
+				<label>
+					<span class='status active'></span>
+					Bill Description:
+				</label>
+				<span>${bill?.description}</span>    
+				<br/>
+			<% } %>
+		</div>
+	
+		<table width="100%" border="1" cellpadding="5" cellspacing="0" id="myTable" class="tablesorter thickbox"
+			   style="margin-top: 5px">
+			<thead>
+			<tr>
+				<th>#</th>
+				<th align="center">Service Name</th>
+				<th style="text-align: right;">Price (KSh)</th>
+				<th style="text-align: right;">Quantity</th>
+				<th style="text-align: right;">Amount</th>
+			</tr>
+			</thead>
+			<tbody>
 
-    <div id="printSection">
-        <center class="print-only">
-            <h2>
-                <img width="100" height="100" align="center" title="OpenMRS" alt="OpenMRS"
-                     src="${ui.resourceLink('billingui', 'images/kenya_logo.bmp')}"><br/>
-                <b>
-                    <u>${userLocation}</u>
-                </b>
-            </h2>
+			<% bill?.billItems.eachWithIndex { it, index -> %>
+			<% if (bill?.voidedDate == null) { %>
+			<% if (it.name != "INPATIENT DEPOSIT") { %>
+			<tr>
+				<td>${index+1}</td>
+				<td>${it.name}</td>
+				<td align="right">${it.unitPrice}</td>
+				<td align="right">${it.quantity}</td>
+				<td class="printfont" height="20" align="right" style="">
+					<% if (it?.actualAmount != null) { %>
+					<% if (it?.actualAmount == it.amount) { %>
+					<% if (it?.voidedDate != null) { %>
+					<span style="text-decoration: line-through;">${it.amount}</span>
+					<% } else { %>
+					${it.amount}
+					<% } %>
+					<% } else { %>
 
-            <h2>
-                RECEIPT #00${bill?.patientServiceBillId}
-            </h2>
-        </center>
+					<span style="text-decoration: line-through;">${it.amount}</span>
+					<b>${it?.actualAmount}</b>
+					<% } %>
+					<% } else { %>
+					${it?.amount}
+					<% } %>
+				</td>
+			</tr>
+			<% } %>
+			<% } %>
+			<% } %>
+			<% def initialtotal = 0 %>
+			<% bill?.billItems.each { %>
+			<% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) {
+				initialtotal += it.amount
+			}
+			%>
+			<% } %>
 
-        <div class="print-only">
-            <label>
-                <span class='status active'></span>
-                Identifier:
-            </label>
-            <span>${patient.getPatientIdentifier()}</span>
-            <br/>
+			<tr>
+				<td></td>
+				<td colspan="3"><b>SUB TOTAL</b></td>
+				<td align="right">
+					<% if (bill?.actualAmount != null) { %>
+					<% if (bill?.actualAmount == bill?.amount) { %>
+					<% if (bill?.voided) { %>
+					<span style="text-decoration: line-through;"><b>${bill?.amount - initialtotal}</b>
+					</span>
+					<% } else { %>
+					<b>${bill?.amount - initialtotal}</b>
+					<% } %>
+					<% } else { %>
+					<span style="text-decoration: line-through;">${bill?.amount - initialtotal}</span>
+					<% if (bill?.voided) { %>
+					<span style="text-decoration: line-through;"><b>${bill?.actualAmount - initialtotal}</b>
+					</span>
+					<% } else { %>
+					<b>${bill?.actualAmount - initialtotal}</b>
+					<% } %>
+					<% } %>
+					<% } else { %>
+					${bill?.amount - initialtotal}
+					<% } %>
+				</td>
+			</tr>
+			<% bill?.billItems.each { %>
+			<% if (it.voidedDate == null) { %>
+			<% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) { %>
+			<tr>
+				<td></td>
+				<td colspan="3">ADVANCE PAYMENT</td>
+				<td class="printfont" height="20" align="right" style="">
+					<% if (StringUtils.isNotBlank(it.actualAmount)) { %>
+					<% if (it.actualAmount == it.amount) { %>
+					${it.amount}
+					<% } else { %>
+					<span style="text-decoration: line-through;">${it.amount}</span>
+					<b>${it.actualAmount}</b>
+					<% } %>
 
-            <label>
-                <span class='status active'></span>
-                Full Names:
-            </label>
-            <span>${patient.givenName} ${patient.familyName} ${patient.middleName ? patient.middleName : ''}</span>
-            <br/>
+					<% } else { %>
+					${it.amount}
+					<% } %>
+				</td>
+			</tr>
+			<% } %>
+			<% } %>
+			<% } %>
+			
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<b>ADVANCE PAYMENT</b>
+				</td>
+				<td align="right" id="initialtotal">${initialtotal}</td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td colspan="3">
+					<b>WAIVER AMOUNT</b>
+					<% if (bill?.waiverAmount > 0) { %>
+						(${bill?.comment})
+					<% } %>				
+				</td>
+				<td align="right">${bill?.waiverAmount}</td>
+			</tr>			
+			
+			<% if (bill?.rebateAmount > 0) { %>
+				<tr>
+					<td></td>
+					<td colspan="3"><b>REBATE AMOUNT</b></td>
+					<td align="right">${bill?.rebateAmount}</td>
+				</tr>
+			<% } %>
 
-            <label>
-                <span class='status active'></span>
-                Age:
-            </label>
-            <span>${patient.age} (${ui.formatDatePretty(patient.birthdate)})</span>
-            <br/>
+			<tr>
+				<td></td>
+				<td colspan="3"><b>NET AMOUNT</b></td>
+				<td align="right"><b>${bill?.actualAmount - bill?.waiverAmount - initialtotal}</b></td>
+			</tr>
+			</tbody>
+		</table>
 
-            <label>
-                <span class='status active'></span>
-                Gender:
-            </label>
-            <span>${gender}</span>
-            <br/>
-
-            <label>
-                <span class='status active'></span>
-                Print Date:
-            </label>
-            <span>${dateTime}</span>
-            <br/>
-
-            <label>
-                <span class='status active'></span>
-                Payment Catg:
-            </label>
-            <span>${paymentCategoryName} / ${paymentSubCategory}</span>
-            <br/>
-
-            <% if (bill?.voided) { %>
-            <label>
-                <span class='status active'></span>
-                Bill Description:
-            </label>
-            <span>${bill?.description}</span>
-            <br/>
-            <% } %>
-        </div>
-
-        <table width="100%" border="1" cellpadding="5" cellspacing="0" id="myTable" class="tablesorter thickbox"
-               style="margin-top: 5px">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th align="center">Service Name</th>
-                <th style="text-align: right;">Price (KSh)</th>
-                <th style="text-align: right;">Quantity</th>
-                <th style="text-align: right;">Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <% bill?.billItems.eachWithIndex { it, index -> %>
-            <% if (bill?.voidedDate == null) { %>
-            <% if (it.name != "INPATIENT DEPOSIT") { %>
-            <tr>
-                <td>${index + 1}</td>
-                <td>${it.name}</td>
-                <td align="right">${it.unitPrice}</td>
-                <td align="right">${it.quantity}</td>
-                <td class="printfont" height="20" align="right" style="">
-                    <% if (it?.actualAmount != null) { %>
-                    <% if (it?.actualAmount == it.amount) { %>
-                    <% if (it?.voidedDate != null) { %>
-                    <span style="text-decoration: line-through;">${it.amount}</span>
-                    <% } else { %>
-                    ${it.amount}
-                    <% } %>
-                    <% } else { %>
-
-                    <span style="text-decoration: line-through;">${it.amount}</span>
-                    <b>${it?.actualAmount}</b>
-                    <% } %>
-                    <% } else { %>
-                    ${it?.amount}
-                    <% } %>
-                </td>
-            </tr>
-            <% } %>
-            <% } %>
-            <% } %>
-            <% def initialtotal = 0 %>
-            <% bill?.billItems.each { %>
-            <% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) {
-                initialtotal += it.amount
-            }
-            %>
-            <% } %>
-
-            <tr>
-                <td></td>
-                <td colspan="3"><b>SUB TOTAL</b></td>
-                <td align="right">
-                    <% if (bill?.actualAmount != null) { %>
-                    <% if (bill?.actualAmount == bill?.amount) { %>
-                    <% if (bill?.voided) { %>
-                    <span style="text-decoration: line-through;"><b>${bill?.amount - initialtotal}</b>
-                    </span>
-                    <% } else { %>
-                    <b>${bill?.amount - initialtotal}</b>
-                    <% } %>
-                    <% } else { %>
-                    <span style="text-decoration: line-through;">${bill?.amount - initialtotal}</span>
-                    <% if (bill?.voided) { %>
-                    <span style="text-decoration: line-through;"><b>${bill?.actualAmount - initialtotal}</b>
-                    </span>
-                    <% } else { %>
-                    <b>${bill?.actualAmount - initialtotal}</b>
-                    <% } %>
-                    <% } %>
-                    <% } else { %>
-                    ${bill?.amount - initialtotal}
-                    <% } %>
-                </td>
-            </tr>
-            <% bill?.billItems.each { %>
-            <% if (it.voidedDate == null) { %>
-            <% if (it.name.equalsIgnoreCase("INPATIENT DEPOSIT")) { %>
-            <tr>
-                <td></td>
-                <td colspan="3">ADVANCE PAYMENT</td>
-                <td class="printfont" height="20" align="right" style="">
-                    <% if (StringUtils.isNotBlank(it.actualAmount)) { %>
-                    <% if (it.actualAmount == it.amount) { %>
-                    ${it.amount}
-                    <% } else { %>
-                    <span style="text-decoration: line-through;">${it.amount}</span>
-                    <b>${it.actualAmount}</b>
-                    <% } %>
-
-                    <% } else { %>
-                    ${it.amount}
-                    <% } %>
-                </td>
-            </tr>
-            <% } %>
-            <% } %>
-            <% } %>
-            <tr>
-                <td></td>
-                <td colspan="3"><b>ADVANCE PAYMENT</b></td>
-                <td align="right" id="initialtotal">${initialtotal}</td>
-            </tr>
-
-            <tr>
-                <td></td>
-                <td colspan="3"><b>WAIVER AMOUNT</b></td>
-                <td align="right">${bill?.waiverAmount}</td>
-            </tr>
-            <% if (bill?.rebateAmount > 0) { %>
-            <tr>
-                <td></td>
-                <td colspan="3"><b>REBATE AMOUNT</b></td>
-                <td align="right">${bill?.rebateAmount}</td>
-            </tr>
-            <% } %>
-
-            <tr>
-                <td></td>
-                <td colspan="3"><b>NET AMOUNT</b></td>
-                <td align="right"><b>${bill?.actualAmount - bill?.waiverAmount - initialtotal}</b></td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="print-only" style="margin: 20px 10px 0 10px">
-            <span>Attending Cashier: <b>${cashier}</b></span>
-        </div>
-
-        <center class="print-only" style="margin-top: 30px">
-            <span>Signature of Billing Clerk/ Stamp</span>
-        </center>
-    </div>
+		<div class="print-only" style="margin: 20px 10px 0 10px">				
+			<span>Attending Cashier: <b>${cashier}</b></span>
+		</div>
+		
+		<center class="print-only" style="margin-top: 30px">
+			<span>Signature of Billing Clerk/ Stamp</span>		
+		</center>
+	</div>
 
     <input type="hidden" id="total" value="${bill?.actualAmount - bill?.waiverAmount}">
 
