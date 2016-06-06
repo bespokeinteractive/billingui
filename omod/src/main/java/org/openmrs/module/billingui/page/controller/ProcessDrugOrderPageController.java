@@ -225,15 +225,10 @@ public class ProcessDrugOrderPageController {
         String comment = jsonObject.getString("comment");
         String waiverAmountString = jsonObject.getString("waiverAmount");
 
-        System.out.println(comment);
-        System.out.println(waiverAmountString);
-
         BigDecimal waiverAmount = null;
         if(StringUtils.isNotEmpty(waiverAmountString)){
             waiverAmount = new BigDecimal(waiverAmountString);
         }
-
-
 
         int receiptid = Integer.parseInt(request.getParameter("receiptid"));
         pageModel.addAttribute("receiptid", receiptid);

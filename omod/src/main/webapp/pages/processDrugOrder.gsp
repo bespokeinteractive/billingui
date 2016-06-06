@@ -535,12 +535,12 @@ th:first-child {
             <label style="font-size: 90%; color: rgb(85, 85, 85); display: inline-block; width: 115px;">Pharmacist:</label>${pharmacist}<br/>
         </div>
 
-        <form method="post" id="drugBillsForm" style="padding-top: 10px">
-            <input id="patientId" name="patientId" type="hidden" value="${identifier}">
-            <input id="receiptid" name="receiptid" type="hidden" value="${receiptid}">
-            <input id="flag" name="flag" type="hidden" value="${flag}">
+        <form method="post" id="drugBillsForm" style="display: none;">
+            <input id="patientId" name="patientId" type="text" value="${identifier}">
+            <input id="receiptid" name="receiptid" type="text" value="${receiptid}">
+            <input id="flag" name="flag" type="text" value="${flag}">
 
-            <textarea name="drugOrder" data-bind="value: ko.toJSON(\$root)" style="display:none;"></textarea>
+            <textarea name="drugOrder" data-bind="value: ko.toJSON(\$root)"></textarea>
 
             <span class="button cancel" onclick="javascript:window.location.href = 'billingQueue.page?'">Cancel</span>
 

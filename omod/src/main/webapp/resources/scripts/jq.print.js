@@ -41,6 +41,7 @@
         } catch (err) {
             def.reject(err);
         }
+		
         return def;
     }
 
@@ -102,7 +103,8 @@
             deferred: $.Deferred(),
             timeout: 250,
 			height: 800,
-			width: 400
+			width: 400,
+			redirectTo: null
         };
         // Merge with user-options
         options = $.extend({}, defaults, (options || {}));
@@ -228,6 +230,9 @@
             printContentInNewWindow(content, options.timeout, options.width, options.height)
                 .always(function () {
                     try {
+						if (options.redirectTo){
+							window.location = options.redirectTo;
+						}
                         options.deferred.resolve();
                     } catch (err) {
                         console.warn('Error notifying deferred', err);
