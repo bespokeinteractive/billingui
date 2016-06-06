@@ -50,6 +50,10 @@ public class PatientServiceBillForBDPageController {
                       HttpServletRequest request, UiUtils uiUtils) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         Map<String, Object> redirectParams = new HashMap<String, Object>();
         redirectParams.put("encounterId", encounterId);
         redirectParams.put("patientId", patientId);

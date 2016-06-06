@@ -44,7 +44,7 @@ import java.util.List;
 
 public class ListOfOrderPageController {
 
-    public void get(PageModel model,
+    public String get(PageModel model,
                     UiSessionContext sessionContext,
                     PageRequest pageRequest,
                     UiUtils ui,
@@ -52,6 +52,10 @@ public class ListOfOrderPageController {
                     @RequestParam(value = "date", required = false) String dateStr) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         BillingService billingService = Context
                 .getService(BillingService.class);
         PatientService patientService = Context.getPatientService();
@@ -104,5 +108,6 @@ public class ListOfOrderPageController {
         model.addAttribute("listOfOrders", listOfOrders);
         model.addAttribute("patientId", patientId);
         model.addAttribute("date", dateStr);
+        return null;
     }
 }

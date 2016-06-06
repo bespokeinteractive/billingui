@@ -5,15 +5,18 @@ import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
 import org.openmrs.module.hospitalcore.model.*;
 import org.openmrs.module.hospitalcore.util.ActionValue;
 import org.openmrs.module.hospitalcore.util.FlagStates;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.inventory.util.DateUtils;
+import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +30,17 @@ import java.util.List;
  *         Created on 4/17/2016.
  */
 public class ProcessDrugOrderPageController {
-    public void get(PageModel model,
+    public String get(PageModel model,
+                      UiSessionContext sessionContext,
+                      PageRequest pageRequest,
                     @RequestParam("orderId") Integer orderId, PageModel pageModel,
                     UiUtils uiUtils) {
+        pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,uiUtils.thisUrl());
+        sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         pageModel.addAttribute("userLocation", Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         InventoryService inventoryService = Context.getService(InventoryService.class);
         List<Role> role = new ArrayList<Role>(Context.getAuthenticatedUser().getAllRoles());
@@ -215,6 +226,7 @@ public class ProcessDrugOrderPageController {
                 }
             }
         }
+        return null;
     }
 
     public String post(HttpServletRequest request, PageModel pageModel, UiUtils uiUtils) {

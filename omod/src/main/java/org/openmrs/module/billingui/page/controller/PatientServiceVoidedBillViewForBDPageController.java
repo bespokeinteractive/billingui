@@ -46,6 +46,10 @@ public class PatientServiceVoidedBillViewForBDPageController {
                       HttpServletRequest request, UiUtils uiUtils) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         BillingService billingService = Context.getService(BillingService.class);
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
