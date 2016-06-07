@@ -81,27 +81,25 @@
             //submit bill
             self.submitBill = function () {
                 var flag = ${flag};
+				var emrLink = emr.pageLink("billingui", "billingQueue");				
+				    emrLink = emrLink.substring(0, emrLink.length-1)+'#pharmacyTab';				
+				
+				if (flag === 0) {
+                    emrLink = null;
+                }
+				
                 jq("#printSection").print({
                     globalStyles: false,
                     mediaPrint: false,
                     stylesheet: '${ui.resourceLink("pharmacyapp", "styles/print-out.css")}',
                     iframe: false,
                     width: 980,
-                    height: 700
-                });
-
-                /*printWindow.document.write('<html><head><title>Print Drug Order :-Support by KenyaEHRS</title>');
-                 printWindow.document.write('</head>');
-                 printWindow.document.write(printDiv);
-                 printWindow.document.write('</body></html>');
-                 printWindow.print();
-                 printWindow.close();*/
+                    height: 700,
+					redirectTo: emrLink
+                });				
 
                 if (flag === 0) {
                     jq("#drugBillsForm").submit();
-                }
-                else {
-                    window.location.href = emr.pageLink("billingui", "billingQueue");
                 }
             }
 
