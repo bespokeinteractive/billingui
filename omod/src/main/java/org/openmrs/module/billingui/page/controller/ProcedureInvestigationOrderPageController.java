@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class ProcedureInvestigationOrderPageController {
 
-    public void get(PageModel model,
+    public String get(PageModel model,
                     UiSessionContext sessionContext,
                     PageRequest pageRequest,
                     UiUtils ui,
@@ -44,6 +44,10 @@ public class ProcedureInvestigationOrderPageController {
                     @RequestParam(value = "date", required = false) String dateStr) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         BillingService billingService = Context.getService(BillingService.class);
         List<BillableService> serviceOrderList = billingService.listOfServiceOrder(patientId, encounterId);
         model.addAttribute("serviceOrderList", serviceOrderList);
@@ -76,6 +80,7 @@ public class ProcedureInvestigationOrderPageController {
 
         model.addAttribute("patientSearch", patientSearch);
         model.addAttribute("date", dateStr);
+        return null;
     }
 
     public String post(PageModel model, Object command, HttpServletRequest request, @RequestParam("patientId") Integer patientId, @RequestParam("encounterId") Integer encounterId,

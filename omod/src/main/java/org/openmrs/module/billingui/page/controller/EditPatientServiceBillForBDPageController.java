@@ -40,7 +40,7 @@ import java.util.*;
 public class EditPatientServiceBillForBDPageController {
     private Log logger = LogFactory.getLog(getClass());
 
-    public void get( PageModel model,
+    public String get( PageModel model,
                      UiSessionContext sessionContext,
                      PageRequest pageRequest,
                      UiUtils uiUtils,
@@ -48,6 +48,10 @@ public class EditPatientServiceBillForBDPageController {
                      @RequestParam("patientId") Integer patientId) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,uiUtils.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
 
@@ -107,7 +111,7 @@ public class EditPatientServiceBillForBDPageController {
         if (patient.getGender().equals("F")) {
             model.addAttribute("gender", "Female");
         }
-
+        return null;
     }
 
 

@@ -31,7 +31,7 @@ import java.util.*;
  */
 public class BillableServiceBillListForBDPageController {
 
-    public void get(  PageModel model,
+    public String get(  PageModel model,
                       UiSessionContext sessionContext,
                       PageRequest pageRequest,
                       UiUtils ui,
@@ -49,7 +49,10 @@ public class BillableServiceBillListForBDPageController {
                       HttpServletRequest request) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
-
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         long admitMili = 0;
         model.addAttribute("bill", null);
         model.addAttribute("initialtotal",0);
@@ -235,7 +238,7 @@ public class BillableServiceBillListForBDPageController {
             model.addAttribute("bill", bill);
             model.addAttribute("userLocation", Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         }
-
+        return null;
     }
 
     public String post(@RequestParam("patientId") Integer patientId,

@@ -21,14 +21,19 @@ public class MainPageController {
     private Log log = LogFactory.getLog(this.getClass());
 
     /*@RequestMapping(method= RequestMethod.GET)*/
-    public void get( PageModel model,
+    public String get( PageModel model,
                      UiSessionContext sessionContext,
                      PageRequest pageRequest,
                      UiUtils ui) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         String prefix = Context.getAdministrationService().getGlobalProperty("registration.identifier_prefix");
         model.addAttribute("idPrefix", prefix);
+        return null;
     }
 
     /*@RequestMapping(method=RequestMethod.POST)*/
