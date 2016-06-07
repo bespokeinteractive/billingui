@@ -541,24 +541,22 @@ th:first-child {
             <input id="flag" name="flag" type="text" value="${flag}">
 
             <textarea name="drugOrder" data-bind="value: ko.toJSON(\$root)"></textarea>
-
-            <span class="button cancel" onclick="javascript:window.location.href = 'billingQueue.page?'">Cancel</span>
-
-
-            <% if (flag == 1) { %>
-            <span id="savebill" class="button task right"
-                  data-bind="click: submitBill, enable: availableOrders().length > 0 ">
-                <i class="icon-print small"></i>
-                Reprint
-            </span>
-            <% } else { %>
-            <span id="savebill" class="button task right"
-                  data-bind="click: submitBill, enable: availableOrders().length > 0 ">
-                <i class="icon-save small"></i>
-                Finish
-            </span>
-            <% } %>
         </form>
+		
+		<span class="button cancel" onclick="javascript:window.location.href = 'billingQueue.page?'">Cancel</span>
+		
+		<% if (flag == 1) { %>
+		<span id="savebill" class="button task right"
+			  data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+			<i class="icon-print small"></i>
+			Reprint
+		</span>
+		<% } else { %>
+		<span id="savebill" class="button task right"
+			  data-bind="click: submitBill, enable: availableOrders().length > 0 ">
+			<i class="icon-save small"></i>
+			Finish
+		</span>
+		<% } %>
     </div>
-
 </div>
