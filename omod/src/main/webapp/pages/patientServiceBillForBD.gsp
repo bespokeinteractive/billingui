@@ -6,10 +6,13 @@
     def props = ["sno", "service", "select", "quantity", "pay", "unitprice", "itemtotal"]
 %>
 <style>
-.form-textbox {
-    height: 12px !important;
-    font-size: 12px !important;
-}
+	.form-textbox {
+		height: 12px !important;
+		font-size: 12px !important;
+	}
+	.name {
+		color: #f26522;
+	}
 </style>
 <script type="text/javascript">
     jQuery(document).ready(function () {

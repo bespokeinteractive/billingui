@@ -289,6 +289,9 @@
 	.red-border {
         border: 1px solid #f00 !important;
     }
+	.name {
+		color: #f26522;
+	}
 </style>
 
 <div class="clear"></div>

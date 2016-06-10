@@ -197,102 +197,105 @@
 </script>
 
 <style>
-#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
-    text-decoration: none;
-}
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
 
-.new-patient-header .demographics .gender-age {
-    font-size: 14px;
-    margin-left: -55px;
-    margin-top: 12px;
-}
+	.new-patient-header .demographics .gender-age {
+		font-size: 14px;
+		margin-left: -55px;
+		margin-top: 12px;
+	}
 
-.new-patient-header .demographics .gender-age span {
-    border-bottom: 1px none #ddd;
-}
+	.new-patient-header .demographics .gender-age span {
+		border-bottom: 1px none #ddd;
+	}
 
-.new-patient-header .identifiers {
-    margin-top: 5px;
-}
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
 
-.tag {
-    padding: 2px 10px;
-}
+	.tag {
+		padding: 2px 10px;
+	}
 
-.tad {
-    background: #666 none repeat scroll 0 0;
-    border-radius: 1px;
-    color: white;
-    display: inline;
-    font-size: 0.8em;
-    margin-left: 4px;
-    padding: 2px 10px;
-}
+	.tad {
+		background: #666 none repeat scroll 0 0;
+		border-radius: 1px;
+		color: white;
+		display: inline;
+		font-size: 0.8em;
+		margin-left: 4px;
+		padding: 2px 10px;
+	}
 
-.status-container {
-    padding: 5px 10px 5px 5px;
-}
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
 
-.catg {
-    color: #363463;
-    margin: 35px 10px 0 0;
-}
+	.catg {
+		color: #363463;
+		margin: 35px 10px 0 0;
+	}
 
-.formfactor {
-    background: #f3f3f3 none repeat scroll 0 0;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    min-height: 38px;
-    padding: 5px 10px;
-    text-align: left;
-    width: auto;
-}
+	.formfactor {
+		background: #f3f3f3 none repeat scroll 0 0;
+		border: 1px solid #ddd;
+		margin-bottom: 5px;
+		margin-top: 5px;
+		min-height: 38px;
+		padding: 5px 10px;
+		text-align: left;
+		width: auto;
+	}
 
-.formfactor label {
-    color: #f26522;
-    padding-left: 5px;
-}
+	.formfactor label {
+		color: #f26522;
+		padding-left: 5px;
+	}
 
-.formfactor input {
-    border: 1px solid #aaa;
-    color: #222;
-    display: block;
-    height: 29px;
-    margin: 5px 0;
-    min-width: 98%;
-    padding: 5px 10px;
-}
+	.formfactor input {
+		border: 1px solid #aaa;
+		color: #222;
+		display: block;
+		height: 29px;
+		margin: 5px 0;
+		min-width: 98%;
+		padding: 5px 10px;
+	}
 
-.formfactor h2 {
-    display: inline-block;
-    float: right;
-    margin-top: -40px;
-    padding-right: 10px;
-}
+	.formfactor h2 {
+		display: inline-block;
+		float: right;
+		margin-top: -40px;
+		padding-right: 10px;
+	}
 
-td input {
-    background: transparent none repeat scroll 0 0;
-    border: 1px solid #aaa;
-    padding-right: 10px;
-    text-align: right;
-    width: 80px;
-}
+	td input {
+		background: transparent none repeat scroll 0 0;
+		border: 1px solid #aaa;
+		padding-right: 10px;
+		text-align: right;
+		width: 80px;
+	}
 
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 5px 20px;
-}
+	table th, table td {
+		border: 1px solid #ddd;
+		padding: 5px 20px;
+	}
 
-#datafield {
-    display: none;
-}
+	#datafield {
+		display: none;
+	}
 
-#waiverAmount {
-    margin-left: -12px;
-    margin-right: -12px;
-    width: 137px;
-}
+	#waiverAmount {
+		margin-left: -12px;
+		margin-right: -12px;
+		width: 137px;
+	}
+	.name {
+		color: #f26522;
+	}
 </style>
 
 <div class="clear"></div>

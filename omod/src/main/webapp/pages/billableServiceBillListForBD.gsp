@@ -72,105 +72,105 @@
 </script>
 
 <style>
-.name {
-    color: #f26522;
-}
+	.name {
+		color: #f26522;
+	}
 
-.form-textbox {
-    height: 12px !important;
-    font-size: 12px !important;
-}
+	.form-textbox {
+		height: 12px !important;
+		font-size: 12px !important;
+	}
 
-.hidden {
-    display: none;
-}
+	.hidden {
+		display: none;
+	}
 
-.retired {
-    text-decoration: line-through;
-    color: darkgrey;
-}
+	.retired {
+		text-decoration: line-through;
+		color: darkgrey;
+	}
 
-#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
-    text-decoration: none;
-}
+	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
+		text-decoration: none;
+	}
 
-.new-patient-header .demographics .gender-age {
-    font-size: 14px;
-    margin-left: -55px;
-    margin-top: 12px;
-}
+	.new-patient-header .demographics .gender-age {
+		font-size: 14px;
+		margin-left: -55px;
+		margin-top: 12px;
+	}
 
-.new-patient-header .demographics .gender-age span {
-    border-bottom: 1px none #ddd;
-}
+	.new-patient-header .demographics .gender-age span {
+		border-bottom: 1px none #ddd;
+	}
 
-.new-patient-header .identifiers {
-    margin-top: 5px;
-}
+	.new-patient-header .identifiers {
+		margin-top: 5px;
+	}
 
-.tag {
-    padding: 2px 10px;
-}
+	.tag {
+		padding: 2px 10px;
+	}
 
-.tad {
-    background: #666 none repeat scroll 0 0;
-    border-radius: 1px;
-    color: white;
-    display: inline;
-    font-size: 0.8em;
-    margin-left: 4px;
-    padding: 2px 10px;
-}
+	.tad {
+		background: #666 none repeat scroll 0 0;
+		border-radius: 1px;
+		color: white;
+		display: inline;
+		font-size: 0.8em;
+		margin-left: 4px;
+		padding: 2px 10px;
+	}
 
-.status-container {
-    padding: 5px 10px 5px 5px;
-}
+	.status-container {
+		padding: 5px 10px 5px 5px;
+	}
 
-.catg {
-    color: #363463;
-    margin: 35px 10px 0 0;
-}
+	.catg {
+		color: #363463;
+		margin: 35px 10px 0 0;
+	}
 
-@media print {
-    .donotprint {
-        display: none;
-    }
+	@media print {
+		.donotprint {
+			display: none;
+		}
 
-    .spacer {
-        margin-top: 70px;
-        font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-        font-style: normal;
-        font-size: 14px;
-    }
+		.spacer {
+			margin-top: 70px;
+			font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+			font-style: normal;
+			font-size: 14px;
+		}
 
-    .printfont {
-        font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
-        font-style: normal;
-        font-size: 14px;
-    }
-}
+		.printfont {
+			font-family: "Dot Matrix Normal", Arial, Helvetica, sans-serif;
+			font-style: normal;
+			font-size: 14px;
+		}
+	}
 
-.formfactor {
-    background: #f3f3f3 none repeat scroll 0 0;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    min-height: 38px;
-    padding: 5px 10px;
-    text-align: left;
-    width: auto;
-}
+	.formfactor {
+		background: #f3f3f3 none repeat scroll 0 0;
+		border: 1px solid #ddd;
+		margin-bottom: 5px;
+		margin-top: 5px;
+		min-height: 38px;
+		padding: 5px 10px;
+		text-align: left;
+		width: auto;
+	}
 
-.dashboard .info-section {
-    margin: 0;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    width: 100%;
-}
+	.dashboard .info-section {
+		margin: 0;
+		padding-bottom: 10px;
+		padding-top: 10px;
+		width: 100%;
+	}
 
-.print-only {
-    display: none;
-}
+	.print-only {
+		display: none;
+	}
 </style>
 
 <div class="clear"></div>

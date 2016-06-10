@@ -181,6 +181,9 @@
 </script>
 
 <style>
+	.name {
+		color: #f26522;
+	}
 	.toast-item {
         background-color: #222;
     }
@@ -370,7 +373,7 @@
 			</h1>
             <h2>Items (<span data-bind="text: billItems().length"></span>)</h2>
         </div>
-        <table>
+        <table style="margin-bottom: 5px;">
             <thead>
 				<tr>
 					<th style="width:40px; text-align: center;">#</th>
@@ -430,15 +433,18 @@
             </tbody>
         </table>
 
-        <div id="waiverCommentDiv" style="padding-top: 10px;">
-            <label for="waiverNumber" style="color: rgb(54, 52, 99); width: 150px; padding-left: 10px; display: inline-block;">Waiver Number</label>
+        <div id="waiverCommentDiv" style="padding-top: 2px;">
+            <label for="waiverNumber" style="color: rgb(54, 52, 99); width: 150px; padding-left: 0px; display: inline-block;">Waiver Number</label>
             <input type="text" size="20" data-bind="value: waiverNumber" name="waiverNumber" id="waiverNumber" style="width: 808px;"/>
 			<br/>
         </div>
-        <label for="waiverComment" style="color: rgb(54, 52, 99);">Comment</label>
-        <textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder"
-                  style="height: 60px; width: 808px; margin-top: 2px;"
-                  data-bind="value: comment"></textarea>
+		
+		<div id="othersCommentDiv" style="padding-top: 2px;">
+			<label for="waiverComment" style="color: rgb(54, 52, 99); width: 150px; padding-left: 10px; display: inline-block;">Comment</label>
+			<textarea type="text" id="waiverComment" name="waiverComment" size="7" class="hasborder"
+					  style="height: 60px; width: 808px; margin-top: 2px;"
+					  data-bind="value: comment"></textarea>
+		</div>
        
 
         <form method="post" id="billsForm" style="padding-top: 10px">
