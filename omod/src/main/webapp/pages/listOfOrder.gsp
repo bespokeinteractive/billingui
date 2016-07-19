@@ -58,6 +58,9 @@
 		color: #363463;
 		margin: 35px 10px 0 0;
 	}
+	.name {
+		color: #f26522;
+	}
 </style>
 
 <div class="clear"></div>

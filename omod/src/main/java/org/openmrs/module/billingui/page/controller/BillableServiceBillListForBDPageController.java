@@ -31,7 +31,7 @@ import java.util.*;
  */
 public class BillableServiceBillListForBDPageController {
 
-    public void get(  PageModel model,
+    public String get(  PageModel model,
                       UiSessionContext sessionContext,
                       PageRequest pageRequest,
                       UiUtils ui,
@@ -49,7 +49,10 @@ public class BillableServiceBillListForBDPageController {
                       HttpServletRequest request) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
-
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         long admitMili = 0;
         model.addAttribute("bill", null);
         model.addAttribute("initialtotal",0);
@@ -104,6 +107,26 @@ public class BillableServiceBillListForBDPageController {
             model.addAttribute("patientId", patientId);
 
             model.addAttribute("category", patient.getAttribute(14));
+
+            HospitalCoreService hcs = Context.getService(HospitalCoreService.class);
+            List<PersonAttribute> pas = hcs.getPersonAttributes(patient.getId());
+
+            for (PersonAttribute pa : pas) {
+                PersonAttributeType attributeType = pa.getAttributeType();
+                PersonAttributeType personAttributePCT = hcs.getPersonAttributeTypeByName("Paying Category Type");
+                PersonAttributeType personAttributeNPCT = hcs.getPersonAttributeTypeByName("Non-Paying Category Type");
+                PersonAttributeType personAttributeSSCT = hcs.getPersonAttributeTypeByName("Special Scheme Category Type");
+                if (attributeType.getPersonAttributeTypeId() == personAttributePCT.getPersonAttributeTypeId()) {
+                    model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategoryName", "PAYING");
+                } else if (attributeType.getPersonAttributeTypeId() == personAttributeNPCT.getPersonAttributeTypeId()) {
+                    model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategoryName", "NON-PAYING");
+                } else if (attributeType.getPersonAttributeTypeId() == personAttributeSSCT.getPersonAttributeTypeId()) {
+                    model.addAttribute("paymentSubCategory", pa.getValue());
+                    model.addAttribute("paymentCategoryName", "SPECIAL SCHEMES");
+                }
+            }
 
             if (patient.getAttribute(43) == null){
                 model.addAttribute("fileNumber", "");
@@ -215,7 +238,7 @@ public class BillableServiceBillListForBDPageController {
             model.addAttribute("bill", bill);
             model.addAttribute("userLocation", Context.getAdministrationService().getGlobalProperty("hospital.location_user"));
         }
-
+        return null;
     }
 
     public String post(@RequestParam("patientId") Integer patientId,

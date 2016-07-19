@@ -31,13 +31,13 @@
         });
 
         if (sos == 0) {
-            jQuery("#savebill").hide();
+            jq("#savebill").hide();
         }
 
         var result = 0;
-        jQuery('#total').attr('value', function () {
+        jq('#total').attr('value', function () {
             jQuery('.serpricalc').each(function () {
-                if (jQuery(this).val() !== '') {
+                if (jq(this).val() !== '') {
                     result += parseInt(jQuery(this).val());
                 }
             });
@@ -45,10 +45,10 @@
         });
 		
 		jq('#waiverAmount').on('change keyup paste', function () {
-			var numb = jq('#waiverAmount').val();
+			var numb = jq('#waiverAmount').val();			
 			
 			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
-				jq("#waiverCommentDiv").show();
+				jq("#waiverCommentDiv").show();				
 			}
 			else {
 				jq("#waiverCommentDiv").hide();
@@ -67,13 +67,29 @@
 		
 		jq('#waiverAmount').on('blur', function () {
 			var numb = jq('#waiverAmount').val();
+			var totl = jq('#total').val();
+			
 			if (!isNaN(parseFloat(numb)) && isFinite(numb) && numb>0){
 				jq('#waiverAmount').val(formatAccounting(numb));
+				
+				if (parseFloat(numb) > parseFloat(totl)){
+					jq().toastmessage('showErrorToast', 'Waiver amount cannot be greater than the total amount');
+					jq('#waiverAmount').addClass('red-border');
+				} else{
+					jq('#waiverAmount').removeClass('red-border');				
+				}
 			}
 			else {
 				jq("#waiverAmount").val('0.00');
 			}
         });
+		
+		jq('#savebill').click(function(){		
+			if (validate()){
+				jq('#orderBillingForm').submit();
+			}
+		
+		});
 		
 		jq('#waiverAmount').val('0.00');
         recalculate(sos);
@@ -111,7 +127,7 @@
         var serqunid = con.concat("servicequantity");
         var serpriid = con.concat("serviceprice");
         var unipriid = con.concat("unitprice");
-//alert(document.getElementById(serqunid).value);
+		
         serqun = jQuery("#" + serqunid).val();
         unpri = jQuery("#" + unipriid).val();
         jQuery("#" + serpriid).val(serqun * unpri);
@@ -162,44 +178,64 @@
         }
     }
 	
-    function validate(serviceOrderSize) {
-        for (var i = 1; i <= serviceOrderSize; i++) {
+    function validate() {
+		var errorCount = 0;
+		var waiverAmts = jq("#waiverAmount").val();
+		var serviceQty = ${serviceOrderSize};
+		
+        for (var i = 1; i <= serviceQty; i++) {
             var con = i.toString();
-            if (jQuery("#" + con + "selectservice").attr('checked')) {
+            if (jq("#" + con + "selectservice").attr('checked')) {
                 var serqunid = con.concat("servicequantity");
-                serqun = jQuery("#" + serqunid).val();
-                if (serqun == null || serqun == "") {
-                    alert("Please enter quantity");
-                    return false;
+                serqun = jq("#" + serqunid).val();
+				
+				console.log(serqunid);
+				console.log(serqun);
+				
+                if (isNaN(parseFloat(serqun)) || Number(serqun) < 0) {
+					jq("#" + serqunid).addClass('red-border');
+                    errorCount++;
                 }
-
-                if (Number(jQuery("#total").val()) < Number(jQuery("#waiverAmount").val())) {
-                    alert("Please enter correct Waiver Amount");
-                    return false;
-                }
-                if (isNaN(jQuery("#waiverAmount").val()) || jQuery("#waiverAmount").val() < 0) {
-                    alert("Please enter correct Waiver Amount");
-                    return false;
-                }
-                if (jQuery("#waiverAmount").val() > 0 && jQuery("#waiverComment").val() == "") {
-                    alert("Please enter Waiver Number");
-                    return false;
-                }
-
-                if (serqun != null || quantity != "") {
-                    if (isNaN(serqun)) {
-                        alert("Please enter quantity in correct format");
-                        return false;
-                    }
-                }
+				else{
+					jq("#" + serqunid).removeClass('red-border');
+				}                
             }
+			else{
+				jq("#" + serqunid).removeClass('red-border');
+			}
         }
+		
+		if (Number(jq("#total").val()) < Number(waiverAmts)) {
+			jq().toastmessage('showErrorToast', "Waiver amount cannot be Larger than the total Amount");
+			return false;
+		}
+		
+		if (isNaN(waiverAmts) || Number(waiverAmts) < 0) {
+			jq().toastmessage('showErrorToast', "Please enter correct Waiver Amount");
+			return false;
+		}
+		
+		if (Number(waiverAmts) > 0 && jQuery("#waiverComment").val() == "") {
+			jq().toastmessage('showErrorToast', "Please enter Waiver Number or Waiver Comment");
+			return false;
+		}
+		
+		if (errorCount > 0){
+			jq().toastmessage('showErrorToast', "Ensure Quantity fields highlighted in red are filled properly");
+			return false;
+		}
+		else{
+			return true;
+		}
     }
 </script>
 
 <style>
+	.toast-item {
+        background-color: #222;
+    }
 	.form-textbox {
-		height: 12px !important;
+		height: 14px !important;
 		font-size: 12px !important;
 	}
 	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
@@ -249,6 +285,12 @@
 	}
 	form input:focus, form select:focus, form textarea:focus {
 		outline: 1px none #ddd!important;
+	}
+	.red-border {
+        border: 1px solid #f00 !important;
+    }
+	.name {
+		color: #f26522;
 	}
 </style>
 
@@ -318,10 +360,7 @@
 		<div class="close"></div>
     </div>
 
-    <form id="orderBillingForm"
-          action="procedureInvestigationOrder.page?patientId=${patientId}&encounterId=${encounterId}&indCount=${serviceOrderSize}&billType=mixed&date=${date}"
-          method="POST"
-          onsubmit="javascript:return validate(${serviceOrderSize});" style="padding-top: 5px">
+    <form id="orderBillingForm" action="procedureInvestigationOrder.page?patientId=${patientId}&encounterId=${encounterId}&indCount=${serviceOrderSize}&billType=mixed&date=${date}" method="POST" style="padding-top: 5px">
         <div class="dashboard clear">
             <table cellpadding="5" cellspacing="0" width="100%" id="myTable" class="tablesorter thickbox">
                 <thead>
@@ -352,7 +391,7 @@
                     <td>
                         <input type="text" class="form-textbox serquncalc" id="${index + 1}servicequantity"
                                name="${index + 1}servicequantity" size="7" value=1
-                               onkeyup="updatePrice(${index+ 1});" />
+                               onkeyup="updatePrice(${index+ 1});" style="border: 1px solid #ddd" />
                     </td>
                     <td>
                         <input type="checkbox" class="form-textbox" id="${index + 1}paybill" name="${index + 1}paybill"
@@ -403,10 +442,11 @@
                 </td>
                 <td>
 
-                    <input type="submit" id="savebill" name="savebill" float="right" class="button confirm"
-                           value="Save Bill">
+                    <span id="savebill" name="savebill" class="button confirm right" style="margin: 10px 0"> 
+						<i class="icon-save small"></i>
+						Save Bill
+					</span>
                 </td>
-
             </tr>
         </div>
     </form>

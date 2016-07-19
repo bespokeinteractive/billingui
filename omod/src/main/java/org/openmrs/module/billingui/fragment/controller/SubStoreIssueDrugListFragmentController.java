@@ -5,7 +5,9 @@ import org.openmrs.Role;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.model.InventoryStore;
 import org.openmrs.module.hospitalcore.model.InventoryStoreDrugPatient;
+import org.openmrs.module.hospitalcore.model.InventoryStoreDrugPatientDetail;
 import org.openmrs.module.hospitalcore.model.InventoryStoreRoleRelation;
+import org.openmrs.module.hospitalcore.util.FlagStates;
 import org.openmrs.module.inventory.InventoryService;
 import org.openmrs.module.inventory.util.PagingUtil;
 import org.openmrs.module.inventory.util.RequestUtil;
@@ -51,6 +53,7 @@ public class SubStoreIssueDrugListFragmentController {
             @RequestParam(value = "fromDate", required = false) String fromDate,
             @RequestParam(value = "toDate", required = false) String toDate,
             @RequestParam(value = "receiptId", required = false) Integer receiptId,
+            @RequestParam(value = "processed", required = false) Integer processed,
             HttpServletRequest request, UiUtils uiUtils) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         InventoryService inventoryService = (InventoryService) Context.getService(InventoryService.class);
@@ -103,15 +106,41 @@ public class SubStoreIssueDrugListFragmentController {
         if (StringUtils.isBlank(fromDate)) {
             fromDate = sdf.format(new Date());
         }
+        List<SimpleObject> orderList = new ArrayList<SimpleObject>();
         List<InventoryStoreDrugPatient> listIssue = inventoryService.listStoreDrugPatient(store.getId(), receiptId, issueName, fromDate, toDate, pagingUtil.getStartPos(), pagingUtil.getPageSize());
-        for (InventoryStoreDrugPatient in : listIssue) {
-            String created = sdf.format(in.getCreatedOn());
+        for (InventoryStoreDrugPatient inventoryStoreDrugPatient : listIssue) {
+            //???
+            inventoryStoreDrugPatient = inventoryService.saveStoreDrugPatient(inventoryStoreDrugPatient);
+            List<InventoryStoreDrugPatientDetail> inventoryStoreDrugPatientDetails = inventoryService.listStoreDrugPatientDetail(inventoryStoreDrugPatient.getId());
+
+            Integer flags= FlagStates.NOT_PROCESSED;
+            if(inventoryStoreDrugPatientDetails.size() >0){
+                flags = inventoryStoreDrugPatientDetails.get(inventoryStoreDrugPatientDetails.size() - 1).getTransactionDetail().getFlag();
+            }
+            if (flags == null){
+                flags = FlagStates.NOT_PROCESSED;
+            }
+            if (flags >= FlagStates.PARTIALLY_PROCESSED && processed == FlagStates.NOT_PROCESSED){
+                continue;
+            }
+
+            String created = sdf.format(inventoryStoreDrugPatient.getCreatedOn());
             String changed = sdf.format(new Date());
             int value = changed.compareTo(created);
-            in.setValues(value);
-            in = inventoryService.saveStoreDrugPatient(in);
+            inventoryStoreDrugPatient.setValues(value);
+            //create simple object
+            SimpleObject orderItem = SimpleObject.create("id", inventoryStoreDrugPatient.getId());
+            orderItem.put("identifier", inventoryStoreDrugPatient.getIdentifier());
+            orderItem.put("patientId", inventoryStoreDrugPatient.getPatient().getId());
+            orderItem.put("givenName", inventoryStoreDrugPatient.getPatient().getGivenName());
+            orderItem.put("familyName", inventoryStoreDrugPatient.getPatient().getFamilyName());
+            orderItem.put("middleName", inventoryStoreDrugPatient.getPatient().getMiddleName());
+            orderItem.put("patient.age",inventoryStoreDrugPatient.getPatient().getAge());
+            orderItem.put("gender", inventoryStoreDrugPatient.getPatient().getGender());
+            orderItem.put("createdOn", inventoryStoreDrugPatient.getCreatedOn());
+            orderItem.put("flag",flags);
+            orderList.add(orderItem);
         }
-        return SimpleObject.fromCollection(listIssue, uiUtils, "id", "identifier", "patient.patientId","patient.givenName", "patient.familyName", "patient.middleName",
-                "patient.age", "patient.gender", "createdOn");
+        return orderList;
     }
 }

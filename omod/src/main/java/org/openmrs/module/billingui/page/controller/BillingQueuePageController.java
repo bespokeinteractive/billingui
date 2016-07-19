@@ -1,5 +1,6 @@
 package org.openmrs.module.billingui.page.controller;
 
+import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.referenceapplication.ReferenceApplicationWebConstants;
 import org.openmrs.ui.framework.UiUtils;
@@ -15,7 +16,7 @@ import java.util.Date;
  */
 public class BillingQueuePageController {
 
-    public void get(
+    public String get(
             PageModel pageModel,
             UiSessionContext sessionContext,
             PageRequest pageRequest,
@@ -23,10 +24,15 @@ public class BillingQueuePageController {
     ) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String dateStr = sdf.format(new Date());
         pageModel.addAttribute("currentDate", dateStr);
         pageModel.addAttribute("currentTime", new Date());
+        return null;
     }
 
 }

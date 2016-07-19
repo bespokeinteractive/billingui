@@ -42,7 +42,7 @@ import java.util.Map;
 public class BillableServiceBillAddPageController {
     private Log logger = LogFactory.getLog(getClass());
 
-    public void get(PageModel pageModel,
+    public String get(PageModel pageModel,
                     UiSessionContext sessionContext,
                     PageRequest pageRequest,
                     UiUtils ui,
@@ -54,6 +54,10 @@ public class BillableServiceBillAddPageController {
                     @RequestParam(value = "lastBillId", required = false) String lastBillId) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         Patient patient = Context.getPatientService().getPatient(patientId);
         Map<String, String> attributes = PatientUtils.getAttributes(patient);
         BillingService billingService = Context.getService(BillingService.class);
@@ -94,7 +98,7 @@ public class BillableServiceBillAddPageController {
         else {
             pageModel.addAttribute("fileNumber", "");
         }
-
+        return null;
     }
 
     public String post(HttpServletRequest request,

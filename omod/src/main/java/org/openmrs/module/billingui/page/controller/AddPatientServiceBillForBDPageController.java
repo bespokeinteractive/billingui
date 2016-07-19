@@ -37,6 +37,10 @@ public class AddPatientServiceBillForBDPageController {
                       UiUtils uiUtils) {
         pageRequest.getSession().setAttribute(ReferenceApplicationWebConstants.SESSION_ATTRIBUTE_REDIRECT_URL,ui.thisUrl());
         sessionContext.requireAuthentication();
+        Boolean isPriviledged = Context.hasPrivilege("Access Billing");
+        if(!isPriviledged){
+            return "redirect: index.htm";
+        }
         BillingService billingService = Context.getService(BillingService.class);
         List<BillableService> services = billingService.getAllServices();
         Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
