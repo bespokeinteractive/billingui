@@ -235,7 +235,7 @@
         background-color: #222;
     }
 	.form-textbox {
-		height: 14px !important;
+		height: 23px !important;
 		font-size: 12px !important;
 	}
 	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
